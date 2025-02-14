@@ -1,7 +1,7 @@
-import { updateUserService } from '../../../(services)/update-user.service'
 import { updateUserDTO } from '../../../(dtos)/update-user.dto'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { updateUserService } from '../../../(services)/update-user.service'
 
 export async function PUT(req: NextRequest) 
 {
