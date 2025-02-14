@@ -11,6 +11,11 @@ export async function PUT(req: NextRequest)
 
     const body = await req.json()
 
+    if(body.birthDate) 
+    {
+      body.birthDate = new Date(body.birthDate)
+    }
+
     const validatedData = updateUserDTO.parse(body)
 
     if (Object.keys(validatedData).length === 0) 
