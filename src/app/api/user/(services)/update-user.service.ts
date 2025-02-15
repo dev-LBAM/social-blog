@@ -5,11 +5,11 @@ import { UpdateUserDTO } from '../(dtos)/update-user.dto'
 export async function updateUserService(userId: string, validatedData: UpdateUserDTO)
 {
     await connectToDB()
-    const updatedData = await User.findOneAndUpdate(
-        { _id: userId },
+    const updatedData = await User.findByIdAndUpdate(
+        userId,
         { $set: validatedData },
         { new: true, returnDocument: 'after' }
-    );
+    )
 
     return updatedData
 }

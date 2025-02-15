@@ -1,5 +1,5 @@
 import User from '@/app/lib/database/schemas/user'
-import { CreateUserDTO } from '../(dto)/create-user.dto'
+import { CreateUserDTO } from '../(dtos)/create-user.dto'
 import { connectToDB } from '@/app/lib/database/mongodb'
 
 export async function createUserService(validatedData: CreateUserDTO)
@@ -9,7 +9,7 @@ export async function createUserService(validatedData: CreateUserDTO)
     })
 
     await connectToDB()
-    const savedUser = await newUser.save()
+    const createdData = await newUser.save()
 
-    return savedUser
+    return createdData
 }

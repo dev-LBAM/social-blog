@@ -2,6 +2,7 @@ import { updateUserDTO } from '../../../(dtos)/update-user.dto'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { updateUserService } from '../../../(services)/update-user.service'
+import { hashPassword } from '@/app/lib/auth/hash'
 
 export async function PUT(req: NextRequest) 
 {
@@ -14,6 +15,10 @@ export async function PUT(req: NextRequest)
     if(body.birthDate) 
     {
       body.birthDate = new Date(body.birthDate)
+    }
+    if(body.password) 
+    {
+      body.password = await hashPassword(body.password)
     }
 
     const validatedData = updateUserDTO.parse(body)
