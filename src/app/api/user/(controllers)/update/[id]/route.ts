@@ -22,7 +22,7 @@ export async function PUT(req: NextRequest)
     }
 
     const validatedData = updateUserDTO.parse(body)
-
+    
     if (Object.keys(validatedData).length === 0) 
     {
       return NextResponse.json(

@@ -15,14 +15,14 @@ const phoneSchema = z
 
 export const createUserDTO = z.object(
 {
-    name: z.string().min(1, 'Name is required.'),
+    name: z.string().min(3, 'Name is required.'),
     email: z.string().email('Invalid email address.'),
     password: passwordSchema,
     phone: phoneSchema,
     age: z.number().min(13, 'Minimum age is 13 years old.').max(130),
     birthDate: z.date(),
-    city: z.string().min(1, 'City is required.'),
-    country: z.string().min(1, 'Country is required.')
+    city: z.string().min(3, 'City is required.'),
+    country: z.string().min(5, 'Country is required.')
 })
 
 export type CreateUserDTO = z.infer<typeof createUserDTO>
