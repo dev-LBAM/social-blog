@@ -12,15 +12,17 @@ export async function POST( req: NextRequest ){
 
         const response = await verifyToken(req)
 
-        body.userId = response
+        const responsejson = await response.json() // I needed transform the response at json to get userId
+
+        body.userId = responsejson.userId
 
         const validatedData = createPostDTO.parse(body)
  
         const newPost = await createPostService(validatedData)
 
         return NextResponse.json(
-            { message: 'Post created successfully!', post: newPost }, 
-            { status: 201 })
+        { message: 'Post created successfully!', post: newPost }, 
+        { status: 201 })
     } 
     catch (error) 
     {

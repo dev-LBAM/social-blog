@@ -3,7 +3,8 @@ import { z } from "zod"
 import { loginUserDTO } from "../../(dtos)/login-user.dto"
 import { loginUserService } from "../../(services)/login-user.service"
 
-export async function POST( req: NextRequest ){
+export async function POST( req: NextRequest )
+{
     try 
     {
         const body = await req.json()
@@ -14,15 +15,14 @@ export async function POST( req: NextRequest ){
 
         if (!response) 
         {
-        return NextResponse.json(
+            return NextResponse.json(
             { message: 'User not found' },
-            { status: 404 }
-        )
+            { status: 404 })
         }
         else
         {
-        return NextResponse.json(
-            { message: 'User logged successfully', response }, 
+            return NextResponse.json(
+            { message: 'User logged successfully', User: response }, 
             { status: 200 })
         }
     } 
@@ -31,15 +31,15 @@ export async function POST( req: NextRequest ){
         if (error instanceof z.ZodError)
         {
             return NextResponse.json(
-                {message: 'Validation error', details: error.errors}, 
-                {status: 400})                 
+            { message: 'Validation error', details: error.errors }, 
+            { status: 400 })                 
         } 
         else 
         {
             console.error('\u{274C} Internal server error while creating user: ', error)
             return NextResponse.json(
-                {message: 'Internal server error, please try again later'},
-                {status: 500})
+            { message: 'Internal server error, please try again later' },
+            { status: 500 })
         }  
     }
 }

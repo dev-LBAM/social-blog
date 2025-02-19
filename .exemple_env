@@ -1,3 +1,4 @@
 MONGODB_URI=
 SECRET_REFRESH_TOKEN_KEY=
-SECRET_TOKEN_KEY=
+SECRET_TOKEN_KEY= 
+NODE_ENV= ( development or production, look lib/auth/token.ts )

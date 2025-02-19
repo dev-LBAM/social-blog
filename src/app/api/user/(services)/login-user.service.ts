@@ -14,11 +14,10 @@ export async function loginUserService(validatedData: LoginUserDTO)
     if(validatedUser)
     {
         const validatedPass = await comparePassword(validatedData.password, validatedUser.password)
-        const response = await createToken(validatedUser._id)
-        if(response)
+        if(validatedPass)
         {
-
-            if(validatedPass) return validatedUser
+            await createToken(validatedUser._id)
+            return validatedUser
         }
     }
 }

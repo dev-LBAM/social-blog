@@ -11,6 +11,6 @@ export async function createPostService(validatedData: CreatePostDTO)
 
     await connectToDB()
     const createdData = await newPost.save()
-        console.log(createdData)
+    
     return createdData
 }
