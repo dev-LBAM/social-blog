@@ -1,7 +1,7 @@
-import mongoose, { Schema, Types } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 const PostSchema = new Schema({
-    userId: 
+    authorId: 
     {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -11,12 +11,16 @@ const PostSchema = new Schema({
     {
         type: String,
         required: true,
+        minlength: 1,
+        maxlength: 500,
     },
     imageUrl: 
     {
         type: String,
         required: false,
     },
+    likeCount: { type: Number, default: 0 },
+    commentCount: { type: Number, default: 0 },
 },
 {
   timestamps: true,
@@ -24,10 +28,14 @@ const PostSchema = new Schema({
 
 interface IPost extends Document 
 {
-    userId: Types.ObjectId
+    authorId: Schema.Types.ObjectId
     content: string
     imageUrl?: string
+    likeCount: number,
+    commentCount: number,
 }
+
+PostSchema.index({authorId: 1, createdAt: -1})
 
 const Post = mongoose.models.Post || mongoose.model<IPost>('Post', PostSchema)
 

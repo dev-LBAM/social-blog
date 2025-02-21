@@ -19,10 +19,11 @@ export const updateUserDTO = z.object(
     email: z.string().email('Invalid email address.'),
     password: passwordSchema,
     phone: phoneSchema,
-    age: z.number().min(13, 'Minimum age is 13 years old.').max(130),
     birthDate: z.date(),
     city: z.string().min(3, 'City is required.'),
-    country: z.string().min(5, 'Country is required.')
+    country: z.string().min(5, 'Country is required.'),
+    followerCount: z.number(),
+    postCount: z.number()
 }).partial()
 
 export type UpdateUserDTO = z.infer<typeof updateUserDTO>

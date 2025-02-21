@@ -36,7 +36,7 @@ export async function POST( req: NextRequest )
         } 
         else 
         {
-            console.error('\u{274C} Internal server error while creating user: ', error)
+            console.error('\u{274C} Internal server error while logging user: ', error)
             return NextResponse.json(
             { message: 'Internal server error, please try again later' },
             { status: 500 })

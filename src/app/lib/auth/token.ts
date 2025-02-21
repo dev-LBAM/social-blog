@@ -31,7 +31,7 @@ export async function createToken(userId: string)
             path: '/',
             maxAge: 60 * 60 * 24 * 7
         })
-        
+        console.log({accessToken, refreshToken})
         return response
     } 
     catch (error) 

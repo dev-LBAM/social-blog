@@ -36,8 +36,7 @@ export async function PUT(req: NextRequest)
     {
       return NextResponse.json(
           { message: 'User not found' },
-          { status: 404 }
-      )
+          { status: 404 })
     }
     else
     {

@@ -14,7 +14,7 @@ export async function POST( req: NextRequest ){
 
         const responsejson = await response.json() // I needed transform the response at json to get userId
 
-        body.userId = responsejson.userId
+        body.authorId = responsejson.userId
 
         const validatedData = createPostDTO.parse(body)
  
