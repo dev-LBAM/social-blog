@@ -2,7 +2,7 @@ import { updateUserDTO } from '../../../(dtos)/update-user.dto'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { updateUserService } from '../../../(services)/update-user.service'
-import { hashPassword } from '@/app/lib/auth/hash'
+import { hashPassword } from '@/app/lib/middlewares/hash'
 
 export async function PUT(req: NextRequest) 
 {

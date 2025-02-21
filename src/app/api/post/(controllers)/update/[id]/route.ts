@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { updatePostService } from '../../../(services)/update-post.service'
 import { updatePostDTO } from '../../../(dtos)/update-post.dto'
-import { verifyToken } from '@/app/lib/auth/token'
+import { verifyToken } from '@/app/lib/middlewares/auth'
 
 export async function PUT(req: NextRequest) 
 {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createUserDTO } from "../../(dtos)/create-user.dto"
 import { z } from "zod"
 import { createUserService } from "../../(services)/create-user.service"
-import { hashPassword } from "@/app/lib/auth/hash"
+import { hashPassword } from "@/app/lib/middlewares/hash"
 
 export async function POST( req: NextRequest )
 {

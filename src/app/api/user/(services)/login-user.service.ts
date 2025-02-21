@@ -1,8 +1,8 @@
 import User from '@/app/lib/database/schemas/user'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { LoginUserDTO } from '../(dtos)/login-user.dto'
-import { comparePassword } from '@/app/lib/auth/hash'
-import { createToken } from '@/app/lib/auth/token'
+import { comparePassword } from '@/app/lib/middlewares/hash'
+import { createToken } from '@/app/lib/middlewares/auth'
 
 export async function loginUserService(validatedData: LoginUserDTO)
 {

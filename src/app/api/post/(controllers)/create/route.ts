@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { createPostDTO } from "../../(dtos)/create-post.dto"
 import { createPostService } from "../../(services)/create-post.service"
-import { verifyToken } from "@/app/lib/auth/token"
+import { verifyToken } from "@/app/lib/middlewares/auth"
 
 
 export async function POST( req: NextRequest ){
