@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
 const PostSchema = new Schema({
-    authorId: 
+    userId: 
     {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -28,14 +28,14 @@ const PostSchema = new Schema({
 
 interface IPost extends Document 
 {
-    authorId: Schema.Types.ObjectId
+    userId: Schema.Types.ObjectId
     content: string
     imageUrl?: string
     likeCount: number,
     commentCount: number,
 }
 
-PostSchema.index({authorId: 1, createdAt: -1})
+PostSchema.index({userId: 1, createdAt: -1})
 
 const Post = mongoose.models.Post || mongoose.model<IPost>('Post', PostSchema)
 

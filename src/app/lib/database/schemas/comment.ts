@@ -13,12 +13,18 @@ const CommentSchema = new Schema({
         ref: "User", 
         required: true,
     },
-    content:
+    comment:
     {
         type: String,
         minlength: 1,
         maxlength: 500,
-    }
+        required: true,
+    },
+    imageUrl: 
+    {
+        type: String,
+        required: false,
+    },
 },
 {
     timestamps: true,
@@ -28,9 +34,10 @@ interface IComment extends Document
 {
     postId: Schema.Types.ObjectId
     userId: Schema.Types.ObjectId
-    content: string
+    comment: string
+    imageUrl?: string
 }
-  
+
 CommentSchema.index({userId: 1, createdAt: -1})
   
 const Comment = mongoose.models.Comment || mongoose.model<IComment>('Comment', CommentSchema)
