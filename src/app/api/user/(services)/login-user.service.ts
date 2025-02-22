@@ -1,8 +1,8 @@
 import User from '@/app/lib/database/schemas/user'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { LoginUserDTO } from '../(dtos)/login-user.dto'
-import { comparePassword } from '@/app/lib/middlewares/hash'
-import { createToken } from '@/app/lib/middlewares/auth'
+import { comparePassword } from '@/app/lib/utils/hash'
+import { createAuth } from '@/app/lib/utils/auth'
 
 export async function loginUserService(validatedData: LoginUserDTO)
 {
@@ -16,7 +16,7 @@ export async function loginUserService(validatedData: LoginUserDTO)
         const validatedPass = await comparePassword(validatedData.password, validatedUser.password)
         if(validatedPass)
         {
-            await createToken(validatedUser._id)
+            await createAuth(validatedUser._id)
             return validatedUser
         }
     }

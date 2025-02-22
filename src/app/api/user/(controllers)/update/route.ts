@@ -1,14 +1,15 @@
-import { updateUserDTO } from '../../../(dtos)/update-user.dto'
+import { updateUserDTO } from '../../(dtos)/update-user.dto'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { updateUserService } from '../../../(services)/update-user.service'
-import { hashPassword } from '@/app/lib/middlewares/hash'
+import { updateUserService } from '../../(services)/update-user.service'
+import { hashPassword } from '@/app/lib/utils/hash'
+import { parseAuth, verifyAuth } from '@/app/lib/utils/auth'
 
 export async function PUT(req: NextRequest) 
 {
   try 
   {
-    const userId = req.nextUrl.pathname.split('/')[4]
+    const userId = await parseAuth(await verifyAuth(req))
 
     const body = await req.json()
 

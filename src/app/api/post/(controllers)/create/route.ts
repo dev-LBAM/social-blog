@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { createPostDTO } from "../../(dtos)/create-post.dto"
 import { createPostService } from "../../(services)/create-post.service"
-import { verifyToken } from "@/app/lib/middlewares/auth"
+import { parseAuth, verifyAuth } from "@/app/lib/utils/auth"
 
 
 export async function POST( req: NextRequest ){
@@ -10,11 +10,7 @@ export async function POST( req: NextRequest ){
     {
         const body = await req.json()
 
-        const response = await verifyToken(req)
-
-        const responsejson = await response.json() // I needed transform the response at json to get userId
-
-        body.authorId = responsejson.userId
+        body.authorId = await parseAuth(await verifyAuth(req))
 
         const validatedData = createPostDTO.parse(body)
  

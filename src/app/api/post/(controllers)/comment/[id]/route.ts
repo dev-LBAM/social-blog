@@ -9,21 +9,21 @@ export async function PUT(req: NextRequest)
   try 
   {
     const postId = req.nextUrl.pathname.split('/')[4]
-
-    const authorId = await parseAuth(await verifyAuth(req))
+    
+    const userId = await parseAuth(await verifyAuth(req))
 
     const body = await req.json()
     
     if (!body || Object.keys(body).length === 0) 
     {
       return NextResponse.json(
-      { message: 'Post not changed' },
+      { message: 'Comment canceled' },
       { status: 200 })
     }
 
     const validatedData = updatePostDTO.parse(body)
     
-    const response = await updatePostService(postId, authorId, validatedData)
+    const response = await updatePostService(postId, userId, validatedData)
   
     if (!response)
     {

@@ -2,7 +2,7 @@ import  jwt from 'jsonwebtoken'
 import { NextRequest, NextResponse } from 'next/server'
 
 
-export async function createToken(userId: string)
+export async function createAuth(userId: string) //CREATE TOKEN
 {
     try 
     {
@@ -11,7 +11,7 @@ export async function createToken(userId: string)
         const refreshToken = jwt.sign({ userId }, `${process.env.SECRET_REFRESH_TOKEN_KEY}`, { expiresIn: '7d' })
 
         const response = NextResponse.json(
-        { message: 'Create auth successful' }, 
+        { message: 'Create authentication successful' }, 
         { status: 200 })
 
         response.cookies.set('accessToken', accessToken, 
@@ -44,7 +44,7 @@ export async function createToken(userId: string)
     }
 }
 
-export async function verifyToken(req: NextRequest) 
+export async function verifyAuth(req: NextRequest) //VERIFY TOKEN
 {
     const accessToken = req.cookies.get('accessToken')?.value
     const refreshToken = req.cookies.get('refreshToken')?.value
@@ -60,7 +60,7 @@ export async function verifyToken(req: NextRequest)
     {
         const decoded = jwt.verify(accessToken!, process.env.SECRET_TOKEN_KEY!) as { userId: string }
         return NextResponse.json(
-        { message: 'Access granted', userId: decoded.userId }, 
+        { message: 'Authentication successful', userId: decoded.userId }, 
         { status: 200 })
     } 
     catch
@@ -68,7 +68,7 @@ export async function verifyToken(req: NextRequest)
         if (!refreshToken) 
         {
             return NextResponse.json(
-            { error: 'Invalid or expired tokens' },
+            { error: 'Authentication invalid or expired' },
             { status: 401 })
         }
 
@@ -78,7 +78,7 @@ export async function verifyToken(req: NextRequest)
             const newAccessToken = jwt.sign({ userId: decodedRefresh.userId }, process.env.SECRET_TOKEN_KEY!, { expiresIn: '15m' })
 
             const response = NextResponse.json(
-            { message: 'Token refreshed',  userId: decodedRefresh.userId}, 
+            { message: 'Authentication refreshed',  userId: decodedRefresh.userId}, 
             { status: 200 })
 
             response.cookies.set('accessToken', newAccessToken, 
@@ -95,8 +95,22 @@ export async function verifyToken(req: NextRequest)
         catch 
         {
             return NextResponse.json(
-            { error: 'Invalid refresh token' }, 
+            { error: 'Invalid authentication refresh' }, 
             { status: 401 })
         }
+    }
+}
+
+export async function parseAuth(data: NextResponse) //CONVERT THE VERIFY TOKEN IN JSON
+{
+    try 
+    {
+        const response = await data.json()
+        return response.userId 
+    } 
+    catch (error) 
+    {
+        console.error("Error parsing auth response:", error)
+        return null
     }
 }

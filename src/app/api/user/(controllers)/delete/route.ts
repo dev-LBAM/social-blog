@@ -1,12 +1,13 @@
 
 import { NextRequest, NextResponse } from 'next/server'
-import { deleteUserService } from '../../../(services)/delete-user.service'
+import { deleteUserService } from '../../(services)/delete-user.service'
+import { parseAuth, verifyAuth } from '@/app/lib/utils/auth'
 
 export async function DELETE(req: NextRequest) 
 {
   try 
   {
-    const userId = req.nextUrl.pathname.split('/')[4]
+    const userId = await parseAuth(await verifyAuth(req))
 
     const response = await deleteUserService(userId)
 

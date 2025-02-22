@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getUserDataService } from '../../../(services)/get-user-data.service'
+import { getUserPublicService } from '../../../(services)/get-user-public.service'
 
 export async function GET(req: NextRequest) 
 {
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest)
   {
     const userId = req.nextUrl.pathname.split('/')[4]
 
-    const response = await getUserDataService(userId)
+    const response = await getUserPublicService(userId)
 
     if (!response) 
     {

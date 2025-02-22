@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createUserDTO } from "../../(dtos)/create-user.dto"
+import { registerUserDTO } from "../../(dtos)/register-user.dto"
 import { z } from "zod"
-import { createUserService } from "../../(services)/create-user.service"
-import { hashPassword } from "@/app/lib/middlewares/hash"
+import { registerUserService } from "../../(services)/register-user.service"
+import { hashPassword } from "@/app/lib/utils/hash"
 
 export async function POST( req: NextRequest )
 {
@@ -14,12 +14,12 @@ export async function POST( req: NextRequest )
 
         body.password = await hashPassword(body.password)
 
-        const validatedData = createUserDTO.parse(body)
+        const validatedData = registerUserDTO.parse(body)
 
-        const newUser = await createUserService(validatedData)
+        const newUser = await registerUserService(validatedData)
 
         return NextResponse.json(
-        { message: 'User created successfully!', user: newUser }, 
+        { message: 'User registered successfully', user: newUser }, 
         { status: 201 })
     } 
     catch (error) 
