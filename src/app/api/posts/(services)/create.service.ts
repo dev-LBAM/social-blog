@@ -1,5 +1,5 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
-import { createPostDTO } from '../(dtos)/create.dto'
+import { postDTO } from '../(dtos)/post.dto'
 import Post from '@/app/lib/database/schemas/post'
 import { NextRequest, NextResponse } from 'next/server'
 import { parseAuth } from '@/app/lib/utils/auth'
@@ -14,14 +14,14 @@ export async function createPostService(req: NextRequest)
     
         const body = await req.json()
     
-        if (!body.content || body.content.trim().length === 0)
+        if (!body || body.content.trim().length === 0 || body.imageUrl.trim().length === 0)
         {
             return NextResponse.json(
-            { message: 'Post canceled: empty content'},
+            { message: 'Create post canceled: empty content'},
             { status: 204 })
         }
 
-        const validatedData = createPostDTO.parse(body)
+        const validatedData = postDTO.parse(body)
      
         const newPost = new Post({
             ...validatedData,

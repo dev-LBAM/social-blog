@@ -1,11 +1,10 @@
-
 import { NextRequest} from 'next/server'
-import { getUserPublicService } from '../../(services)/get-public.service'
+import { getUserPostsService } from '../../../(services)/get-posts.service'
 
 export async function GET(req: NextRequest) /* GET PUBLIC DATA OF USER */
 {
     const userId = req.nextUrl.pathname.split('/')[3]
 
-    const response = await getUserPublicService(userId) 
+    const response = await getUserPostsService(userId, req) 
     return response
 }

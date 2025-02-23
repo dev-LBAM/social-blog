@@ -1,11 +1,12 @@
-import Post from '@/app/lib/database/schemas/post'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 import { parseAuth } from '@/app/lib/utils/auth'
 import { z } from 'zod'
-import { postDTO } from '../(dtos)/post.dto'
+import Comment from '@/app/lib/database/schemas/comment'
+import { commentDTO } from '../(dtos)/comment.dto'
 
-export async function updatePostService(postId: string, req: NextRequest)
+
+export async function updateCommentService(commentId: string, req: NextRequest)
 {
     try 
     {
@@ -14,31 +15,32 @@ export async function updatePostService(postId: string, req: NextRequest)
 
         const body = await req.json()
         
-        if (!body || body.content.trim().length === 0 || body.imageUrl.trim().length === 0) 
+        if (!body || body.comment.trim().length === 0 && body.imageUrl.trim().length === 0) 
         {
           return NextResponse.json(
-          { message: 'Update post canceled: empty content' },
+          { message: 'Update comment canceled: empty content' },
           { status: 204 })
         }
     
-        const validatedData = postDTO.parse(body)
+        const validatedData = commentDTO.parse(body)
         
         await connectToDB()
-        const response = await Post.findOneAndUpdate(
-          {_id: postId, userId: userId},
-          { $set: validatedData },
-          { new: true, returnDocument: 'after' })
+        const response = await Comment.findOneAndUpdate(
+            {_id: commentId, userId: userId},
+            { $set: validatedData },
+            { new: true, returnDocument: 'after' },
+        )
 
         if(!response)
         {
           return NextResponse.json(
-          { message: 'Post not found or user not is author' },
+          { message: 'Comment not found or user not is author' },
           { status: 404 })
         }
         else
         {
           return NextResponse.json(
-          { message: 'Post updated successfully', post: response }, 
+          { message: 'Comment updated successfully', response }, 
           { status: 200 })
         }
       } 
@@ -52,7 +54,7 @@ export async function updatePostService(postId: string, req: NextRequest)
         } 
         else 
         {
-          console.error('\u{274C} Internal server error while updating post: ', error)
+          console.error('\u{274C} Internal server error while updating comment: ', error)
           return NextResponse.json(
           { message: 'Internal server error, please try again later' },
           { status: 500 })

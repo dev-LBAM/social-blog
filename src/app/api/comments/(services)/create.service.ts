@@ -1,12 +1,12 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import Comment from '@/app/lib/database/schemas/comment'
-import { createCommentDTO } from '../(dtos)/create-comment.dto'
 import { parseAuth } from '@/app/lib/utils/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import Post from '@/app/lib/database/schemas/post'
+import { commentDTO } from '../(dtos)/comment.dto'
 
-export async function createCommentService(req: NextRequest)
+export async function createCommentService(postId: string, req: NextRequest)
 {
 
     try 
@@ -14,34 +14,28 @@ export async function createCommentService(req: NextRequest)
         const userId = await parseAuth(req)
         if(userId.status === 401) return userId
         
-        if (!userId) 
-        {
-          return NextResponse.json(
-          { message: 'Authentication failed' },
-          { status: 401 })
-        }
-    
         const body = await req.json()
-        console.log(body.comment)
-        if (!body.comment || body.comment.trim().length === 0) 
+
+        if (!body || body.comment.trim().length === 0 && body.imageUrl.trim().length === 0) 
         {
           return NextResponse.json(
-          { message: 'Comment canceled: empty comment' },
+          { message: 'Create comment canceled: empty comment' },
           { status: 204 })
         }
     
-        const validatedData = createCommentDTO.parse(body)
+        const validatedData = commentDTO.parse(body)
 
         const commentPost = new Comment({
             ...validatedData,
+            postId,
             userId,
         })
     
         await connectToDB()
         const response = await Post.findByIdAndUpdate(
-          validatedData.postId,
+          postId,
           { $inc: { commentsCount: 1 } },
-          { new: true })
+          { new: true, returnDocument: 'after' })
       
         if (!response) 
         {
@@ -66,7 +60,7 @@ export async function createCommentService(req: NextRequest)
         }
         else 
         {
-          console.error('\u{274C} Internal server error while commenting post: ', error)
+          console.error('\u{274C} Internal server error while creating comment: ', error)
           return NextResponse.json(
           { message: 'Internal server error, please try again later' },
           { status: 500 })
