@@ -36,8 +36,8 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  followerCount: { type: Number, default: 0 },
-  postCount: { type: Number,  default: 0 }
+  followersCount: { type: Number, default: 0 },
+  postsCount: { type: Number,  default: 0 }
 },
 {
   timestamps: true,

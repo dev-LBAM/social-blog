@@ -19,8 +19,8 @@ const PostSchema = new Schema({
         type: String,
         required: false,
     },
-    likeCount: { type: Number, default: 0 },
-    commentCount: { type: Number, default: 0 },
+    likesCount: { type: Number, default: 0 },
+    commentsCount: { type: Number, default: 0 },
 },
 {
   timestamps: true,
@@ -31,8 +31,8 @@ interface IPost extends Document
     userId: Schema.Types.ObjectId
     content: string
     imageUrl?: string
-    likeCount: number,
-    commentCount: number,
+    likesCount: number,
+    commentsCount: number,
 }
 
 PostSchema.index({userId: 1, createdAt: -1})

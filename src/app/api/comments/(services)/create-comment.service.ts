@@ -4,6 +4,7 @@ import { createCommentDTO } from '../(dtos)/create-comment.dto'
 import { parseAuth } from '@/app/lib/utils/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import Post from '@/app/lib/database/schemas/post'
 
 export async function createCommentService(req: NextRequest)
 {
@@ -21,7 +22,7 @@ export async function createCommentService(req: NextRequest)
         }
     
         const body = await req.json()
-        
+        console.log(body.comment)
         if (!body.comment || body.comment.trim().length === 0) 
         {
           return NextResponse.json(
@@ -37,10 +38,22 @@ export async function createCommentService(req: NextRequest)
         })
     
         await connectToDB()
-        const response = await commentPost.save()
-    
+        const response = await Post.findByIdAndUpdate(
+          validatedData.postId,
+          { $inc: { commentsCount: 1 } },
+          { new: true })
+      
+        if (!response) 
+        {
+            return NextResponse.json(
+            { message: 'Post not found' },
+            { status: 404 })
+        }
+
+        const response2 = await commentPost.save()
+
         return NextResponse.json(
-        { message: 'Comment created successfully', comment: response }, 
+        { message: 'Comment created successfully', comment: response2, post: response }, 
         { status: 201 })
       } 
       catch (error) 
@@ -53,7 +66,7 @@ export async function createCommentService(req: NextRequest)
         }
         else 
         {
-          console.error('\u{274C} Internal server error while updating post: ', error)
+          console.error('\u{274C} Internal server error while commenting post: ', error)
           return NextResponse.json(
           { message: 'Internal server error, please try again later' },
           { status: 500 })
