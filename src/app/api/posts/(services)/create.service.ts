@@ -4,6 +4,7 @@ import Post from '@/app/lib/database/schemas/post'
 import { NextRequest, NextResponse } from 'next/server'
 import { parseAuth } from '@/app/lib/utils/auth'
 import { z } from 'zod'
+import User from '@/app/lib/database/schemas/user'
 
 export async function createPostService(req: NextRequest)
 {
@@ -29,12 +30,14 @@ export async function createPostService(req: NextRequest)
         })
     
         await connectToDB()
-        const response = await newPost.save()
-    
-        if(response)
+        const savedPost = await newPost.save()
+
+        if(savedPost)
         {
+            await  User.findByIdAndUpdate(userId,{ $inc: { postsCount: 1 } })
+            
             return NextResponse.json(
-            { message: 'Post created successfully!', post: response }, 
+            { message: 'Post created successfully!', post: savedPost }, 
             { status: 201 })
         } 
     }

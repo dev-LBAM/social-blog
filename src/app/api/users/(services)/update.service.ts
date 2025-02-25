@@ -28,12 +28,12 @@ export async function updateUserService(req: NextRequest)
     const validatedData = updateUserDTO.parse(body)
   
     await connectToDB()
-    const response = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
     userId,
     { $set: validatedData },
     { new: true, returnDocument: 'after' })
 
-    if (!response) 
+    if (!updatedUser) 
     {
       return NextResponse.json(
       { message: 'User not found' },
@@ -42,7 +42,7 @@ export async function updateUserService(req: NextRequest)
     else
     {
       return NextResponse.json(
-      { message: 'User updated successfully', user: response }, 
+      { message: 'User updated successfully', user: updatedUser }, 
       { status: 200 })
     }
   } 

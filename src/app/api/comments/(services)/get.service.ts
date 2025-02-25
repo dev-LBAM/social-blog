@@ -12,14 +12,14 @@ export async function getCommentService(postId: string, req: NextRequest)
 
         const filter = cursor ? {postId: postId, _id: { $lt: cursor } } : { postId: postId }
 
-        const response = await Comment.find(filter)
+        const obtainedComments = await Comment.find(filter)
           .sort({ _id: -1})
           .limit(limit)
           .lean()
         
-        const nextCursor = response.length > 0 ? response[response.length - 1]._id : null
+        const nextCursor = obtainedComments.length > 0 ? obtainedComments[obtainedComments.length - 1]._id : null
         
-        if (!response) 
+        if (!obtainedComments) 
         {
             return NextResponse.json(
             { message: 'None comment found' },
@@ -28,7 +28,7 @@ export async function getCommentService(postId: string, req: NextRequest)
         else
         {
             return NextResponse.json(
-            { message: 'Comments obtained successfully', response, nextCursor }, 
+            { message: 'Comments obtained successfully', comments: obtainedComments, nextCursor }, 
             { status: 200 })
         }
     } 

@@ -1,6 +1,6 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
-import { logoutUser, parseAuth } from '@/app/lib/utils/auth'
+import { parseAuth } from '@/app/lib/utils/auth'
 import Post from '@/app/lib/database/schemas/post'
 
 export async function deletePostService(postId: string, req: NextRequest)
@@ -11,10 +11,10 @@ export async function deletePostService(postId: string, req: NextRequest)
         if(userId.status === 401) return userId
 
         await connectToDB()
-        const response = await Post.findOneAndDelete(
+        const deletedPost = await Post.findOneAndDelete(
         {_id: postId, userId: userId})
 
-        if (!response) 
+        if (!deletedPost) 
         {
             return NextResponse.json(
             { message: 'Post not found or user not is author' },
@@ -22,7 +22,6 @@ export async function deletePostService(postId: string, req: NextRequest)
         }
         else
         {
-            await logoutUser()
             return NextResponse.json(
             { message: 'Post deleted successfully' }, 
             { status: 200 })

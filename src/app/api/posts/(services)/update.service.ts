@@ -24,12 +24,12 @@ export async function updatePostService(postId: string, req: NextRequest)
         const validatedData = postDTO.parse(body)
         
         await connectToDB()
-        const response = await Post.findOneAndUpdate(
+        const updatedPost = await Post.findOneAndUpdate(
           {_id: postId, userId: userId},
           { $set: validatedData },
           { new: true, returnDocument: 'after' })
 
-        if(!response)
+        if(!updatedPost)
         {
           return NextResponse.json(
           { message: 'Post not found or user not is author' },
@@ -38,7 +38,7 @@ export async function updatePostService(postId: string, req: NextRequest)
         else
         {
           return NextResponse.json(
-          { message: 'Post updated successfully', post: response }, 
+          { message: 'Post updated successfully', post: updatedPost }, 
           { status: 200 })
         }
       } 

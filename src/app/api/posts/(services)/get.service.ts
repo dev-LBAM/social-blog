@@ -12,14 +12,14 @@ export async function getPostService(req: NextRequest)
         
         const filter = cursor ? { _id: { $lt: cursor } } : {}
         
-        const response = await Post.find(filter)
+        const obtainedPosts = await Post.find(filter)
           .sort({ _id: -1 }) 
           .limit(limit)
           .lean()
         
-        const nextCursor = response.length > 0 ? response[response.length - 1]._id : null
+        const nextCursor = obtainedPosts.length > 0 ? obtainedPosts[obtainedPosts.length - 1]._id : null
         
-        if (!response) 
+        if (!obtainedPosts) 
         {
             return NextResponse.json(
             { message: 'None post found' },
@@ -28,7 +28,7 @@ export async function getPostService(req: NextRequest)
         else
         {
             return NextResponse.json(
-            { message: 'Posts obtained successfully', response, nextCursor }, 
+            { message: 'Posts obtained successfully', posts: obtainedPosts, nextCursor }, 
             { status: 200 })
         }
     } 

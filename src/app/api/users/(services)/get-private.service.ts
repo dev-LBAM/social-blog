@@ -12,9 +12,9 @@ export async function getUserPrivateService(req: NextRequest)
     if(userId.status === 401) return userId
           
     await connectToDB()
-    const response = await User.findById(userId)
+    const obtainedUserDataPrivate = await User.findById(userId)
     
-    if (!response) 
+    if (!obtainedUserDataPrivate) 
     {
       return NextResponse.json(
       { message: 'User not found' },
@@ -23,7 +23,7 @@ export async function getUserPrivateService(req: NextRequest)
     else
     {
       return NextResponse.json(
-      { message: 'User data obtained successfully', userData: response }, 
+      { message: 'User data private obtained successfully', user: obtainedUserDataPrivate }, 
       { status: 200 })
     }
   } 

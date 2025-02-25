@@ -25,13 +25,13 @@ export async function updateCommentService(commentId: string, req: NextRequest)
         const validatedData = commentDTO.parse(body)
         
         await connectToDB()
-        const response = await Comment.findOneAndUpdate(
+        const updatedComment = await Comment.findOneAndUpdate(
             {_id: commentId, userId: userId},
             { $set: validatedData },
             { new: true, returnDocument: 'after' },
         )
 
-        if(!response)
+        if(!updatedComment)
         {
           return NextResponse.json(
           { message: 'Comment not found or user not is author' },
@@ -40,7 +40,7 @@ export async function updateCommentService(commentId: string, req: NextRequest)
         else
         {
           return NextResponse.json(
-          { message: 'Comment updated successfully', response }, 
+          { message: 'Comment updated successfully', comment: updatedComment }, 
           { status: 200 })
         }
       } 

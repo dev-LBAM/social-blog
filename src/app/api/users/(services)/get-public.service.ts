@@ -8,9 +8,9 @@ export async function getUserPublicService(userId: string)
     try 
         {
         await connectToDB()
-        const response = await User.findById(userId).select( "-email -password -phone")
+        const obtainedUserDataPublic = await User.findById(userId).select( "-email -password -phone")
 
-        if (!response) 
+        if (!obtainedUserDataPublic) 
         {
             return NextResponse.json(
             { message: 'User not found' },
@@ -19,7 +19,7 @@ export async function getUserPublicService(userId: string)
         else
         {
             return NextResponse.json(
-            { message: 'User data obtained successfully', userData: response }, 
+            { message: 'User data public obtained successfully', user: obtainedUserDataPublic }, 
             { status: 200 })
         }
     } 

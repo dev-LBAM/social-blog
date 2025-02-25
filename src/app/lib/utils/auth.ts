@@ -3,7 +3,7 @@ import  jwt from 'jsonwebtoken'
 import { NextRequest, NextResponse } from 'next/server'
 
 
-export async function createAuth(userId: string) //CREATE TOKEN
+export async function createAuth(userId: string) //CREATE AUTHENTICATION
 {
     try 
     {
@@ -45,7 +45,7 @@ export async function createAuth(userId: string) //CREATE TOKEN
     }
 }
 
-export async function verifyAuth(req: NextRequest) //VERIFY TOKEN
+export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
 {
     const accessToken = req.cookies.get('accessToken')?.value
     const refreshToken = req.cookies.get('refreshToken')?.value
@@ -102,7 +102,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY TOKEN
     }
 }
 
-export async function parseAuth(req: NextRequest) 
+export async function parseAuth(req: NextRequest) // GET RESPONSE OF ( VERIFY AUTH ) AND TRANSFORM IN JSON
 {
     const authUser = await verifyAuth(req)
     if(authUser.status === 401) return authUser

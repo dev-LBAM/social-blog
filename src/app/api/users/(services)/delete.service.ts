@@ -11,9 +11,9 @@ export async function deleteUserService(req: NextRequest)
         if(userId.status === 401) return userId
 
         await connectToDB()
-        const response = await User.findByIdAndDelete(userId)
+        const deletedUser = await User.findByIdAndDelete(userId)
 
-        if (!response) 
+        if (!deletedUser) 
         {
             return NextResponse.json(
             { message: 'User not found' },
