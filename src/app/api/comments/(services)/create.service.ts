@@ -16,7 +16,7 @@ export async function createCommentService(postId: string, req: NextRequest)
         
         const body = await req.json()
 
-        if (!body || body.comment.trim().length === 0 && body.imageUrl.trim().length === 0) 
+        if (!body && body.comment.trim().length === 0 && body.imageUrl.trim().length === 0) 
         {
           return NextResponse.json(
           { message: 'Create comment canceled: empty comment' },

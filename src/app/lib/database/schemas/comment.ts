@@ -4,13 +4,13 @@ const CommentSchema = new Schema({
     postId: 
     { 
         type: Schema.Types.ObjectId, 
-        ref: "Post", 
+        ref: 'Post', 
         required: true,
     },
     userId: 
     { 
         type: Schema.Types.ObjectId, 
-        ref: "User", 
+        ref: 'User', 
         required: true,
     },
     comment:
@@ -18,7 +18,7 @@ const CommentSchema = new Schema({
         type: String,
         minlength: 1,
         maxlength: 500,
-        required: true,
+        required: false,
     },
     imageUrl: 
     {
@@ -35,7 +35,7 @@ interface IComment extends Document
     postId: Schema.Types.ObjectId
     userId: Schema.Types.ObjectId
     comment: string
-    imageUrl?: string
+    imageUrl: string
 }
 
 CommentSchema.index({userId: 1, createdAt: -1})

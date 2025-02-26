@@ -4,13 +4,13 @@ const PostSchema = new Schema({
     userId: 
     {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     content: 
     {
         type: String,
-        required: true,
+        required: false,
         minlength: 1,
         maxlength: 500,
     },
@@ -30,7 +30,7 @@ interface IPost extends Document
 {
     userId: Schema.Types.ObjectId
     content: string
-    imageUrl?: string
+    imageUrl: string
     likesCount: number,
     commentsCount: number,
 }

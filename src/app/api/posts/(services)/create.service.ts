@@ -15,7 +15,7 @@ export async function createPostService(req: NextRequest)
     
         const body = await req.json()
     
-        if (!body || body.content.trim().length === 0 || body.imageUrl.trim().length === 0)
+        if (!body && body.content.trim().length === 0 && body.imageUrl.trim().length === 0)
         {
             return NextResponse.json(
             { message: 'Create post canceled: empty content'},

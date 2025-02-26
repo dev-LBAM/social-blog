@@ -15,6 +15,7 @@ export async function getCommentService(postId: string, req: NextRequest)
         const obtainedComments = await Comment.find(filter)
           .sort({ _id: -1})
           .limit(limit)
+          .populate('userId', 'name profileImg')
           .lean()
         
         const nextCursor = obtainedComments.length > 0 ? obtainedComments[obtainedComments.length - 1]._id : null

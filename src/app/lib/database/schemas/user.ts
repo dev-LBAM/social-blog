@@ -36,6 +36,11 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  profileImg:
+  {
+    type: String,
+    required: false
+  },
   followersCount: { type: Number, default: 0 },
   postsCount: { type: Number,  default: 0 }
 },
@@ -51,6 +56,7 @@ interface IUser extends Document
   birthDate: Date
   city: string
   country: string,
+  profileImg: string,
   followerCount: number,
   postCount: number
 }

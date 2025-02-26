@@ -15,6 +15,7 @@ export async function getLikeService(postId: string, req: NextRequest)
         const obtainedLikes = await Like.find(filter)
           .sort({ _id: -1})
           .limit(limit)
+          .populate('userId', 'name profileImg')
           .lean()
         
         const nextCursor = obtainedLikes.length > 0 ? obtainedLikes[obtainedLikes.length - 1]._id : null
