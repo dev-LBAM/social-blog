@@ -31,7 +31,7 @@ export async function createLikeService(postId: string, req: NextRequest)
         const updatedPost = await Post.findByIdAndUpdate(
           postId,
           { $inc: { likesCount: 1 } },
-          { new: true, returnDocument: 'after' })
+          { new: true })
       
         if (!updatedPost) 
         {

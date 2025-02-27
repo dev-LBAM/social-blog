@@ -1,7 +1,7 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { checkRequest } from '@/app/lib/utils/checks'
+import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 import { messageDTO } from '../(dtos)/message.dto'
 import Message from '@/app/lib/database/schemas/message'
 
@@ -14,13 +14,24 @@ export async function updateMessageService(messageId: string, req: NextRequest)
         if(validationRequest instanceof NextResponse) return validationRequest
         const { userId, body } = validationRequest
     
-        const validatedData = messageDTO.parse(body)
+        messageDTO.parse(body)
         
         await connectToDB()
+
         const updatedMessage = await Message.findOneAndUpdate(
         {_id: messageId, senderId: userId},
-        { $set: validatedData, edited: true },
-        { new: true, returnDocument: 'after' })
+        { $set:
+            {
+                text: body.text,
+                file:
+                {
+                    url: body.fileUrl,
+                    type: checkFileType(body.fileUrl)
+                },
+                edited: true
+            }
+        },
+        { new: true })
 
         if(!updatedMessage)
         {

@@ -30,7 +30,7 @@ export async function checkRequest(req: NextRequest)
 
 
 
-export function checkFileType(url: string): string 
+export function checkFileType(url: string)
 {
     const extension = url.split('.').pop()?.toLowerCase()
     switch (extension) 

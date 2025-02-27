@@ -11,9 +11,12 @@ export async function deletePostService(postId: string, req: NextRequest)
         if(userId.status === 401) return userId
 
         await connectToDB()
-        
+
         const deletedPost = await Post.findOneAndDelete(
-        {_id: postId, userId: userId})
+        {
+            _id: postId, 
+            userId: userId
+        })
 
         if (!deletedPost) 
         {

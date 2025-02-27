@@ -14,8 +14,7 @@ export async function createMessageService(receiverId: string, req: NextRequest)
     if(validationRequest instanceof NextResponse) return validationRequest
     const { userId, body } = validationRequest
 
-    const validatedData = messageDTO.parse(body)
-
+    messageDTO.parse(body)
 
     await connectToDB()
 
@@ -25,7 +24,7 @@ export async function createMessageService(receiverId: string, req: NextRequest)
     {
       conversation = new Conversation(
       {
-        lastMessage: validatedData.text + ' ' + checkFileType(body.fileUrl),
+        lastMessage: (body.text ? body.text : '') + (body.fileUrl? `${checkFileType(body.fileUrl)}`: ''),
         lastMessageAt: new Date(),
         participants: [userId, receiverId]
       })
@@ -33,7 +32,7 @@ export async function createMessageService(receiverId: string, req: NextRequest)
     } 
     else
     {
-      conversation.lastMessage = validatedData.text + ' ' + checkFileType(body.fileUrl)
+      conversation.lastMessage = (body.text ? body.text : '') + (body.fileUrl ? `${checkFileType(body.fileUrl)}`: '')
       conversation.lastMessageAt = new Date()
       await conversation.save()
     }
@@ -43,11 +42,11 @@ export async function createMessageService(receiverId: string, req: NextRequest)
       conversationId: conversation._id,
       senderId: userId,
       receiverId,
-      text: validatedData.text,
+      text: body.text ? body.text : undefined,
       file: body.fileUrl ?
       {
           url: body.fileUrl,
-          type: body.fileUrl,
+          type: checkFileType(body.fileUrl),
       } : undefined
     })
 

@@ -1,34 +1,20 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import Comment from '@/app/lib/database/schemas/comment'
-import { parseAuth } from '@/app/lib/utils/auths'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import Post from '@/app/lib/database/schemas/post'
 import { commentDTO } from '../(dtos)/comment.dto'
+import { checkRequest } from '@/app/lib/utils/checks'
 
 export async function createCommentService(postId: string, req: NextRequest)
 {
   try 
   {
-    const userId = await parseAuth(req)
-    if(userId.status === 401) return userId
+    const validationRequest = await checkRequest(req)
+    if(validationRequest instanceof NextResponse) return validationRequest
+    const { userId, body } = validationRequest
     
-    const body = await req.json()
-        
-    if (!body.comment && !body.fileUrl)
-    {
-      return NextResponse.json(
-      { message: 'Create comment canceled: empty content' },
-      { status: 204 })
-    }
-
     const validatedData = commentDTO.parse(body)
-
-    const commentPost = new Comment({
-        ...validatedData,
-        postId,
-        userId,
-    })
 
     await connectToDB()
 
@@ -43,6 +29,17 @@ export async function createCommentService(postId: string, req: NextRequest)
         { message: 'Post not found' },
         { status: 404 })
     }
+
+    const commentPost = new Comment({
+      postId,
+      userId,
+      text: validatedData.text ? validatedData.text : '',
+      file: body.fileUrl ?
+      {
+          url: body.fileUrl,
+          type: body.fileUrl,
+      } : undefined
+  })
 
     const savedComment = await commentPost.save()
 

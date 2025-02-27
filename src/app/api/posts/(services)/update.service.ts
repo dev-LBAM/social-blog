@@ -3,7 +3,7 @@ import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { postDTO } from '../(dtos)/post.dto'
-import { checkRequest } from '@/app/lib/utils/checks'
+import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 
 export async function updatePostService(postId: string, req: NextRequest)
 {
@@ -13,14 +13,24 @@ export async function updatePostService(postId: string, req: NextRequest)
         if(validationRequest instanceof NextResponse) return validationRequest
         const { userId, body } = validationRequest
     
-        const validatedData = postDTO.parse(body)
+        postDTO.parse(body)
         
         await connectToDB()
-        
+
         const updatedPost = await Post.findOneAndUpdate(
         {_id: postId, userId: userId},
-        { $set: validatedData, edited: true},
-        { new: true, returnDocument: 'after' })
+        { $set:
+          {
+              text: body.text,
+              file:
+              {
+                  url: body.fileUrl,
+                  type: checkFileType(body.fileUrl)
+              },
+              edited: true
+          }
+        },
+        { new: true})
 
         if(!updatedPost)
         {

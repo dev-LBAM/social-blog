@@ -1,10 +1,10 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 import { parseAuth } from '@/app/lib/utils/auths'
-import Post from '@/app/lib/database/schemas/post'
-import Like from '@/app/lib/database/schemas/like'
+import Conversation from '@/app/lib/database/schemas/conversation'
+import Message from '@/app/lib/database/schemas/message'
 
-export async function deleteLikeService(likeId: string, req: NextRequest)
+export async function deleteUserConversationService(conversationId: string, req: NextRequest)
 {
     try
     {
@@ -12,25 +12,27 @@ export async function deleteLikeService(likeId: string, req: NextRequest)
         if(userId.status === 401) return userId
     
         await connectToDB()
-        const deletedLike = await Like.findOneAndDelete({
-            _id: likeId,
-            userId: userId, 
-          })
+
+        const deletedConversation = await Conversation.findOneAndDelete(
+        {
+            _id: conversationId
+        })
         
-        if (!deletedLike) 
+        if (!deletedConversation) 
         {
             return NextResponse.json(
-            { message: 'Like not found or user not is author' },
+            { message: 'Conversation not found' },
             { status: 404 })
         }
-          
-        const updatedPost = await Post.findByIdAndUpdate(
-        deletedLike.postId,
-        { $inc: { likesCount: -1 } },
-        { new: true })
 
+        
+        await Message.deleteMany(
+        {
+            conversationId: deletedConversation._id
+        })
+          
         return NextResponse.json(
-        { message: 'Like deleted successfully', post: updatedPost }, 
+        { message: 'Conversation deleted successfully' }, 
         { status: 200 })
     }
     catch (error) 

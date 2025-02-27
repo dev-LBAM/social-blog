@@ -14,14 +14,14 @@ export async function createPostService(req: NextRequest)
         if(validationRequest instanceof NextResponse) return validationRequest
         const { userId, body } = validationRequest
 
-        const validatedData = postDTO.parse(body)
+        postDTO.parse(body)
      
         await connectToDB()
 
         const newPost = new Post(
         {
             userId: userId,
-            text: validatedData.text,
+            text: body.text ? body.text : undefined,
             file: body.fileUrl ?
             {
                 url: body.fileUrl,
