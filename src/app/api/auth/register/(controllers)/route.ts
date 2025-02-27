@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
-import { hashPassword } from "@/app/lib/utils/auth"
+import { hashPassword } from "@/app/lib/utils/auths"
 import { registerUserDTO } from "../(dtos)/register.dto"
 import { registerUserService } from "../(services)/register.service"
 

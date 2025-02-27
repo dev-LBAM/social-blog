@@ -2,24 +2,17 @@ import User from '@/app/lib/database/schemas/user'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { updateUserDTO } from '../(dtos)/update.dto'
 import { NextRequest, NextResponse } from 'next/server'
-import { hashPassword, parseAuth } from '@/app/lib/utils/auth'
+import { hashPassword } from '@/app/lib/utils/auths'
 import { z } from 'zod'
+import { checkRequest } from '@/app/lib/utils/checks'
 
 export async function updateUserService(req: NextRequest)
 {
   try 
   {
-    const userId = await parseAuth(req)
-    if(userId.status === 401) return userId
-
-    const body = await req.json()
-  
-    if (!body || body.trim().length === 0)
-    {
-      return NextResponse.json(
-      { message: 'At least one field must be provided for update.' }, 
-      { status: 400 })
-    }
+    const validationRequest = await checkRequest(req)
+    if(validationRequest instanceof NextResponse) return validationRequest
+    const { userId, body } = validationRequest
   
     if(body.birthDate) body.birthDate = new Date(body.birthDate)
     
@@ -28,6 +21,7 @@ export async function updateUserService(req: NextRequest)
     const validatedData = updateUserDTO.parse(body)
   
     await connectToDB()
+
     const updatedUser = await User.findByIdAndUpdate(
     userId,
     { $set: validatedData },

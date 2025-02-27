@@ -7,17 +7,31 @@ const PostSchema = new Schema({
       ref: 'User',
       required: true,
     },
-    content: 
+    text: 
     {
         type: String,
         required: false,
         minlength: 1,
         maxlength: 500,
     },
-    imageUrl: 
+    file: 
     {
-        type: String,
+        url: 
+        {
+            type: String,
+            required: false
+        },
+        type: 
+        {
+            type: String,
+            required: false
+        }
+    },
+    edited:
+    {
+        type: Boolean,
         required: false,
+        default: false
     },
     likesCount: { type: Number, default: 0 },
     commentsCount: { type: Number, default: 0 },
@@ -30,7 +44,7 @@ interface IPost extends Document
 {
     userId: Schema.Types.ObjectId
     content: string
-    imageUrl: string
+    mediaUrl: string
     likesCount: number,
     commentsCount: number,
 }

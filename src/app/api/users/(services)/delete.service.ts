@@ -1,7 +1,7 @@
 import User from '@/app/lib/database/schemas/user'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
-import { logoutUser, parseAuth } from '@/app/lib/utils/auth'
+import { logoutUser, parseAuth } from '@/app/lib/utils/auths'
 
 export async function deleteUserService(req: NextRequest)
 {
@@ -11,6 +11,7 @@ export async function deleteUserService(req: NextRequest)
         if(userId.status === 401) return userId
 
         await connectToDB()
+        
         const deletedUser = await User.findByIdAndDelete(userId)
 
         if (!deletedUser) 

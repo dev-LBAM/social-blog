@@ -61,7 +61,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
     {
         const decoded = jwt.verify(accessToken!, process.env.SECRET_TOKEN_KEY!) as { userId: string }
         return NextResponse.json(
-        { message: 'Authentication successful', userId: decoded.userId }, 
+        { message: 'Auth successfull', userId: decoded.userId }, 
         { status: 200 })
     } 
     catch
@@ -69,7 +69,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         if (!refreshToken) 
         {
             return NextResponse.json(
-            { error: 'Authentication invalid or expired' },
+            { error: 'Auth invalid or expired' },
             { status: 401 })
         }
 
@@ -79,7 +79,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
             const newAccessToken = jwt.sign({ userId: decodedRefresh.userId }, process.env.SECRET_TOKEN_KEY!, { expiresIn: '15m' })
 
             const response = NextResponse.json(
-            { message: 'Authentication refreshed',  userId: decodedRefresh.userId}, 
+            { message: 'Refresh auth sucessfull',  userId: decodedRefresh.userId}, 
             { status: 200 })
 
             response.cookies.set('accessToken', newAccessToken, 
@@ -96,7 +96,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         catch 
         {
             return NextResponse.json(
-            { error: 'Invalid authentication refresh' }, 
+            { error: 'Refresh auth failed' }, 
             { status: 401 })
         }
     }

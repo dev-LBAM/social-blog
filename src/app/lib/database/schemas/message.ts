@@ -5,29 +5,43 @@ const MessageSchema = new Schema({
     { 
         type: Schema.Types.ObjectId,
         ref:'Conversation',
-        required: true 
+        required: true
     },
     senderId: 
     { 
         type: Schema.Types.ObjectId,
         ref:'User',
-        required: true 
+        required: true
     },
     receiverId: 
     { 
         type: Schema.Types.ObjectId,
         ref:'User',
-        required: true 
+        required: true
     },
     text:
     {
         type: String,
         required: false
     },
-    imageUrl:
+    file: 
     {
-        type: String,
-        required: false
+        url: 
+        {
+            type: String,
+            required: false
+        },
+        type: 
+        {
+            type: String,
+            required: false
+        }
+    },
+    edited:
+    {
+        type: Boolean,
+        required: false,
+        default: false
     },
     viewed:
     {
@@ -45,13 +59,16 @@ const MessageSchema = new Schema({
     timestamps: true,
 })
   
-interface IMessage extends Document 
-{
+interface IMessage extends Document {
     conversationId: string,
     senderId: string,
     receiverId: string,
     text?: string,
-    imageUrl?: string,
+    file?: 
+    {
+        url: string,
+        type: string
+    },
     viewed?: boolean,
     viewedAt?: Date
 }

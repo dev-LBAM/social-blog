@@ -1,6 +1,6 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
-import { parseAuth } from '@/app/lib/utils/auth'
+import { parseAuth } from '@/app/lib/utils/auths'
 import Post from '@/app/lib/database/schemas/post'
 import Comment from '@/app/lib/database/schemas/comment'
 

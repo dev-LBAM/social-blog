@@ -4,11 +4,12 @@ import { connectToDB } from '@/app/lib/database/mongodb'
 
 export async function registerUserService(validatedData: RegisterUserDTO)
 {
+    await connectToDB()
+    
     const newUser = new User({
         ...validatedData
     })
 
-    await connectToDB()
     const registeredData = await newUser.save()
 
     return registeredData

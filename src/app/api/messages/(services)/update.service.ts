@@ -1,11 +1,12 @@
-import Post from '@/app/lib/database/schemas/post'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { postDTO } from '../(dtos)/post.dto'
 import { checkRequest } from '@/app/lib/utils/checks'
+import { messageDTO } from '../(dtos)/message.dto'
+import Message from '@/app/lib/database/schemas/message'
 
-export async function updatePostService(postId: string, req: NextRequest)
+
+export async function updateMessageService(messageId: string, req: NextRequest)
 {
     try 
     {
@@ -13,25 +14,24 @@ export async function updatePostService(postId: string, req: NextRequest)
         if(validationRequest instanceof NextResponse) return validationRequest
         const { userId, body } = validationRequest
     
-        const validatedData = postDTO.parse(body)
+        const validatedData = messageDTO.parse(body)
         
         await connectToDB()
-        
-        const updatedPost = await Post.findOneAndUpdate(
-        {_id: postId, userId: userId},
-        { $set: validatedData, edited: true},
+        const updatedMessage = await Message.findOneAndUpdate(
+        {_id: messageId, senderId: userId},
+        { $set: validatedData, edited: true },
         { new: true, returnDocument: 'after' })
 
-        if(!updatedPost)
+        if(!updatedMessage)
         {
           return NextResponse.json(
-          { message: 'Post not found or user not is author' },
+          { message: 'Message not found or user not is author' },
           { status: 404 })
         }
         else
         {
           return NextResponse.json(
-          { message: 'Post updated successfully', post: updatedPost }, 
+          { message: 'Message updated successfully', updatedMessage }, 
           { status: 200 })
         }
       } 
@@ -45,7 +45,7 @@ export async function updatePostService(postId: string, req: NextRequest)
         } 
         else 
         {
-          console.error('\u{274C} Internal server error while updating post: ', error)
+          console.error('\u{274C} Internal server error while updating comment: ', error)
           return NextResponse.json(
           { message: 'Internal server error, please try again later' },
           { status: 500 })

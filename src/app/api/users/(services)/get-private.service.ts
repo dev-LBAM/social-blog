@@ -1,7 +1,7 @@
 
 import User from '@/app/lib/database/schemas/user'
 import { connectToDB } from '@/app/lib/database/mongodb'
-import { parseAuth } from '@/app/lib/utils/auth'
+import { parseAuth } from '@/app/lib/utils/auths'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function getUserPrivateService(req: NextRequest)
@@ -12,6 +12,7 @@ export async function getUserPrivateService(req: NextRequest)
     if(userId.status === 401) return userId
           
     await connectToDB()
+    
     const obtainedUserDataPrivate = await User.findById(userId)
     
     if (!obtainedUserDataPrivate) 

@@ -7,8 +7,10 @@ export async function getPostService(req: NextRequest)
     try 
     {
         await connectToDB()
+
         const limit = 10
-        const cursor = req.headers.get('cursor') // ID do último post carregado
+
+        const cursor = req.headers.get('cursor')
         
         const filter = cursor ? { _id: { $lt: cursor } } : {}
         

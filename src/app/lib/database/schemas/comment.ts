@@ -13,17 +13,31 @@ const CommentSchema = new Schema({
         ref: 'User', 
         required: true,
     },
-    comment:
+    text:
     {
         type: String,
         minlength: 1,
         maxlength: 500,
         required: false,
     },
-    imageUrl: 
+    file: 
     {
-        type: String,
+        url: 
+        {
+            type: String,
+            required: false
+        },
+        type: 
+        {
+            type: String,
+            required: false
+        }
+    },
+    edited:
+    {
+        type: Boolean,
         required: false,
+        default: false
     },
 },
 {
@@ -35,7 +49,7 @@ interface IComment extends Document
     postId: Schema.Types.ObjectId
     userId: Schema.Types.ObjectId
     comment: string
-    imageUrl: string
+    mediaUrl: string
 }
 
 CommentSchema.index({userId: 1, createdAt: -1})

@@ -9,6 +9,7 @@ export async function POST(req: NextRequest)  /* CREATE COMMENTS */
     const response = await createCommentService(postId, req)
     return response
 }
+
 import { updateCommentService } from '../../(services)/update.service'
 export async function PATCH(req: NextRequest)  /* UPDATE COMMENTS */
 {
@@ -17,6 +18,7 @@ export async function PATCH(req: NextRequest)  /* UPDATE COMMENTS */
     const response = await updateCommentService(commentId, req)
     return response
 }
+
 import { getCommentService } from '../../(services)/get.service'
 export async function GET(req: NextRequest)  /* GET COMMENTS */
 {

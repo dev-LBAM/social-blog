@@ -6,17 +6,18 @@ export async function getUserPostsService(userId: string, req: NextRequest)
 {
     try 
     {
-
         await connectToDB()
+
         const limit = 10
+
         const cursor = req.headers.get('cursor')
 
         const filter = cursor ? {userId: userId, _id: { $lt: cursor } } : { userId: userId }
 
         const obtainedUserPosts = await Post.find(filter)
-          .sort({ _id: -1})
-          .limit(limit)
-          .lean()
+        .sort({ _id: -1})
+        .limit(limit)
+        .lean()
         
         const nextCursor = obtainedUserPosts.length > 0 ? obtainedUserPosts[obtainedUserPosts.length - 1]._id : null
         
@@ -29,7 +30,7 @@ export async function getUserPostsService(userId: string, req: NextRequest)
         else
         {
             return NextResponse.json(
-            { message: 'User posts obtained successfully', userPosts: obtainedUserPosts, nextCursor }, 
+            { message: 'User posts obtained successfully', posts: obtainedUserPosts, nextCursor }, 
             { status: 200 })
         }
     } 

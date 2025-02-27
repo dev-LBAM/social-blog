@@ -1,6 +1,6 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
-import { parseAuth } from '@/app/lib/utils/auth'
+import { parseAuth } from '@/app/lib/utils/auths'
 import Post from '@/app/lib/database/schemas/post'
 
 export async function deletePostService(postId: string, req: NextRequest)
@@ -11,6 +11,7 @@ export async function deletePostService(postId: string, req: NextRequest)
         if(userId.status === 401) return userId
 
         await connectToDB()
+        
         const deletedPost = await Post.findOneAndDelete(
         {_id: postId, userId: userId})
 
