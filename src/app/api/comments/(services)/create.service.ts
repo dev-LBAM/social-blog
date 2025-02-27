@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import Post from '@/app/lib/database/schemas/post'
 import { commentDTO } from '../(dtos)/comment.dto'
-import { checkRequest } from '@/app/lib/utils/checks'
+import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 
 export async function createCommentService(postId: string, req: NextRequest)
 {
@@ -13,15 +13,15 @@ export async function createCommentService(postId: string, req: NextRequest)
     const validationRequest = await checkRequest(req)
     if(validationRequest instanceof NextResponse) return validationRequest
     const { userId, body } = validationRequest
-    
-    const validatedData = commentDTO.parse(body)
+
+    commentDTO.parse(body)
 
     await connectToDB()
 
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
       { $inc: { commentsCount: 1 } },
-      { new: true, returnDocument: 'after' })
+      { new: true })
   
     if (!updatedPost) 
     {
@@ -33,11 +33,11 @@ export async function createCommentService(postId: string, req: NextRequest)
     const commentPost = new Comment({
       postId,
       userId,
-      text: validatedData.text ? validatedData.text : '',
+      text: body.text ? body.text : undefined,
       file: body.fileUrl ?
       {
           url: body.fileUrl,
-          type: body.fileUrl,
+          type: checkFileType(body.fileUrl),
       } : undefined
   })
 

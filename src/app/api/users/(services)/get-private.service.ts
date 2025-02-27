@@ -12,9 +12,9 @@ export async function getUserPrivateService(req: NextRequest)
     if(userId.status === 401) return userId
           
     await connectToDB()
-    
+
     const obtainedUserDataPrivate = await User.findById(userId)
-    
+    console.log(obtainedUserDataPrivate)
     if (!obtainedUserDataPrivate) 
     {
       return NextResponse.json(

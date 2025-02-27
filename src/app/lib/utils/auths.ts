@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs'
 import  jwt from 'jsonwebtoken'
 import { NextRequest, NextResponse } from 'next/server'
+import User from '../database/schemas/user'
+import { connectToDB } from '../database/mongodb'
 
 
 export async function createAuth(userId: string) //CREATE AUTHENTICATION
@@ -60,6 +62,16 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
     try 
     {
         const decoded = jwt.verify(accessToken!, process.env.SECRET_TOKEN_KEY!) as { userId: string }
+        
+        await connectToDB()
+        const userExists = await User.findById(decoded.userId)
+        if (!userExists)
+        {
+            return NextResponse.json(
+            { message: 'User not found' },
+            { status: 401 })
+        }
+    
         return NextResponse.json(
         { message: 'Auth successfull', userId: decoded.userId }, 
         { status: 200 })
@@ -77,6 +89,15 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         {
             const decodedRefresh = jwt.verify(refreshToken, process.env.SECRET_REFRESH_TOKEN_KEY!) as { userId: string }
             const newAccessToken = jwt.sign({ userId: decodedRefresh.userId }, process.env.SECRET_TOKEN_KEY!, { expiresIn: '15m' })
+            
+            await connectToDB()
+            const userExists = await User.findById(decodedRefresh.userId)
+            if (!userExists)
+            {
+                return NextResponse.json(
+                { message: 'User not found' },
+                { status: 401 })
+            }
 
             const response = NextResponse.json(
             { message: 'Refresh auth sucessfull',  userId: decodedRefresh.userId}, 

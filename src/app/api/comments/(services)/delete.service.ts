@@ -28,10 +28,10 @@ export async function deleteCommentService(commentId: string, req: NextRequest)
         const updatedPost = await Post.findByIdAndUpdate(
         deletedComment.postId,
         { $inc: { commentsCount: -1 } },
-        { new: true, returnDocument: 'after' })
+        { new: true })
 
         return NextResponse.json(
-        { message: 'Comment deleted successfully', comment: deletedComment, post: updatedPost}, 
+        { message: 'Comment deleted successfully', post: updatedPost}, 
         { status: 200 })
     }
     catch (error) 

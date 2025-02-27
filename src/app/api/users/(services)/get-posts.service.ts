@@ -21,7 +21,7 @@ export async function getUserPostsService(userId: string, req: NextRequest)
         
         const nextCursor = obtainedUserPosts.length > 0 ? obtainedUserPosts[obtainedUserPosts.length - 1]._id : null
         
-        if (!obtainedUserPosts) 
+        if (obtainedUserPosts.length === 0 ) 
         {
             return NextResponse.json(
             { message: 'None user post found' },

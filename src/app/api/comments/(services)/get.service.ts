@@ -7,7 +7,9 @@ export async function getCommentService(postId: string, req: NextRequest)
     try 
     {
         await connectToDB()
+
         const limit = 10
+
         const cursor = req.headers.get('cursor')
 
         const filter = cursor ? {postId: postId, _id: { $lt: cursor } } : { postId: postId }
@@ -20,7 +22,7 @@ export async function getCommentService(postId: string, req: NextRequest)
         
         const nextCursor = obtainedComments.length > 0 ? obtainedComments[obtainedComments.length - 1]._id : null
         
-        if (!obtainedComments) 
+        if (obtainedComments.length === 0) 
         {
             return NextResponse.json(
             { message: 'None comment found' },

@@ -20,7 +20,7 @@ export async function getLikeService(postId: string, req: NextRequest)
         
         const nextCursor = obtainedLikes.length > 0 ? obtainedLikes[obtainedLikes.length - 1]._id : null
         
-        if (obtainedLikes.length == 0) 
+        if (obtainedLikes.length === 0) 
         {
             return NextResponse.json(
             { message: 'None like found' },
