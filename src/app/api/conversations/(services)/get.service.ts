@@ -40,8 +40,7 @@ export async function getUserConversationService(req: NextRequest)
     {
         console.error('\u{274C} Internal server error while getting user messages: ', error);
         return NextResponse.json(
-            { message: 'Internal server error, please try again later' },
-            { status: 500 }
-        );
+        { message: 'Internal server error, please try again later' },
+        { status: 500 })
     }
 }

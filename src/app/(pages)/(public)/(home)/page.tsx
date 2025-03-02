@@ -1,15 +1,16 @@
 'use client'
 
-import React from "react";
+export default function Home() 
+{
+  const toggleTheme = () => 
+    {
+        document.documentElement.classList.toggle("light");
+    }
 
-export default function Home() {
-  const click: React.MouseEventHandler<HTMLButtonElement> = () => {
-    return console.log("\u{1F4BB} vc clicou")
-  }
-    return (
-      <main>
-        <div>Hello HomePage</div>
-        <button onClick={click}>click here</button>
-      </main>
-    );
-  }
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center bg-background text-text">
+      <h1 className="text-4xl font-bold">Tailwind está funcionando</h1>
+      <button onClick={toggleTheme}>Test light mode</button>
+    </main>
+  );
+}
