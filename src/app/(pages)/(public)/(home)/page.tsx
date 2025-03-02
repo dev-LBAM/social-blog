@@ -1,15 +1,8 @@
-'use client'
-
-import React from "react";
-
-export default function Home() {
-  const click: React.MouseEventHandler<HTMLButtonElement> = () => {
-    return console.log("\u{1F4BB} vc clicou")
-  }
-    return (
-      <main>
-        <div>Hello HomePage</div>
-        <button onClick={click}>click here</button>
-      </main>
-    );
-  }
+export default function Home() 
+{
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900 text-white">
+      <h1 className="text-4xl font-bold">Tailwind está funcionando! 🚀</h1>
+    </main>
+  );
+}
