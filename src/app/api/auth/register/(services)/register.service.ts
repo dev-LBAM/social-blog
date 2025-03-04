@@ -9,7 +9,7 @@ export async function registerUserService(validatedData: RegisterUserDTO)
     const newUser = new User({
         ...validatedData
     })
-
+    
     const registeredData = await newUser.save()
 
     return registeredData

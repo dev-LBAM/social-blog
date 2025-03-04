@@ -26,12 +26,17 @@ const UserSchema = new Schema({
     type: Date,
     required: true,
   },
-  city: 
+  country: 
   {
     type: String,
     required: true,
   },
-  country: 
+  state: 
+  {
+    type: String,
+    required: true,
+  },
+  city: 
   {
     type: String,
     required: true,
@@ -41,8 +46,8 @@ const UserSchema = new Schema({
     type: String,
     required: false
   },
-  followersCount: { type: Number, default: 0 },
-  postsCount: { type: Number,  default: 0 }
+  followersCount: { type: Number, default: 0, required: false },
+  postsCount: { type: Number,  default: 0, required: false }
 },
 {
   timestamps: true,
@@ -54,11 +59,12 @@ interface IUser extends Document
   email: string
   password: string
   birthDate: Date
+  country: string
+  state: string
   city: string
-  country: string,
-  profileImg: string,
-  followerCount: number,
-  postCount: number
+  profileImg?: string
+  followerCount?: number
+  postCount?: number
 }
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema)

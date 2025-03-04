@@ -10,7 +10,7 @@ export async function POST( req: NextRequest )
     try 
     {
         const body = await req.json()
-
+        console.log(body)
         body.birthDate = new Date(body.birthDate)
 
         body.password = await hashPassword(body.password)
