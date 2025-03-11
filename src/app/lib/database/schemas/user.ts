@@ -21,6 +21,11 @@ const UserSchema = new Schema({
     minlength: 60,
     maxlength: 72,
   },
+  gender: 
+  {
+    type: String,
+    required: true,
+  },
   birthDate: 
   {
     type: Date,

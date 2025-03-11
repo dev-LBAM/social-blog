@@ -86,7 +86,7 @@ export async function GET() {
         
         // Buscar todas as locations no banco
         const locations = await db.collection('locations').find().toArray();
-        console.log(locations)
+
         if (!locations.length) {
             return NextResponse.json({ message: 'No locations found' }, { status: 404 });
         }

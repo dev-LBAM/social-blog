@@ -14,6 +14,7 @@
   
   --text-gradient-light: linear-gradient(to right, #d1d1d1, #6366f1); /* Gradiente para o texto no modo claro */
   --text-gradient-dark: linear-gradient(to right, #6366f1, #d1d1d1);  /* Gradiente para o texto no modo escuro */
+  --text-placeholder: #333333;
 }
 
 /* Estilos do body */
@@ -25,6 +26,15 @@ body {
 /* Quando o modo escuro for ativado */
 body.dark {
   background: var(--background-gradient-dark); /* Gradiente escuro */
+}
+
+.bg-background
+{
+  background: var(--background-gradient-dark)
+}
+
+.text-placeholder{
+  color: var(--text-placeholder);
 }
 
 /* Aplicando gradiente no texto */

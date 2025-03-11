@@ -14,27 +14,27 @@ export async function createAuth(userId: string) //CREATE AUTHENTICATION
         const refreshToken = jwt.sign({ userId }, `${process.env.SECRET_REFRESH_TOKEN_KEY}`, { expiresIn: '7d' })
 
         const response = NextResponse.json(
-        { message: 'Create authentication successful'}, 
+        { message: 'Authentication successfully'}, 
         { status: 200 })
 
         response.cookies.set('accessToken', accessToken, 
         {
+            path: '/',
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production' ? true : false, 
-            sameSite: 'strict', 
-            path: '/', 
-            maxAge: 60 * 5
+            secure: false,
+            sameSite: 'strict',
+            maxAge: 300
         })
-
+        
         response.cookies.set('refreshToken', refreshToken, 
         {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production' ? true : false,
-            sameSite: 'strict',
             path: '/',
-            maxAge: 60 * 60 * 24 * 7
+            httpOnly: true,
+            secure: false,
+            sameSite: 'strict',
+            maxAge: 604800
         })
-        console.log({accessToken, refreshToken})
+
         return response
     } 
     catch (error) 
@@ -55,7 +55,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
     if (!accessToken && !refreshToken) 
     {
         return NextResponse.json(
-        { error: 'Unauthorized' }, 
+        { error: 'Unauthorized.' }, 
         { status: 401 })
     }
 
@@ -68,12 +68,12 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         if (!userExists)
         {
             return NextResponse.json(
-            { message: 'User not found' },
+            { message: 'User not found.' },
             { status: 401 })
         }
     
         return NextResponse.json(
-        { message: 'Auth successfull', userId: decoded.userId }, 
+        { message: 'Authentication successfully.', userId: decoded.userId }, 
         { status: 200 })
     } 
     catch
@@ -81,7 +81,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         if (!refreshToken) 
         {
             return NextResponse.json(
-            { error: 'Auth invalid or expired' },
+            { error: 'Authentication unauthorized or expired.' },
             { status: 401 })
         }
 
@@ -95,29 +95,30 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
             if (!userExists)
             {
                 return NextResponse.json(
-                { message: 'User not found' },
+                { message: 'User not found.' },
                 { status: 401 })
             }
 
             const response = NextResponse.json(
-            { message: 'Refresh auth sucessfull',  userId: decodedRefresh.userId}, 
+            { message: 'Authentication refresh sucessfully',  userId: decodedRefresh.userId}, 
             { status: 200 })
 
             response.cookies.set('accessToken', newAccessToken, 
             {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production' ? true : false,
-                sameSite: 'strict',
+                secure: true,
+                sameSite: 'none',
                 path: '/',
                 maxAge: 60 * 5
-            })
+            })  
+            
 
             return response
         } 
         catch 
         {
             return NextResponse.json(
-            { error: 'Refresh auth failed' }, 
+            { error: 'Authentication refresh unauthorized' }, 
             { status: 401 })
         }
     }

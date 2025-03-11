@@ -10,11 +10,6 @@ export default defineConfig({
   theme: {
     extend: {
       colors: {
-        'gradient-light-start': '#ffffff',
-        'gradient-light-end': '#a1c4fd',
-        'gradient-dark-start': '#2e2e2e',
-        'gradient-dark-end': '#434343',
-
       },
     },
   },
