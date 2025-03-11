@@ -5,20 +5,49 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* global.css */
+
+/* Definindo gradientes para o fundo nos temas claro e escuro */
 :root {
-  --background: #222222;
-  --text: #ededed;
-}
-
-.light{
-  --background: #ededed;
-  --text: #222222;
+  --background-gradient-light: linear-gradient(to right, #a5a4a4, #252525); /* Gradiente para o fundo no modo claro */
+  --background-gradient-dark: linear-gradient(to right, #252525, #a5a4a4);  /* Gradiente para o fundo no modo escuro */
   
+  --text-gradient-light: linear-gradient(to right, #d1d1d1, #6366f1); /* Gradiente para o texto no modo claro */
+  --text-gradient-dark: linear-gradient(to right, #6366f1, #d1d1d1);  /* Gradiente para o texto no modo escuro */
+  --text-placeholder: #333333;
 }
 
+/* Estilos do body */
 body {
-  color: var(--text);
-  background: var(--background);
+  background: var(--background-gradient-light); /* Gradiente claro por padrão */
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Quando o modo escuro for ativado */
+body.dark {
+  background: var(--background-gradient-dark); /* Gradiente escuro */
+}
+
+.bg-background
+{
+  background: var(--background-gradient-dark)
+}
+
+.text-placeholder{
+  color: var(--text-placeholder);
+}
+
+/* Aplicando gradiente no texto */
+.text-gradient {
+  background: var(--text-gradient-light); /* Gradiente claro por padrão */
+  -webkit-background-clip: text;
+  color: transparent;
+  background-clip: text; /* Para suportar o background-clip no texto */
+}
+
+/* Quando o modo escuro for ativado, mudar o gradiente do texto */
+body.dark .text-gradient {
+  background: var(--text-gradient-dark); /* Gradiente de texto para o modo escuro */
+}
+
 

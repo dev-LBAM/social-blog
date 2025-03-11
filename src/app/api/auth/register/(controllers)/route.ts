@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
-
-import { hashPassword } from "@/app/lib/utils/auths"
 import { registerUserDTO } from "../(dtos)/register.dto"
 import { registerUserService } from "../(services)/register.service"
 
@@ -10,10 +8,7 @@ export async function POST( req: NextRequest )
     try 
     {
         const body = await req.json()
-
-        body.birthDate = new Date(body.birthDate)
-
-        body.password = await hashPassword(body.password)
+        console.log(body)
 
         const validatedData = registerUserDTO.parse(body)
 

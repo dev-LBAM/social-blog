@@ -1,16 +1,31 @@
 'use client'
 
-export default function Home() 
+import { useState } from "react"
+import React from "react"
+import RegisterForm from "@/app/components/RegisterForm"
+import LoginForm from "@/app/components/LoginForm"
+
+export default function HomePage() 
 {
-  const toggleTheme = () => 
-    {
-        document.documentElement.classList.toggle("light");
-    }
+  const[isRegister, setIsRegister] = useState(false)
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background text-text">
-      <h1 className="text-4xl font-bold">Tailwind está funcionando</h1>
-      <button onClick={toggleTheme}>Test light mode</button>
-    </main>
-  );
+    <div className="flex items-center justify-center h-screen ">
+
+      <div className="max-w-md w-full p-8 rounded-xl " >
+        
+        {isRegister ? <RegisterForm /> : <LoginForm />}
+
+        <button 
+          onClick={ () => setIsRegister(!isRegister)} 
+          className="font-serif text-gradient  pt-5 transition-transform duration-200 ease-in-out transform hover:scale-103 cursor-pointer " >
+          {isRegister ? "Already have an account?" : "Don't have an account?"}
+        </button>
+
+      </div>
+
+    </div>
+  )
 }
+
+
