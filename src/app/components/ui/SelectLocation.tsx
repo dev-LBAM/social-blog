@@ -90,7 +90,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
       {/* Country Select */}
       <div className="relative ">
 
-        <label className="block text-gradient font-serif">Country</label>
+        <label className="block text-input-title">Country</label>
 
         <select
           value={selectedCountry}
@@ -106,8 +106,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
           }}
           className=
           {
-            `w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400
-            ${locationError && !selectedCountry ? 'border-red-500' : 'border-gray-300'}`
+            `${locationError && !selectedCountry ? 'input-style-error' : 'input-style-standard'}`
           }
         >
 
@@ -130,12 +129,11 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
       {/* State Select */}
       {states.length > 0 && (
         <div className="relative">
-          <label className="block text-gradient font-serif">State</label>
+          <label className="block text-input-title">State</label>
           <select
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value)}
-            className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400
-                ${locationError && !selectedState ? 'border-red-500' : 'border-gray-300'}`}
+            className={`${locationError && !selectedState ? 'input-style-error' : 'input-style-standard'}`}
           >
             <option value="" disabled hidden>Select a state</option>
             {states.map((state) => (
@@ -153,12 +151,11 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
       {/* City Select */}
       {cities.length > 0 && (
         <div className="relative">
-          <label className="block text-gradient font-serif">City</label>
+          <label className="block text-input-title">City</label>
           <select
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
-            className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400
-                ${locationError && !selectedCity ? 'border-red-500' : 'border-gray-300'}`}
+            className={`${locationError && !selectedCity ? 'input-style-error' : 'input-style-standard'}`}
           >
             <option value="" disabled hidden>Select a city</option>
             {cities.map((city) => (

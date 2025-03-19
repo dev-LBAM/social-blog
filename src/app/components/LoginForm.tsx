@@ -2,7 +2,8 @@
 import { useCallback, useEffect, useState } from "react"
 import axios from "axios"
 import { loginUserDTO } from "../api/auth/login/(dtos)/login-user.dto"
-import Buttom from "./ui/Buttom"
+import Button from "./ui/Button"
+import { useRouter } from "next/navigation"
 
 interface LoginFormData 
 {
@@ -12,8 +13,12 @@ interface LoginFormData
 
 export default function LoginForm() 
 {
-  const [formErrors, setFormErrors] = useState<object>({})
+  const router = useRouter()
 
+  const [formErrors, setFormErrors] = useState<object>({})
+  const [formSucessColor, setFormSucessColor] = useState<boolean | null>(null)
+  const [formSucessText, setFormSucessText] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
   const [formData, setFormData] = useState<LoginFormData>(() => 
   {
     if (typeof window !== "undefined") 
@@ -45,35 +50,58 @@ export default function LoginForm()
     const { name, value } = e.target
 
     setFormData((prev) => ({ ...prev, [name]: value })) 
-
+    setFormSucessText("")
     if(formErrors[name]) /* When exists a formError with the name of input hide error */
     {
       setFormErrors((prevErrors) => ({...prevErrors, [name]: undefined}))
     }
   },[formErrors])
 
+
   const handleSubmit = async (e: React.FormEvent) => 
   {
     e.preventDefault()
-
+    setLoading(true)
     const validatedData = loginUserDTO.safeParse(formData)
 
     if (!validatedData.success) 
     {
       /* loops through the validation errors and gets the name of each field by path, and add the error message into field of error, example: errors{"email" = "Email is required"}  */
       const errors = Object.fromEntries(validatedData.error.errors.map((err) => [err.path[0], err.message]))
-      
-      return setFormErrors(errors)
+      return setTimeout(() => 
+        {
+          setFormErrors(errors)
+          setLoading(false)
+        }, 1000)
     }
-    
-    const response = await axios.post("/api/auth/login", validatedData.data, {withCredentials: true})
 
-    console.log(response.data.message)
+    try
+    {
+      const res = await axios.post("/api/auth/login", validatedData.data, {withCredentials: true})
+      setFormSucessColor(true)
+      setFormSucessText(res.data.message)
+      
+      return setTimeout(() => 
+      {
+
+      router.push('/feed');
+        setLoading(false)
+      }, 1000)
+    }
+    catch
+    {
+      setFormSucessColor(false)
+      setFormSucessText("Email or password incorrect")
+      return setTimeout(() => 
+      {
+        setLoading(false)
+      }, 1000)
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-      
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl " noValidate>
+
       {[
         {
           title: "Email",
@@ -89,14 +117,9 @@ export default function LoginForm()
         },
       ].map((field) => (
         <div key={field.title}>
-
-          <label
-            htmlFor={field.name}
-            className="block text-gradient font-serif"
-          >
+          <label htmlFor={field.name} className="block text-input-title">
             {field.title}
           </label>
-
           <input
             id={field.name}
             name={field.name}
@@ -104,24 +127,16 @@ export default function LoginForm()
             placeholder={field.placeholder}
             value={formData[field.name]}
             onChange={handleChange}
-            className=
-            { 
-              `w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400 
-              ${
-                formErrors[field.name]
-                ? "border-red-500"
-                : "border-gray-300"
-              }`
-            }
+            className={`${formErrors[field.name] ? "input-style-error" : "input-style-standard"}`}
           />
-
-          {formErrors[field.name] && (<p className="text-red-500 text-sm">{formErrors[field.name]}</p>)}
-
+          {formErrors[field.name] && <p className="text-error">{formErrors[field.name]}</p>}
         </div>
       ))}
-
-      <Buttom text="Sign in Social Blog" />
-
+      {formSucessText && <p className={`${formSucessColor ? "text-success" : "text-error"}`}>{formSucessText}</p>}
+      <Button 
+        disabled={loading}
+        text="Log in Social Blog" 
+      />
     </form>
   )
 }

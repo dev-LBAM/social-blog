@@ -14,8 +14,10 @@ export async function createAuth(userId: string) //CREATE AUTHENTICATION
         const refreshToken = jwt.sign({ userId }, `${process.env.SECRET_REFRESH_TOKEN_KEY}`, { expiresIn: '7d' })
 
         const response = NextResponse.json(
-        { message: 'Authentication successfully'}, 
+        { message: 'User logged successfully'}, 
         { status: 200 })
+
+
 
         response.cookies.set('accessToken', accessToken, 
         {

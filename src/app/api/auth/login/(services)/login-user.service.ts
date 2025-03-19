@@ -21,7 +21,7 @@ export async function loginUserService(req: NextRequest)
         if(!validatedUser)
         {
             return NextResponse.json(
-            { message: 'User not found' },
+            { message: 'Email or password incorrect'  },
             { status: 404 })
         }
 
@@ -34,9 +34,6 @@ export async function loginUserService(req: NextRequest)
         }
         
         const response = await createAuth(validatedUser._id)
-        NextResponse.json(
-        { message: 'User logged successfully' }, 
-        { status: 200 })
 
         return response 
     } 

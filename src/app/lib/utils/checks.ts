@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { parseAuth } from "./auths"
 
+
 export async function checkRequest(req: NextRequest)
 {
     const userId = await parseAuth(req)
@@ -61,4 +62,9 @@ export function checkFileType(url: string)
         return '📎'
     }
 }
+
+
+  
+
+
 

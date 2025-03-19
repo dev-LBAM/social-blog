@@ -8,14 +8,13 @@ export async function POST( req: NextRequest )
     try 
     {
         const body = await req.json()
-        console.log(body)
 
         const validatedData = registerUserDTO.parse(body)
 
         const newUser = await registerUserService(validatedData)
 
         return NextResponse.json(
-        { message: 'User registered successfully', user: newUser }, 
+        { message: 'User registered successfully!', user: newUser }, 
         { status: 201 })
     } 
     catch (error) 

@@ -1,53 +1,40 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-/* global.css */
-
-/* Definindo gradientes para o fundo nos temas claro e escuro */
-:root {
-  --background-gradient-light: linear-gradient(to right, #a5a4a4, #252525); /* Gradiente para o fundo no modo claro */
-  --background-gradient-dark: linear-gradient(to right, #252525, #a5a4a4);  /* Gradiente para o fundo no modo escuro */
-  
-  --text-gradient-light: linear-gradient(to right, #d1d1d1, #6366f1); /* Gradiente para o texto no modo claro */
-  --text-gradient-dark: linear-gradient(to right, #6366f1, #d1d1d1);  /* Gradiente para o texto no modo escuro */
-  --text-placeholder: #333333;
-}
-
-/* Estilos do body */
-body {
-  background: var(--background-gradient-light); /* Gradiente claro por padrão */
+body 
+{
+  background: #838383; /* Gradiente claro por padrão */
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Quando o modo escuro for ativado */
-body.dark {
-  background: var(--background-gradient-dark); /* Gradiente escuro */
-}
 
-.bg-background
+.text-placeholder
 {
-  background: var(--background-gradient-dark)
+  color: #333333;
 }
 
-.text-placeholder{
-  color: var(--text-placeholder);
+.text-input-title 
+{
+  @apply drop-shadow-lg text-white font-serif text-lg /* Exemplo de text-shadow */
 }
 
-/* Aplicando gradiente no texto */
-.text-gradient {
-  background: var(--text-gradient-light); /* Gradiente claro por padrão */
-  -webkit-background-clip: text;
-  color: transparent;
-  background-clip: text; /* Para suportar o background-clip no texto */
+.input-style-standard
+{
+  @apply w-full p-2 border rounded-md border-gray-300 focus:outline-none focus:ring-1 focus:ring-orange-100 shadow-md
 }
 
-/* Quando o modo escuro for ativado, mudar o gradiente do texto */
-body.dark .text-gradient {
-  background: var(--text-gradient-dark); /* Gradiente de texto para o modo escuro */
+.input-style-error
+{
+  @apply w-full p-2 border rounded-md border-red-500 focus:outline-none focus:ring-1 focus:ring-orange-100 shadow-md
+}
+
+.text-success
+{
+  @apply text-green-500 text-sm;
+}
+
+.text-error
+{
+  @apply text-red-500 text-sm;
 }
 
 

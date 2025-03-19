@@ -4,8 +4,10 @@ import SelectDate from "./ui/SelectDate"
 import SelectLocation from "./ui/SelectLocation"
 import axios from "axios"
 import { registerUserDTO } from "../api/auth/register/(dtos)/register.dto"
-import Buttom from "./ui/Buttom"
+import Buttom from "./ui/Button"
 import SelectGender from "./ui/SelectGender"
+import { useRouter } from "next/navigation"
+
 
 interface RegisterFormData 
 {
@@ -25,21 +27,42 @@ interface RegisterFormData
 
 export default function RegisterForm() 
 {
+  const router = useRouter()
+
   const [formErrors, setFormErrors] = useState<object>({})
   const [genderError, setGenderError] = useState<string>("")
   const [dateError, setDateError] = useState<string>("")
   const [locationError, setLocationError] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [formSucessColor, setFormSucessColor] = useState<boolean | null>(null)
+  const [formSucessText, setFormSucessText] = useState<string>("")
 
   const [formData, setFormData] = useState<RegisterFormData>(() => 
-  {
-    const storedData = sessionStorage.getItem("registerFormData") /* Get data of in session storage and put they into input for user dont need retype */
-
-    if (storedData) 
+  {    
+    if (typeof window !== "undefined") 
     {
-      const data = JSON.parse(storedData)
-      return { ...data, ...data, password: "" }
-    }
+      const storedData = sessionStorage.getItem("registerFormData") /* Get data of in session storage and put they into input for user dont need retype */
 
+      if (storedData) {
+        const data = JSON.parse(storedData);
+  
+        // Garantir que nenhum campo seja null ou undefined
+        return {
+          name: data.name || "",
+          email: data.email || "", // Aqui o email é diretamente atribuído, mas pode ser vazio se não houver
+          password: data.password || "",
+          confirmPassword: data.confirmPassword || "",
+          gender: data.gender || "",
+          birthDate: data.birthDate || "",
+          day: data.day || "",
+          month: data.month || "",
+          year: data.year || "",
+          country: data.country || "",
+          state: data.state || "",
+          city: data.city || ""
+        };
+      }
+    }
     return {
       name: "",
       email: "",
@@ -66,10 +89,8 @@ export default function RegisterForm()
   const handleGenderChange = useCallback((gender: string) => 
     {
       setGenderError("")
-      console.log(gender)
       if(gender) 
       {
-        console.log(gender)
         setFormData((prevState) => ({...prevState, gender: gender}))
       }
     }, [])
@@ -77,12 +98,7 @@ export default function RegisterForm()
   const handleDateChange = useCallback((day: string, month: string, year: string) => 
   {
     setDateError("")
-    setFormData((prevState) => ({
-      ...prevState,
-      day,
-      month,
-      year,
-    }));
+    setFormData((prevState) => ({...prevState, day, month, year,}));
 
     if(day && month && year) 
     {
@@ -103,7 +119,7 @@ export default function RegisterForm()
     {
       const { name, value } = e.target
 
-      setFormData((prev) => ({ ...prev, [name]: value }))
+      setFormData((prev) => ({ ...prev, [name]: value ?? ""}))
       
       if (formErrors[name]) /* When exists a formError with the name of input define error undefined */
       {
@@ -114,27 +130,77 @@ export default function RegisterForm()
   const handleSubmit = async (e: React.FormEvent) => 
   {
     e.preventDefault()
-
+    setLoading(true)
     const validatedData = registerUserDTO.safeParse(formData)
-
     if (!validatedData.success) 
     {
       /* loops through the validation errors and gets the name of each field by path, and add the error message into field of error, example: errors{"email" = "Email is required"}  */
       const errors = Object.fromEntries(validatedData.error.errors.map((err) => [err.path[0], err.message]))
-      console.log(formData)
-      if(errors.gender) { 
-        console.log(errors.gender)
-        setGenderError(errors.gender) } 
       
-      if(errors.birthDate) { setDateError(errors.birthDate) } 
+      if(errors.gender) 
+      { 
+        setTimeout(() => 
+        {
+          setGenderError(errors.gender)
+          setLoading(false)
+        }, 1000)
+      }
+      if(errors.birthDate) 
+      { 
+       
+        setTimeout(() => 
+        {
+          setDateError(errors.birthDate)
+          setLoading(false)
+        }, 1000)
+      } 
 
-      if(errors.country || errors.state || errors.city) { setLocationError(true) }
+      if(errors.country || errors.state || errors.city) 
+      { 
+        setTimeout(() => 
+        {
+          setLocationError(true)
+          setLoading(false)
+        }, 1000)
+        
+      }
 
-      return setFormErrors(errors)
+      return setTimeout(() => 
+      {
+        setFormErrors(errors)
+        setLoading(false)
+      }, 1000)
     }
-
-    const response = await axios.post("/api/auth/register", validatedData.data)
-    console.log(response.data)
+    
+    try
+    {
+      const res = await axios.post("/api/auth/register", validatedData.data, {withCredentials: true})
+      setFormSucessColor(true)
+      setFormSucessText(res.data.message)
+      return setTimeout(async () => 
+      {
+        setFormSucessText("")
+        await axios.post("/api/auth/login", validatedData.data, {withCredentials: true})
+        router.push('/feed')
+        setLoading(false)
+      }, 1000)
+    }
+    catch (error) 
+    {
+      if (error instanceof Error) 
+      {
+        setFormSucessColor(false);
+        setFormSucessText(error.message); // Agora pode acessar .message com segurança
+      } 
+      else 
+      {
+        setFormSucessColor(false);
+        setFormSucessText("Unknown error!");
+      }
+      return setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
   }
 
   return (
@@ -145,12 +211,6 @@ export default function RegisterForm()
           name: "name",
           type: "string",
           placeholder: "User Name Example ",
-        },
-        {
-          title: "Email",
-          name: "email",
-          type: "email",
-          placeholder: "you@example.com",
         },
         {
           title: "Password",
@@ -169,7 +229,7 @@ export default function RegisterForm()
 
           <label
             htmlFor={field.name}
-            className="block text-gradient font-serif"
+            className="block text-input-title"
           >
             {field.title}
           </label>
@@ -181,18 +241,10 @@ export default function RegisterForm()
             placeholder={field.placeholder}
             value={formData[field.name as keyof RegisterFormData]}
             onChange={handleChange}
-            className=
-            {
-              `w-full p-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400 
-              ${
-                formErrors[field.name as keyof RegisterFormData]
-                ? "border-red-500"
-                : "border-gray-300"
-              }`
-            }
+            className={`${formErrors[field.name as keyof RegisterFormData]? "input-style-error": "input-style-standard"}`}
           />
 
-          {formErrors[field.name] && (<p className="text-red-500 text-sm">{formErrors[field.name]}</p>)}
+          {formErrors[field.name] && (<p className="text-error">{formErrors[field.name]}</p>)}
 
         </div>
       ))}
@@ -206,9 +258,9 @@ export default function RegisterForm()
       <SelectDate 
         onDateChange={handleDateChange} 
         dateError={dateError} 
-        initialDay={formData.day} 
-        initialMonth={formData.month} 
-        initialYear={formData.year} 
+        initialDay={formData.day ? formData.day : ""} 
+        initialMonth={formData.month ? formData.month : ""} 
+        initialYear={formData.year ? formData.year : ""} 
       />
 
       <SelectLocation 
@@ -216,7 +268,12 @@ export default function RegisterForm()
         locationError={locationError}
       />
 
-      <Buttom text="Sign up account" />
+      {formSucessText && <p className={`${formSucessColor ? "text-success" : "text-error"}`}>{formSucessText}</p>}
+
+      <Buttom 
+        disabled={loading}
+        text="Sign up account" 
+      />
 
     </form>
   )

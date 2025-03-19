@@ -11,7 +11,7 @@ export default function SelectGender({ onGenderChange, genderError, initialGende
 
   return (
     <div>
-      <label htmlFor="gender" className="block text-gradient font-serif">
+      <label htmlFor="gender" className="block text-input-title">
         Gender
       </label>
 
@@ -23,10 +23,9 @@ export default function SelectGender({ onGenderChange, genderError, initialGende
               value={selectedGender} 
               onChange={(e) =>{
                 setSelectedGender(e.target.value)
-                onGenderChange(selectedGender)
+                onGenderChange(e.target.value)
               }}
-              className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400
-                ${genderError ? "border-red-500" : "border-gray-300"}`}
+              className={`${genderError ? "input-style-error" : "input-style-standard"}`}
             >
               <option value="" disabled hidden>
                 Select a gender

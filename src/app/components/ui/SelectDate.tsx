@@ -32,7 +32,7 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
     <div>
         <label
           htmlFor="birthdate"
-          className="block text-gradient font-serif"
+          className="block text-input-title"
         >
           Birthdate
         </label>
@@ -48,10 +48,9 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
               value={selectedDay}
               onChange={(e) => {
                 setSelectedDay(e.target.value)
-                onDateChange(selectedDay, selectedMonth, selectedYear)
+                onDateChange(e.target.value, selectedMonth, selectedYear)
               }}
-              className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400
-                ${dateError ? 'border-red-500' : 'border-gray-300'}`}
+              className={`${dateError ? 'input-style-error' : 'input-style-standard'}`}
             >
               <option value="" disabled hidden>Day</option>
               {days.map((day) => (
@@ -68,10 +67,9 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
               value={selectedMonth}
               onChange={(e) => {
                 setSelectedMonth(e.target.value)
-                onDateChange(selectedDay, selectedMonth, selectedYear)
+                onDateChange(selectedDay, e.target.value, selectedYear)
               }}
-              className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400
-                ${dateError ? 'border-red-500' : 'border-gray-300'}`}
+              className={`${dateError ? 'input-style-error' : 'input-style-standard'}`}
             >
               <option value="" disabled hidden>Month</option>
               {months.map((month) => (
@@ -88,10 +86,9 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
               value={selectedYear}
               onChange={(e) => {
                 setSelectedYear(e.target.value)
-                onDateChange(selectedDay, selectedMonth, selectedYear)
+                onDateChange(selectedDay, selectedMonth, e.target.value)
               }}
-              className={`w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-400
-                  ${dateError ? 'border-red-500' : 'border-gray-300'}`}
+              className={`${dateError ? 'input-style-error' : 'input-style-standard'}`}
             >
               <option value="" disabled hidden>Year</option>
               {years.map((year) => (
@@ -108,7 +105,7 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
 
       </div>
       {dateError && (
-            <p className=" text-red-500 text-sm">{dateError}</p>
+            <p className=" text-error">{dateError}</p>
           )}
     </div>
   );
