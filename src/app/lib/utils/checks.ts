@@ -30,36 +30,43 @@ export async function checkRequest(req: NextRequest)
 }
 
 
-
-export function checkFileType(url: string)
-{
-    const extension = url.split('.').pop()?.toLowerCase()
-    switch (extension) 
-    {
+export function checkFileType(url: string) {
+    const extension = url.split('.').pop()?.toLowerCase();
+    console.log( extension)
+    switch (extension) {
+        // Image
         case 'jpg':
         case 'jpeg':
         case 'png':
         case 'gif':
-        return '📷'
+            return 'image/' + extension;
 
+        // Video
         case 'mp4':
         case 'mkv':
         case 'avi':
-        return '🎥'
+            return 'video/' + extension
 
+        // Audio
         case 'mp3':
         case 'wav':
         case 'ogg':
-        return '🎵'
+            return 'audio/' + extension
 
+        // Files
         case 'pdf':
         case 'doc':
         case 'docx':
         case 'txt':
-        return '📄'
+        case 'zip':
+        case 'rar':
+        case 'exe':
+        case 'xml':
+        case 'json':
+            return 'application/' + extension
 
         default:
-        return '📎'
+            return 'unknown/' + extension
     }
 }
 

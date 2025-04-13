@@ -23,7 +23,8 @@ export const updateUserDTO = z.object(
     city: z.string().min(3, 'City is required.'),
     country: z.string().min(5, 'Country is required.'),
     followerCount: z.number(),
-    postCount: z.number()
+    postCount: z.number(),
+    profileImg: z.string().url()
 }).partial()
 
 export type UpdateUserDTO = z.infer<typeof updateUserDTO>

@@ -12,11 +12,10 @@ export async function deletePostService(postId: string, req: NextRequest)
 
         await connectToDB()
 
-        const deletedPost = await Post.findOneAndDelete(
-        {
-            _id: postId, 
-            userId: userId
-        })
+        console.log(postId)
+        const deletedPost = await Post.findOne(
+        { _id: postId, userId }, 
+        "file.url")
 
         if (!deletedPost) 
         {
@@ -24,12 +23,20 @@ export async function deletePostService(postId: string, req: NextRequest)
             { message: 'Post not found or user not is author' },
             { status: 404 })
         }
-        else
-        {
+            if(deletedPost.file.url) 
+            {
+                const url = new URL(deletedPost.file.url)
+                
+                await fetch(`http://localhost:3000/api/aws/delete-file`, {
+                  method: "DELETE",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({url}),
+                })
+            }
+            await Post.findByIdAndDelete(postId)
             return NextResponse.json(
-            { message: 'Post deleted successfully' }, 
+            { message: 'Post deleted successfully', userId}, 
             { status: 200 })
-        }
     }
     catch (error) 
     {

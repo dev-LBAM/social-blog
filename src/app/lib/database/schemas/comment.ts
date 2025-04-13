@@ -13,15 +13,26 @@ const CommentSchema = new Schema({
         ref: 'User', 
         required: true,
     },
+    parentCommentId: 
+    {
+        type: Schema.Types.ObjectId, 
+        ref: 'Comment',
+        required: false, 
+    },
     text:
     {
         type: String,
         minlength: 1,
-        maxlength: 500,
+        maxlength: 1500,
         required: false,
     },
     file: 
     {
+        name: 
+        {
+            type: String,
+            required: false
+        },
         url: 
         {
             type: String,
@@ -33,12 +44,13 @@ const CommentSchema = new Schema({
             required: false
         }
     },
-    edited:
+    editAt:
     {
-        type: Boolean,
+        type: Date,
         required: false,
-        default: false
     },
+    likesCount: { type: Number, default: 0 },
+    commentsCount: { type: Number, default: 0 },
 },
 {
     timestamps: true,
@@ -48,8 +60,15 @@ interface IComment extends Document
 {
     postId: Schema.Types.ObjectId
     userId: Schema.Types.ObjectId
-    comment: string
-    mediaUrl: string
+    text: string
+    editAt: Date
+    likesCount: number
+    answersCount: number
+    file:{
+        name: string,
+        url: string,
+        type: string
+    }
 }
 
 CommentSchema.index({userId: 1, createdAt: -1})

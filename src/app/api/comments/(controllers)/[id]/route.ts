@@ -23,7 +23,7 @@ import { getCommentService } from '../../(services)/get.service'
 export async function GET(req: NextRequest)  /* GET COMMENTS */
 {
     const postId = req.nextUrl.pathname.split('/')[3]
-
+   
     const response = await getCommentService(postId, req)
     return response
 }

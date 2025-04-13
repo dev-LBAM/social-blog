@@ -1,9 +1,9 @@
 
 import { useCallback, useEffect, useState } from "react"
 import axios from "axios"
-import { loginUserDTO } from "../api/auth/login/(dtos)/login-user.dto"
-import Button from "./ui/Button"
 import { useRouter } from "next/navigation"
+import { loginUserDTO } from "@/app/api/auth/login/(dtos)/login-user.dto"
+import Button from "../ui/Button"
 
 interface LoginFormData 
 {
@@ -84,14 +84,14 @@ export default function LoginForm()
       return setTimeout(() => 
       {
 
-      router.push('/feed');
+      router.push('/feed')
         setLoading(false)
       }, 1000)
     }
     catch
     {
       setFormSucessColor(false)
-      setFormSucessText("Email or password incorrect")
+      setFormSucessText("Incorrect email or password!")
       return setTimeout(() => 
       {
         setLoading(false)

@@ -41,10 +41,10 @@ export async function createAuth(userId: string) //CREATE AUTHENTICATION
     } 
     catch (error) 
     {
-        console.error('Error generating access: ', error)
+        console.error('Error to generate access: ', error)
 
         return NextResponse.json(
-        { error: 'Internal server error, please try again later' }, 
+        { message: 'Internal server error, please try again later' }, 
         { status: 500 })
     }
 }
@@ -57,7 +57,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
     if (!accessToken && !refreshToken) 
     {
         return NextResponse.json(
-        { error: 'Unauthorized.' }, 
+        { message: 'Unauthorized' }, 
         { status: 401 })
     }
 
@@ -70,7 +70,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         if (!userExists)
         {
             return NextResponse.json(
-            { message: 'User not found.' },
+            { message: 'User not found' },
             { status: 401 })
         }
     
@@ -83,7 +83,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         if (!refreshToken) 
         {
             return NextResponse.json(
-            { error: 'Authentication unauthorized or expired.' },
+            { message: 'Authentication unauthorized or expired' },
             { status: 401 })
         }
 
@@ -97,7 +97,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
             if (!userExists)
             {
                 return NextResponse.json(
-                { message: 'User not found.' },
+                { message: 'User not found' },
                 { status: 401 })
             }
 
@@ -120,7 +120,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         catch 
         {
             return NextResponse.json(
-            { error: 'Authentication refresh unauthorized' }, 
+            { message: 'Authentication refresh unauthorized' }, 
             { status: 401 })
         }
     }
@@ -130,7 +130,6 @@ export async function parseAuth(req: NextRequest) // GET RESPONSE OF ( VERIFY AU
 {
     const authUser = await verifyAuth(req)
     if(authUser.status === 401) return authUser
-
     const { userId } = await authUser.json()
     return userId
 }

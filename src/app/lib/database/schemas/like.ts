@@ -1,10 +1,14 @@
 import mongoose, { Schema } from 'mongoose'
   
 const LikeSchema = new Schema({
-    postId: 
+    targetId: 
     { 
         type: Schema.Types.ObjectId, 
-        ref: 'Post', 
+        required: true 
+    },
+    targetType: 
+    { 
+        type: String, enum: ["Post", "Comment"],
         required: true 
     },
     userId: 
@@ -20,7 +24,8 @@ const LikeSchema = new Schema({
   
 interface ILike extends Document 
 {
-    postId: Schema.Types.ObjectId
+    targetId: Schema.Types.ObjectId
+    targetType: "Post" | "Comment"
     userId: Schema.Types.ObjectId
 }
   

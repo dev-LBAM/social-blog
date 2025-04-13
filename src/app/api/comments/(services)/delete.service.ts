@@ -21,7 +21,7 @@ export async function deleteCommentService(commentId: string, req: NextRequest)
         if (!deletedComment) 
         {
             return NextResponse.json(
-            { message: 'Comment not found or user not is author' },
+            { message: 'Comment not found or you not is author' },
             { status: 404 })
         }
           

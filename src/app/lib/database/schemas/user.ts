@@ -46,10 +46,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  profileImg:
-  {
+  profileImg: {
     type: String,
-    required: false
+    default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
   },
   followersCount: { type: Number, default: 0, required: false },
   postsCount: { type: Number,  default: 0, required: false }
@@ -67,7 +66,6 @@ interface IUser extends Document
   country: string
   state: string
   city: string
-  profileImg?: string
   followerCount?: number
   postCount?: number
 }

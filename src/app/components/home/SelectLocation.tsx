@@ -122,7 +122,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
         )}
         </select>
         {locationError && !selectedCountry && (
-          <p className=" text-red-500 text-sm">Country is required.</p>
+          <p className="text-error">Country is required.</p>
         )}
       </div>
 
@@ -143,7 +143,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
             ))}
           </select>
           {locationError && !selectedState && (
-            <p className=" text-red-500 text-sm">State is required.</p>
+            <p className="text-error">State is required.</p>
           )}
         </div>
       )}
@@ -165,7 +165,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
             ))}
           </select>
           {locationError && !selectedCity && (
-            <p className=" text-red-500 text-sm">City is required.</p>
+            <p className="text-error">City is required.</p>
           )}
         </div>
       )}

@@ -1,45 +1,42 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
-import { parseAuth } from '@/app/lib/utils/auths'
 import { z } from 'zod'
 import Comment from '@/app/lib/database/schemas/comment'
 import { commentDTO } from '../(dtos)/comment.dto'
-import { checkFileType } from '@/app/lib/utils/checks'
+import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 
 
 export async function updateCommentService(commentId: string, req: NextRequest)
 {
   try 
   {
-    const userId = await parseAuth(req)
-    if(userId.status === 401) return userId
+    const validationRequest = await checkRequest(req)
+    if (validationRequest instanceof NextResponse) return validationRequest
 
-    const body = await req.json()
-    
-    if (!body || body.comment.trim().length === 0 && body.mediaUrl.trim().length === 0) 
-    {
-      return NextResponse.json(
-      { message: 'Update comment canceled: empty content' },
-      { status: 204 })
-    }
+    const { userId, body } = validationRequest
 
     commentDTO.parse(body)
     
     await connectToDB()
     const updatedComment = await Comment.findOneAndUpdate(
-    {_id: commentId, userId: userId},
-    { $set:
+      { _id: commentId, userId: userId },
       {
-          text: body.text,
-          file:
-          {
-              url: body.fileUrl,
-              type: checkFileType(body.fileUrl)
-          },
-          edited: true
-      }
-    },
-    { new: true })
+        $set: {
+          text: body.text ? body.text : undefined,
+          editAt: new Date(),
+        },
+        ...(body.fileUrl
+          ? {
+              file: {
+                url: body.fileUrl,
+                name: body.fileName || undefined,
+                type: checkFileType(body.fileUrl),
+              },
+            }
+          : { $unset: { file: 1 } }),
+      },
+      { new: true }
+    )
 
     if(!updatedComment)
     {
@@ -58,9 +55,10 @@ export async function updateCommentService(commentId: string, req: NextRequest)
   {
     if (error instanceof z.ZodError)
     {
+      const errorMessages = error.errors.map(e => e.message)
       return NextResponse.json(
-      { message: 'Validation error', details: error.errors }, 
-      { status: 400 })                 
+      { message: errorMessages, details: error.errors },
+      { status: 400 })               
     } 
     else 
     {

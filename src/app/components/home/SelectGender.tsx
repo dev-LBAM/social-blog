@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from "react"
 
 interface SelectGenderProps {
-  onGenderChange: (gender: string) => void;
-  genderError: string;
-  initialGender: string;
+  onGenderChange: (gender: string) => void
+  genderError: string
+  initialGender: string
 }
 
 export default function SelectGender({ onGenderChange, genderError, initialGender = "" }: SelectGenderProps) {
@@ -37,7 +37,7 @@ export default function SelectGender({ onGenderChange, genderError, initialGende
           </div>
         </div>
       </div>
-      {genderError && <p className="text-red-500 text-sm">{genderError}</p>}
+      {genderError && <p className="text-error">{genderError}</p>}
     </div>
-  );
+  )
 }

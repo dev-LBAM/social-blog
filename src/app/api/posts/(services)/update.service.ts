@@ -16,22 +16,26 @@ export async function updatePostService(postId: string, req: NextRequest)
         postDTO.parse(body)
         
         await connectToDB()
-
         const updatedPost = await Post.findOneAndUpdate(
-        {_id: postId, userId: userId},
-        { $set:
-          {
-              text: body.text,
-              file:
-              {
+        { _id: postId, userId: userId },
+        {
+          $set: {
+            text: body.text ? body.text : undefined,
+            editAt: new Date(),
+          },
+          ...(body.fileUrl
+            ? {
+                file: {
                   url: body.fileUrl,
-                  type: checkFileType(body.fileUrl)
-              },
-              edited: true
-          }
+                  name: body.fileName || undefined,
+                  type: checkFileType(body.fileUrl),
+                },
+              }
+            : { $unset: { file: 1 } }),
+            categories: body.categories ?? []
         },
-        { new: true})
-
+        { new: true }
+      )
         if(!updatedPost)
         {
           return NextResponse.json(
@@ -49,9 +53,10 @@ export async function updatePostService(postId: string, req: NextRequest)
       {
         if (error instanceof z.ZodError)
         {
+          const errorMessages = error.errors.map(e => e.message)
           return NextResponse.json(
-          { message: 'Validation error', details: error.errors }, 
-          { status: 400 })                 
+          { message: errorMessages, details: error.errors },
+          { status: 400 })                
         } 
         else 
         {

@@ -12,10 +12,9 @@ export async function loginUserService(req: NextRequest)
         const body = await req.json()
         
         const validatedData = loginUserDTO.parse(body)
-        
         await connectToDB()
         const validatedUser = await User.findOne(
-            { email: validatedData.email }
+            { email: validatedData.email.trim().toLowerCase() }
         )
 
         if(!validatedUser)

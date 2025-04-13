@@ -1,12 +1,12 @@
 
 import { useCallback, useEffect, useState } from "react"
-import SelectDate from "./ui/SelectDate"
-import SelectLocation from "./ui/SelectLocation"
 import axios from "axios"
-import { registerUserDTO } from "../api/auth/register/(dtos)/register.dto"
-import Buttom from "./ui/Button"
-import SelectGender from "./ui/SelectGender"
 import { useRouter } from "next/navigation"
+import { registerUserDTO } from "@/app/api/auth/register/(dtos)/register.dto"
+import SelectGender from "./SelectGender"
+import SelectDate from "./SelectDate"
+import SelectLocation from "./SelectLocation"
+import Buttom from "../ui/Button"
 
 
 interface RegisterFormData 
@@ -44,12 +44,11 @@ export default function RegisterForm()
       const storedData = sessionStorage.getItem("registerFormData") /* Get data of in session storage and put they into input for user dont need retype */
 
       if (storedData) {
-        const data = JSON.parse(storedData);
-  
-        // Garantir que nenhum campo seja null ou undefined
+        const data = JSON.parse(storedData)
+
         return {
           name: data.name || "",
-          email: data.email || "", // Aqui o email é diretamente atribuído, mas pode ser vazio se não houver
+          email: data.email || "", 
           password: data.password || "",
           confirmPassword: data.confirmPassword || "",
           gender: data.gender || "",
@@ -60,7 +59,7 @@ export default function RegisterForm()
           country: data.country || "",
           state: data.state || "",
           city: data.city || ""
-        };
+        }
       }
     }
     return {
@@ -98,7 +97,7 @@ export default function RegisterForm()
   const handleDateChange = useCallback((day: string, month: string, year: string) => 
   {
     setDateError("")
-    setFormData((prevState) => ({...prevState, day, month, year,}));
+    setFormData((prevState) => ({...prevState, day, month, year,}))
 
     if(day && month && year) 
     {
@@ -189,17 +188,17 @@ export default function RegisterForm()
     {
       if (error instanceof Error) 
       {
-        setFormSucessColor(false);
-        setFormSucessText(error.message); // Agora pode acessar .message com segurança
+        setFormSucessColor(false)
+        setFormSucessText(error.message)
       } 
       else 
       {
-        setFormSucessColor(false);
-        setFormSucessText("Unknown error!");
+        setFormSucessColor(false)
+        setFormSucessText("Unknown error!")
       }
       return setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+        setLoading(false)
+      }, 1000)
     }
   }
 

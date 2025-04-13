@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const verificationSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   code: { type: String, required: true, unique: true },
-  expiresAt: { type: Date, default: () => new Date(Date.now() + 10 * 60 * 1000) }, // Expira em 10 min
+  expiresAt: { type: Date, default: () => new Date(Date.now() + 10 * 60 * 1000) },
 });
 
 verificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });

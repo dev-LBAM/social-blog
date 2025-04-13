@@ -12,7 +12,8 @@ export async function registerUserService(validatedData: RegisterUserDTO)
     const newUser = new User({
         ...validatedData,
         password: hashPass,
-        birthDate: birthDate
+        birthDate: birthDate,
+        profileImg: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
     })
     
     const registeredData = await newUser.save()

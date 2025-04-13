@@ -1,65 +1,58 @@
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { parseAuth } from '@/app/lib/utils/auths'
 import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
 import Post from '@/app/lib/database/schemas/post'
+import Comment from '@/app/lib/database/schemas/comment'
 import Like from '@/app/lib/database/schemas/like'
 
-export async function createLikeService(postId: string, req: NextRequest)
-{
-
-    try 
-      {
+export async function createLikeService(targetId: string, targetType: "Post" | "Comment", req: NextRequest) {
+    try {
         const userId = await parseAuth(req)
-        if(userId.status === 401) return userId
+        if (userId.status === 401) return userId
 
-        const likePost = new Like({
-            postId,
-            userId,
-        })
-    
         await connectToDB()
 
-        const existingLike = await Like.findOne({ postId, userId })
+        const existingLike = await Like.findOne({ targetId, targetType, userId })
+
         if (existingLike) 
         {
-          return NextResponse.json(
-          { message: 'User already liked this post' },
-          { status: 409 })
-        }
+            if (targetType === "Post") 
+            {
+                await Post.findByIdAndUpdate(targetId, { $inc: { likesCount: -1 } })
+            } 
+            else 
+            {
+                await Comment.findByIdAndUpdate(targetId, { $inc: { likesCount: -1 } })
+            }
 
-        const updatedPost = await Post.findByIdAndUpdate(
-          postId,
-          { $inc: { likesCount: 1 } },
-          { new: true })
-      
-        if (!updatedPost) 
-        {
+            await Like.findOneAndDelete({ targetId, targetType, userId })
+
             return NextResponse.json(
-            { message: 'Post not found' },
-            { status: 404 })
+            { message: `User removed the like from this ${targetType.toLowerCase()}` },
+            { status: 200 })
         }
 
-        const savedLike = await likePost.save()
-        
-        return NextResponse.json(
-        { message: 'Like created successfully', like: savedLike, post: updatedPost }, 
-        { status: 201 })
-      } 
-      catch (error) 
-      {
-        if (error instanceof z.ZodError)
+        const like = new Like({ targetId, targetType, userId })
+        await like.save()
+
+        if (targetType === "Post") 
         {
-          return NextResponse.json(
-          { message: 'Validation failed', details: error.errors }, 
-          { status: 400 })                 
-        }
+            await Post.findByIdAndUpdate(targetId, { $inc: { likesCount: 1 } })
+        } 
         else 
         {
-          console.error('\u{274C} Internal server error while creating like: ', error)
-          return NextResponse.json(
-          { message: 'Internal server error, please try again later' },
-          { status: 500 })
-        }  
-      }
+            await Comment.findByIdAndUpdate(targetId, { $inc: { likesCount: 1 } })
+        }
+
+        return NextResponse.json(
+        { message: `Like created successfully on ${targetType.toLowerCase()}`, like },
+        { status: 201 })
+    } 
+    catch (error) 
+    {
+        console.error('Internal server error while creating like:', error)
+        return NextResponse.json(
+        { message: 'Internal server error, please try again later' },
+        { status: 500 })
+    }
 }

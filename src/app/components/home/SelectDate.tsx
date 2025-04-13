@@ -1,8 +1,8 @@
 
-import { useState } from "react";
+import { useState } from "react"
 
 interface SelectDateProps {
-  onDateChange: (day: string, month: string, year: string) => void;
+  onDateChange: (day: string, month: string, year: string) => void
   initialDay: string
   initialMonth: string
   initialYear: string
@@ -10,23 +10,20 @@ interface SelectDateProps {
 }
 
 export default function SelectDate({ onDateChange, dateError, initialDay, initialMonth, initialYear}: SelectDateProps) {
-  const currentYear = new Date().getFullYear();
-  const minYear = currentYear - 120; // Ano mínimo para idade de 130 anos
-  const [selectedDay, setSelectedDay] = useState<string>(initialDay);
-  const [selectedMonth, setSelectedMonth] = useState<string>(initialMonth);
-  const [selectedYear, setSelectedYear] = useState<string>(initialYear);
+  const currentYear = new Date().getFullYear()
+  const minYear = currentYear - 120 
+  const [selectedDay, setSelectedDay] = useState<string>(initialDay)
+  const [selectedMonth, setSelectedMonth] = useState<string>(initialMonth)
+  const [selectedYear, setSelectedYear] = useState<string>(initialYear)
 
-  // Gerar os dias de 1 a 31
-  const days = Array.from({ length: 31 }, (_, index) => (index + 1).toString());
+  const days = Array.from({ length: 31 }, (_, index) => (index + 1).toString())
 
-  // Gerar os meses de 1 a 12
-  const months = Array.from({ length: 12 }, (_, index) => (index + 1).toString());
+  const months = Array.from({ length: 12 }, (_, index) => (index + 1).toString())
 
-  // Gerar os anos desde o ano mínimo até o ano atual
   const years = Array.from(
     { length: currentYear - minYear + 1 },
     (_, index) => (minYear + index).toString()
-  ).reverse();
+  ).reverse()
 
   return (
     <div>
@@ -39,9 +36,8 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
       <div className="flex items-center gap-4 text-placeholder">
 
 
-        {/* Select de Dia, Mês e Ano na mesma linha */}
         <div className="flex gap-4 w-full">
-          {/* Select de Dia */}
+          {/* Select Day */}
           <div className="flex-1">
             <select
               required
@@ -61,7 +57,7 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
             </select>
           </div>
 
-          {/* Select de Mês */}
+          {/* Select Month */}
           <div className="flex-1">
             <select
               value={selectedMonth}
@@ -80,7 +76,7 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
             </select>
           </div>
 
-          {/* Select de Ano */}
+          {/* Select Year */}
           <div className="flex-1">
             <select
               value={selectedYear}
@@ -108,5 +104,5 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
             <p className=" text-error">{dateError}</p>
           )}
     </div>
-  );
+  )
 }

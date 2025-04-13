@@ -12,10 +12,15 @@ const PostSchema = new Schema({
         type: String,
         required: false,
         minlength: 1,
-        maxlength: 500,
+        maxlength: 10000,
     },
     file: 
     {
+        name: 
+        {
+            type: String,
+            required: false
+        },
         url: 
         {
             type: String,
@@ -27,12 +32,26 @@ const PostSchema = new Schema({
             required: false
         }
     },
-    edited:
+    editAt:
     {
-        type: Boolean,
+        type: Date,
         required: false,
-        default: false
     },
+    categories: {
+        type: [String],
+        enum: [
+          "education",
+          "news",
+          "art",
+          "tech",
+          "lifestyle",
+          "personal",
+          "humor",
+          "insights",
+          "question"
+        ],
+        default: [],
+      },
     likesCount: { type: Number, default: 0 },
     commentsCount: { type: Number, default: 0 },
 },
@@ -40,13 +59,33 @@ const PostSchema = new Schema({
   timestamps: true,
 })
 
-interface IPost extends Document 
+export interface IPost extends Document 
 {
     userId: Schema.Types.ObjectId
-    content: string
-    mediaUrl: string
-    likesCount: number,
-    commentsCount: number,
+    text: string
+    file:{
+        name:string
+        url: string
+        type:string
+    }
+    editAt: Date
+    categories: {
+        type: [string],
+        enum: [
+          "education",
+          "news",
+          "art",
+          "tech",
+          "lifestyle",
+          "personal",
+          "humor",
+          "insights",
+          "question"
+        ],
+        default: [],
+      },
+    likesCount: number
+    commentsCount: number
 }
 
 PostSchema.index({userId: 1, createdAt: -1})

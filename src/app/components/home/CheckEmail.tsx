@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react"
 import axios from "axios"
-import Button from "./ui/Button"
-import { verifyEmailDTO } from "../api/auth/verify-email/(dtos)/verify-email.dto"
+import Button from "../ui/Button"
+import { verifyEmailDTO } from "../../api/auth/verify-email/(dtos)/verify-email.dto"
 import RegisterForm from "./RegisterForm"
+import { successToast } from "../ui/Toasts"
 
 interface EmailData 
 {
@@ -44,7 +45,6 @@ export default function CheckEmail()
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
   {
     const { name, value } = e.target
-    // Atualiza o código de entrada ao digitar
     
     setCodeInput((prevCode) => 
     {
@@ -93,7 +93,7 @@ export default function CheckEmail()
     catch
     {
       setFormSucessColor(false)
-      setFormSucessText("Email already exists!")
+      setFormSucessText("Email already exists...Try other!")
       return setTimeout(()=> 
       {
         setLoading(false)
@@ -120,7 +120,7 @@ export default function CheckEmail()
     {
       await axios.post("/api/auth/verify-email/check", { email: formData.email, code: codeInput })
       setFormSucessColor(true)
-      setFormSucessText("Code confirmed successfully!")
+      setFormSucessText("Code confirmed successfully")
       return setTimeout(()=> 
       {
         setFormSucessText("")
@@ -158,8 +158,10 @@ export default function CheckEmail()
     try
     {
       await axios.post("/api/auth/verify-email/send", { email: formData.email})
+
+      successToast("Resending Code", "Your code was sent again sucessfully")
       setFormSucessColor(true)
-      setFormSucessText("Email code sended again sucessfully!")
+      setFormSucessText("Code resend sucessfully")
       setResendTime(60)
     }
     catch
@@ -236,21 +238,21 @@ export default function CheckEmail()
         </form>
       ) : 
       (
-        <form className="space-y-4 rounded-xl" noValidate>
+        <form className="space-y-4 rounded-xl " noValidate>
 
           <div>
 
             <label htmlFor={"email"} className="text-input-title block text-center">
               The code was send to email:
-              <div className="items-center justify-center pt-1 rounded-x1 text-center text-sm">
+              <div className="items-center justify-center pt-1 rounded-x1 text-center">
 
-                <p className="block text-black font-serif text-sm">{formData.email}</p>
+                <p className="block text-neutral-900 font-serif">{formData.email}</p>
 
                 <div className="flex gap-2 pt-3">
                   <p>Not your email?</p>
                   <button 
                     type="button"
-                    className=" text-orange-200 drop-shadow-sm font-light text-center underline transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer"
+                    className=" text-neutral-700 drop-shadow-sm font-light text-center underline transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer"
                     onClick={() => 
                     {
                       setEmailCode(false)
@@ -266,7 +268,7 @@ export default function CheckEmail()
                   <button 
                     type="button"
                     disabled={resendTime >= 1}
-                    className={`text-orange-200 drop-shadow-sm font-light text-sm text-center underline 
+                    className={`text-neutral-700 drop-shadow-sm font-light text-center underline 
                     ${resendTime >= 1 ? 'opacity-50 cursor-not-allowed' : 'transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer'}`}
                     onClick={handleClickResend} 
                   >
@@ -288,10 +290,10 @@ export default function CheckEmail()
                 name={inputName}
                 type="text"
                 maxLength={1}
-                value={codeInput[index] || ""} // Usando o estado codeInput para controlar os valores digitados
+                value={codeInput[index] || ""}
                 onChange={handleChange}
-                onKeyUp={(e) => handleAutoFocus(e, index)} // Move o foco para o próximo input ao digitar
-                onPaste={(e) => handlePaste(e)} // Lida com o evento de colar código
+                onKeyUp={(e) => handleAutoFocus(e, index)} 
+                onPaste={(e) => handlePaste(e)} 
                 className={`${formSucessText && formSucessColor === false ? "input-style-error" : "input-style-standard"} text-center`}
               />
             ))}

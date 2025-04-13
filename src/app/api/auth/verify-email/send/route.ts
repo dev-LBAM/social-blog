@@ -11,7 +11,6 @@ export async function POST( req: NextRequest )
 {
     try 
     {
-        
         const body = await req.json()
         const email = body.email
         verifyEmailDTO.parse(body)
@@ -23,7 +22,7 @@ export async function POST( req: NextRequest )
 
         if(!emailExists)
         {
-            const code = Math.floor(100000 + Math.random() * 900000).toString() // Gerar código de 6 dígitos
+            const code = Math.floor(100000 + Math.random() * 900000).toString() 
         
             const existingVerification = await VerifyEmail.findOne({ email })
             if(existingVerification) 
@@ -37,7 +36,7 @@ export async function POST( req: NextRequest )
             sendVerificationEmail(email, code)
           
             return NextResponse.json(
-            { message: 'Email code sended successfully!'}, 
+            { message: 'Email code sent successfully'}, 
             { status: 201 })
         }
         else
