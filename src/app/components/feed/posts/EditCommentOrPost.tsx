@@ -101,37 +101,46 @@ export default function EditCommentOrPost({ fileEdit, textProp, onCancelEdit, po
     let fileName = ''
       try
       {
-        if(file) 
-        {
-          if(fileEdit?.url)
+        console.log(file)
+        console.log(fileEdit)
+        console.log(process.env.INTERNAL_SECRET_KEY)
+        if(file && isEditing) 
           {
-            await fetch(`/api/aws/delete-file`, 
+            if(fileEdit?.url) 
             {
-              method: "DELETE",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ url: fileEdit.url }),
-            })
-          }
-
-          if (file) 
-          {
+              const url = new URL(fileEdit.url)
+              await fetch(`/api/aws/delete-file`, {
+                method: "DELETE",
+                headers: 
+                { 
+                  "Content-Type": "application/json" ,
+                },
+                credentials: 'include',
+                body: JSON.stringify({ url}),
+              })
+            }
+          
             const res = await uploadFile(file)
             if(res) 
             {
               fileUrl = res.fileUrl
               fileName = res.fileName
             }
-
           }
-          if (!file && fileEdit?.url) 
+          else if (!file && fileEdit?.url && isEditing === false) 
           {
+            const url = new URL(fileEdit.url)
             await fetch(`/api/aws/delete-file`, {
               method: "DELETE",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ url: fileEdit.url }),
+              headers: 
+              { 
+                "Content-Type": "application/json" ,
+              },
+              credentials: 'include',
+              body: JSON.stringify({url}),
             })
           }
-        }
+           
     
         const postData = {
           text: text?.trim() || undefined,

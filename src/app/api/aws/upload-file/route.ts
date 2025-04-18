@@ -47,11 +47,17 @@ export async function GET(req: NextRequest)
     { status: 400 })
   }
 
-  const extension = fileName?.split('.').pop()
-  const baseFileName = fileName?.split('.')[0]
+  const lastDotIndex = fileName?.lastIndexOf('.') ?? -1
+  let baseFileName = lastDotIndex !== -1 ? fileName?.substring(0, lastDotIndex) : fileName
+  const extension = fileName?.substring(lastDotIndex + 1)
   
+  baseFileName = baseFileName
+  ?.trim()
+  .toLowerCase()
+  .replace(/\s+/g, '-')          
+  .replace(/[^a-z0-9-_]/g, '') 
   const fileKey = `uploads/${baseFileName}-${Date.now()}.${extension}`
-
+  
   const params = 
   {
     Bucket: process.env.AWS_S3_BUCKET_NAME!,

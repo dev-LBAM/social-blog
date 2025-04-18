@@ -33,19 +33,6 @@ export async function updateCommentService(commentId: string, req: NextRequest)
       { status: 404 })
     }
 
-    if (!body.fileUrl && existingComment.file?.url) 
-    {
-      const url = new URL(existingComment.file.url)
-      await fetch(`http://localhost:3000/api/aws/delete-file`, {
-        method: "DELETE",
-        headers: 
-        { 
-          "Content-Type": "application/json" ,
-          "x-internal-secret": process.env.INTERNAL_SECRET_KEY!
-        },
-        body: JSON.stringify({ url }),
-      })
-    }
     await connectToDB()
     const updatedComment = await Comment.findOneAndUpdate(
     { _id: commentId, userId: userId },

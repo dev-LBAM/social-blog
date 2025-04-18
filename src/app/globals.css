@@ -7,11 +7,11 @@ body {
 }
 
 .text-placeholder {
-  @apply bg-neutral-300
+  @apply text-neutral-300
 }
 
 .dark .text-placeholder {
-  @apply bg-neutral-800
+  @apply text-neutral-800
 }
 
 .text-color {
@@ -55,11 +55,11 @@ body {
 }
 
 .input-style-error {
-  @apply w-full p-2 border rounded-md border-red-500 focus:outline-none focus:ring-1 focus:ring-neutral-600 shadow-md;
+  @apply w-full p-2 border rounded-sm text-neutral-700 border-red-500 focus:outline-none focus:ring-1 focus:ring-neutral-600 shadow-md;
 }
 
 .dark .input-style-error {
-  @apply border-red-700 focus:ring-neutral-600;
+  @apply w-full p-2 border rounded-sm text-neutral-300 border-red-700 focus:outline-none focus:ring-1 focus:ring-neutral-600 shadow-md;
 }
 
 .text-success {

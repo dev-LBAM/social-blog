@@ -27,19 +27,21 @@ export async function deletePostService(postId: string, req: NextRequest)
             { status: 404 })
         }
 
-        if(deletedPost.file.url) 
+        if (deletedPost.file.url) 
         {
             const url = new URL(deletedPost.file.url)
+            const cookies = req.headers.get('cookie')
             
-            await fetch(`http://localhost:3000/api/aws/delete-file`, {
+            await fetch(`http://localhost:3000/api/aws/delete-file`, 
+            {
                 method: "DELETE",
                 headers: 
                 { 
-                    "Content-Type": "application/json" ,
-                    "x-internal-secret": process.env.INTERNAL_SECRET_KEY!
+                    "Content-Type": "application/json",
+                    ...(cookies ? { "Cookie": cookies } : {}) 
                 },
-                body: JSON.stringify({url}),
-            })
+                body: JSON.stringify({ url }),
+            });
         }
 
         await Post.findByIdAndDelete(postId)

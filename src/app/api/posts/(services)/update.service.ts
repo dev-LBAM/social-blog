@@ -31,21 +31,6 @@ export async function updatePostService(postId: string, req: NextRequest)
           { status: 404 })
         }
 
-        console.log(body.fileUrl, existingPost.file?.url)
-        if (!body.fileUrl && existingPost.file?.url) 
-        {
-          const url = new URL(existingPost.file.url)
-          await fetch(`http://localhost:3000/api/aws/delete-file`, {
-            method: "DELETE",
-            headers: 
-            { 
-              "Content-Type": "application/json" ,
-              "x-internal-secret": process.env.INTERNAL_SECRET_KEY!
-            },
-            body: JSON.stringify({ url }),
-          })
-        }
-
         await connectToDB()
         const updatedPost = await Post.findOneAndUpdate(
         { _id: postId, userId: userId },

@@ -27,19 +27,21 @@ export async function deleteCommentService(commentId: string, req: NextRequest)
             { status: 404 })
         }
 
-        if(deletedComment.file.url) 
+        if (deletedComment.file.url) 
         {
-            const url = new URL(deletedComment.file.url)
-            
-            await fetch(`http://localhost:3000/api/aws/delete-file`, {
+            const url = new URL(deletedComment.file.url);
+            const cookies = req.headers.get('cookie');  // pega os cookies do request
+        
+            await fetch(`http://localhost:3000/api/aws/delete-file`, 
+            {
                 method: "DELETE",
                 headers: 
                 { 
-                    "Content-Type": "application/json" ,
-                    "x-internal-secret": process.env.INTERNAL_SECRET_KEY!
+                    "Content-Type": "application/json",
+                    ...(cookies ? { "Cookie": cookies } : {})  // só adiciona se existir
                 },
-                body: JSON.stringify({url}),
-            })
+                body: JSON.stringify({ url }),
+            });
         }
           
         const updatedPost = await Post.findByIdAndUpdate(
