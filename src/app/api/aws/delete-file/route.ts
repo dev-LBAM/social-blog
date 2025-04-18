@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import AWS from "aws-sdk"
-import { verifyAuth } from "@/app/lib/utils/auths"
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -11,10 +10,13 @@ const s3 = new AWS.S3({
 export async function DELETE(req: NextRequest) {
   try 
   {
-    const auth = await verifyAuth(req)
-    if (auth.status === 401) 
-    {
-        return auth
+    const internalSecret = req.headers.get("x-internal-secret")
+
+    if (internalSecret !== process.env.INTERNAL_SECRET_KEY) {
+      return NextResponse.json(
+        { error: "Unauthorized" }, 
+        { status: 401 }
+      )
     }
     const { url } = await req.json()
 
@@ -24,7 +26,7 @@ export async function DELETE(req: NextRequest) {
       { error: "File URL is required" }, 
       { status: 400 })
     }
-    console.log('url', url)
+
     const parsedUrl = new URL(url)
     const key = parsedUrl.pathname.substring(1)
     const params = 
@@ -34,7 +36,6 @@ export async function DELETE(req: NextRequest) {
     }
 
     await s3.deleteObject(params).promise()
-    console.log("deleted")
     return NextResponse.json({ message: "File deleted succesfully" })
   } 
   catch (error) 

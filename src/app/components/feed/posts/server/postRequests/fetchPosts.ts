@@ -5,8 +5,6 @@ export default async function fetchInitialPosts(userId?: string) {
       method: 'GET',
       cache: "no-store",
     })
-    
-    console.log(userId)
 
     if(!res.ok) 
     {

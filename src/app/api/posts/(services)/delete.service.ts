@@ -33,7 +33,11 @@ export async function deletePostService(postId: string, req: NextRequest)
             
             await fetch(`http://localhost:3000/api/aws/delete-file`, {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: 
+                { 
+                    "Content-Type": "application/json" ,
+                    "x-internal-secret": process.env.INTERNAL_SECRET_KEY!
+                },
                 body: JSON.stringify({url}),
             })
         }

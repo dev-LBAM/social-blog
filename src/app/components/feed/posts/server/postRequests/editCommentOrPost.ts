@@ -17,6 +17,7 @@ export default async function editCommentOrPost({ postId, commentId, data }: Edi
       {
         'Content-Type': 'application/json',
       },
+      credentials:'include',
       body: JSON.stringify(data),
     })
 

@@ -51,12 +51,12 @@ export async function createAuth(userId: string) //CREATE AUTHENTICATION
 
 export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
 {
-    console.log('auth')
     const accessToken = req.cookies.get('accessToken')?.value
     const refreshToken = req.cookies.get('refreshToken')?.value
 
     if (!accessToken && !refreshToken) 
     {
+
         return NextResponse.json(
         { message: 'Access denied. Please log in.' }, 
         { status: 401 })

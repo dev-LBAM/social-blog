@@ -38,7 +38,11 @@ export async function updateCommentService(commentId: string, req: NextRequest)
       const url = new URL(existingComment.file.url)
       await fetch(`http://localhost:3000/api/aws/delete-file`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: 
+        { 
+          "Content-Type": "application/json" ,
+          "x-internal-secret": process.env.INTERNAL_SECRET_KEY!
+        },
         body: JSON.stringify({ url }),
       })
     }

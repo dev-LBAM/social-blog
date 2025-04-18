@@ -34,8 +34,10 @@ export default function CommentMenu({ commentId, postId, parentId, onEditClick }
   const deleteComment = async () => {
     try 
     {
+
         const res = await fetch(`/api/comments/${commentId}`, {
         method: "DELETE",
+        credentials: 'include'
         })
 
         if(res.status === 401) 

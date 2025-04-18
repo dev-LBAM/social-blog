@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import AWS from 'aws-sdk'
 import { verifyAuth } from '@/app/lib/utils/auths'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
 
 const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
@@ -9,12 +10,31 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
 })
 
+const rateLimiter = new RateLimiterMemory({
+  points: 2,
+  duration: 60,
+})
+
 export async function GET(req: NextRequest) 
 {
   const auth = await verifyAuth(req)
   if (auth.status === 401) 
   {
       return auth
+  }
+
+  const userIp = req.headers.get("x-forwarded-for") || 'anonymous'
+
+  try 
+  {
+    await rateLimiter.consume(userIp)
+  } 
+  catch 
+  {
+    return NextResponse.json(
+      { message: 'You have exceeded the file upload limit per minute. Please try again later!' }, 
+      { status: 429 }
+    )
   }
 
   const fileType = req.headers.get('File-Type') 
@@ -47,6 +67,7 @@ export async function GET(req: NextRequest)
   } 
   catch (error) 
   {
+
     console.error('Error generating signed URL:', error)
     return NextResponse.json({ message: 'Error generating signed URL' }, { status: 500 })
   }
