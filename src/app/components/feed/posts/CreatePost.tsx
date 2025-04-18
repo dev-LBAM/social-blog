@@ -195,7 +195,7 @@ export default function CreatePost()
           alt="Preview Image"
           width={400}
           height={200}
-          className="mt-1 w-full cursor-pointer rounded-lg"
+          className="mt-1cursor-pointer rounded-lg"
           onClick={() => setSelectedImage(filePreview)}
         />
       )}

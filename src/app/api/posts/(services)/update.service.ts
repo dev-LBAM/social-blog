@@ -31,6 +31,7 @@ export async function updatePostService(postId: string, req: NextRequest)
           { status: 404 })
         }
 
+        console.log(body.fileUrl, existingPost.file?.url)
         if (!body.fileUrl && existingPost.file?.url) 
         {
           const url = new URL(existingPost.file.url)

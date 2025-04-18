@@ -24,7 +24,7 @@ export async function DELETE(req: NextRequest) {
       { error: "File URL is required" }, 
       { status: 400 })
     }
-
+    console.log('url', url)
     const parsedUrl = new URL(url)
     const key = parsedUrl.pathname.substring(1)
     const params = 
@@ -34,7 +34,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     await s3.deleteObject(params).promise()
-    
+    console.log("deleted")
     return NextResponse.json({ message: "File deleted succesfully" })
   } 
   catch (error) 
