@@ -10,12 +10,11 @@ body {
 }
 
 .text-placeholder {
-  color: #333333;
+  @apply bg-neutral-300
 }
 
 .dark .text-placeholder {
-  color: #cccccc;
-  /* Cor para o modo escuro */
+  @apply bg-neutral-800
 }
 
 .text-color {
@@ -48,7 +47,6 @@ body {
 
 .dark .text-input-title {
   @apply text-neutral-200;
-  /* Ajuste de cor para o modo escuro */
 }
 
 .input-style-standard {
@@ -57,7 +55,6 @@ body {
 
 .dark .input-style-standard {
   @apply text-neutral-300 border-neutral-500 focus:ring-neutral-600;
-  /* Ajustes para o modo escuro */
 }
 
 .input-style-error {
@@ -66,7 +63,6 @@ body {
 
 .dark .input-style-error {
   @apply border-red-700 focus:ring-neutral-600;
-  /* Ajustes para o modo escuro */
 }
 
 .text-success {
@@ -75,7 +71,6 @@ body {
 
 .dark .text-success {
   @apply text-green-300;
-  /* Ajuste de cor para o modo escuro */
 }
 
 .text-error {
@@ -84,5 +79,4 @@ body {
 
 .dark .text-error {
   @apply text-red-400;
-  /* Ajuste de cor para o modo escuro */
 }

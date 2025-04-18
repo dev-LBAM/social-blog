@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
-import { parseAuth } from "./auths"
 
 
 export async function checkRequest(req: NextRequest)
 {
-    const userId = await parseAuth(req)
-    if(userId.status === 401) return userId
-
     let body
     try 
     {
@@ -26,13 +22,12 @@ export async function checkRequest(req: NextRequest)
         { status: 422 })
     }
 
-    return { userId, body }
+    return { body }
 }
 
 
 export function checkFileType(url: string) {
     const extension = url.split('.').pop()?.toLowerCase();
-    console.log( extension)
     switch (extension) {
         // Image
         case 'jpg':

@@ -8,8 +8,16 @@ export default async function uploadFile( file: File) {
             "File-Name": file.name,
           },
         })
-        if (!signedUrlFile.ok) throw new Error("Error to send archive")
-
+        if(signedUrlFile.status === 401) 
+          {
+            window.location.href = '/'
+          }
+          
+          if(!signedUrlFile.ok) 
+          {
+            const error = await signedUrlFile.json()
+            throw new Error(error.message)
+          }
         const { uploadUrl, fileUrl: s3FileUrl } = await signedUrlFile.json()
 
         const uploadFile = await fetch(uploadUrl, {
@@ -19,7 +27,19 @@ export default async function uploadFile( file: File) {
             "Content-Type": file.type,
           },
         })
-        if (!uploadFile.ok) throw new Error("Error to send archive")
+        
+        if(uploadFile.status === 401) 
+        {
+          window.location.href = '/'
+        }
+        
+        if(!uploadFile.ok) 
+        {
+          const error = await uploadFile.json()
+          throw new Error(error.message)
+        }
+
+
 
         return { fileUrl: s3FileUrl, fileName: file.name }
       } 

@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(req: NextRequest) {
   try 
   {
-
     const userId = await parseAuth(req)
     
     return NextResponse.json( userId )

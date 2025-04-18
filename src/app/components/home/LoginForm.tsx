@@ -57,7 +57,6 @@ export default function LoginForm()
     }
   },[formErrors])
 
-
   const handleSubmit = async (e: React.FormEvent) => 
   {
     e.preventDefault()
@@ -80,22 +79,27 @@ export default function LoginForm()
       const res = await axios.post("/api/auth/login", validatedData.data, {withCredentials: true})
       setFormSucessColor(true)
       setFormSucessText(res.data.message)
-      
+
       return setTimeout(() => 
       {
-
-      router.push('/feed')
-        setLoading(false)
-      }, 1000)
+        router.push('/feed')
+      }, 500)
     }
-    catch
+    catch(error: unknown)
     {
       setFormSucessColor(false)
-      setFormSucessText("Incorrect email or password!")
-      return setTimeout(() => 
+      if(axios.isAxiosError(error) && error.response) 
       {
-        setLoading(false)
-      }, 1000)
+        setFormSucessText(error.response.data.message)
+      } 
+
+    }
+    finally
+    {
+        setTimeout(() => 
+        {
+          setLoading(false)
+        }, 500)
     }
   }
 

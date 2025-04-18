@@ -38,7 +38,12 @@ export default function CommentMenu({ commentId, postId, parentId, onEditClick }
         method: "DELETE",
         })
 
-        if (!res.ok) 
+        if(res.status === 401) 
+        {
+          window.location.href = '/'
+        }
+          
+        if(!res.ok) 
         {
           const error = await res.json()
           throw new Error(error.message)

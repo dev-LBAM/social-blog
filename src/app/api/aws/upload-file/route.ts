@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import AWS from 'aws-sdk'
+import { verifyAuth } from '@/app/lib/utils/auths'
 
 const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
@@ -10,6 +11,12 @@ const s3 = new AWS.S3({
 
 export async function GET(req: NextRequest) 
 {
+  const auth = await verifyAuth(req)
+  if (auth.status === 401) 
+  {
+      return auth
+  }
+
   const fileType = req.headers.get('File-Type') 
   const fileName = req.headers.get('File-Name')
 

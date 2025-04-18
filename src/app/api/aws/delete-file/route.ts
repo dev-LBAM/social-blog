@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import AWS from "aws-sdk"
+import { verifyAuth } from "@/app/lib/utils/auths"
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -10,6 +11,11 @@ const s3 = new AWS.S3({
 export async function DELETE(req: NextRequest) {
   try 
   {
+    const auth = await verifyAuth(req)
+    if (auth.status === 401) 
+    {
+        return auth
+    }
     const { url } = await req.json()
 
     if (!url) 

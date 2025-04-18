@@ -124,14 +124,14 @@ export default function Posts({ initialData, userId }: { initialData: object, us
 
   const posts = data?.pages.flatMap((page) => page?.posts ?? []) || []
   const filteredPosts = posts.filter((post: Post) => {
-    const matchesText = post.text.toLowerCase().includes(query.toLowerCase())
+    const matchesText = !query || post.text?.toLowerCase().includes(query.toLowerCase())
     const matchesCategories =
       selectedCategories.length === 0 ||
-
       selectedCategories.some((category) => (post.categories ?? []).includes(category))
-
+  
     return matchesText && matchesCategories
   })
+  
 
   
   
@@ -159,17 +159,35 @@ export default function Posts({ initialData, userId }: { initialData: object, us
     return <div className="text-center py-4 text-neutral-500">No posts found</div>
   }
 
+
   const categoryMap: Record<string, { icon: string, label: string }> = {
     education: { icon: "📚", label: "Education" },
-    insights: { icon: "💡", label: "Thoughts & Ideas" },
     news: { icon: "📰", label: "News" },
-    art: { icon: "🎨", label: "Art" },
-    tech: { icon: "💻", label: "Technology" },
-    lifestyle: { icon: "🌱", label: "Lifestyle & Wellnes" },
-    personal: { icon: "📷", label: "Personal Stories" },
+    technology: { icon: "💻", label: "Technology" },
+    "art-design": { icon: "🎨", label: "Art & Design" },
     humor: { icon: "😂", label: "Humor" },
-    question: { icon: "❓", label: "Question" },
+    "lifestyle-wellness": { icon: "🌱", label: "Lifestyle & Wellness" },
+    "personal-stories": { icon: "📷", label: "Personal Stories" },
+    music: { icon: "🎵", label: "Music" },
+    "movies-tv": { icon: "🎬", label: "Movies & TV" },
+    gaming: { icon: "🎮", label: "Gaming" },
+    "food-recipes": { icon: "🍔", label: "Food & Recipes" },
+    sports: { icon: "🏆", label: "Sports" },
+    "health-fitness": { icon: "💪", label: "Health & Fitness" },
+    "finance-investment": { icon: "💰", label: "Finance & Investment" },
+    science: { icon: "🔬", label: "Science" },
+    travel: { icon: "✈️", label: "Travel" },
+    "environment-nature": { icon: "🌍", label: "Environment & Nature" },
+    "politics-society": { icon: "🏛️", label: "Politics & Society" },
+    "books-literature": { icon: "📖", label: "Books & Literature" },
+    "tech-news": { icon: "🖥️", label: "Tech News" },
+    "career-jobs": { icon: "💼", label: "Career & Jobs" },
+    "diy-crafts": { icon: "🧵", label: "DIY & Crafts" },
+    "events-festivals": { icon: "🎉", label: "Events & Festivals" },
+    "animals-pets": { icon: "🐾", label: "Animals & Pets" },
   }
+  
+  
 
   return (
    <>
@@ -187,7 +205,7 @@ export default function Posts({ initialData, userId }: { initialData: object, us
               <div className="flex items-start space-x-2">
 
                 <Image
-                  src={post.userId.profileImg}
+                  src={post.userId.profileImg || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
                   alt={post.userId.name}
                   width={800}
                   height={600}

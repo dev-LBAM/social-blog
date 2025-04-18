@@ -20,7 +20,7 @@ export async function loginUserService(req: NextRequest)
         if(!validatedUser)
         {
             return NextResponse.json(
-            { message: 'Email or password incorrect'  },
+            { message: 'Email not registered!'  },
             { status: 404 })
         }
 
@@ -28,8 +28,8 @@ export async function loginUserService(req: NextRequest)
         if(!validatedPass)
         {
             return NextResponse.json(
-            { message: 'Email or password incorrect' },
-            { status: 404 })
+            { message: 'Email or password incorrect!' },
+            { status: 400 })
         }
         
         const response = await createAuth(validatedUser._id)

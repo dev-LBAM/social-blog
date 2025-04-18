@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { ChevronDown } from "lucide-react"
 
+
 const categoryOptions = [
   {
     value: "education",
@@ -15,12 +16,12 @@ const categoryOptions = [
     description: "Updates on current events and trends."
   },
   {
-    value: "tech",
+    value: "technology",
     label: "💻 Technology",
     description: "Posts about programming, gadgets, and innovation."
   },
   {
-    value: "art",
+    value: "art-design",
     label: "🎨 Art & Design",
     description: "Creative work including illustration, photography, and design."
   },
@@ -30,27 +31,108 @@ const categoryOptions = [
     description: "Funny posts, memes, and amusing stories."
   },
   {
-    value: "insights",
-    label: "💡 Thoughts & Ideas",
-    description: "Reflections, opinions, and original ideas."
-  },
-  {
-    value: "lifestyle",
+    value: "lifestyle-wellness",
     label: "🌱 Lifestyle & Wellness",
     description: "Well-being, habits, routines, and daily life tips."
   },
   {
-    value: "personal",
+    value: "personal-stories",
     label: "📷 Personal Stories",
     description: "Real-life experiences, moments, and reflections."
+  },
+  {
+    value: "music",
+    label: "🎶 Music",
+    description: "Posts about artists, genres, albums, and music events."
+  },
+  {
+    value: "movies-tv",
+    label: "🎬 Movies & TV Shows",
+    description: "Discussions and reviews about films and TV shows."
+  },
+  {
+    value: "gaming",
+    label: "🎮 Gaming",
+    description: "Posts about video games, gaming culture, and game reviews."
   },
   {
     value: "question",
     label: "❓ Question",
     description: "Posts that ask for help, feedback, or opinions."
   },
-  
+  {
+    value: "food-recipes",
+    label: "🍽️ Food & Recipes",
+    description: "Delicious recipes, cooking tips, and food reviews."
+  },
+  {
+    value: "sports",
+    label: "🏅 Sports",
+    description: "News and discussions about various sports."
+  },
+  {
+    value: "health-fitness",
+    label: "🏋️‍♂️ Health & Fitness",
+    description: "Tips on health, exercise, and physical well-being."
+  },
+  {
+    value: "finance-investment",
+    label: "💰 Finance & Investment",
+    description: "Posts about personal finance, investments, and economics."
+  },
+  {
+    value: "science",
+    label: "🔬 Science",
+    description: "Scientific discoveries and research topics."
+  },
+  {
+    value: "travel",
+    label: "✈️ Travel",
+    description: "Tips and experiences on travel destinations."
+  },
+  {
+    value: "environment-nature",
+    label: "🌍 Environment & Nature",
+    description: "Topics about sustainability, climate, and environmental preservation."
+  },
+  {
+    value: "politics-society",
+    label: "⚖️ Politics & Society",
+    description: "Discussions about current political and social issues."
+  },
+  {
+    value: "books-literature",
+    label: "📖 Books & Literature",
+    description: "Discussions about books, authors, and literary reviews."
+  },
+  {
+    value: "tech-news",
+    label: "📰 Tech News",
+    description: "Latest news about technology and innovations."
+  },
+  {
+    value: "career-jobs",
+    label: "💼 Career & Jobs",
+    description: "Career tips, job search advice, and professional growth."
+  },
+  {
+    value: "diy-crafts",
+    label: "🛠️ DIY & Crafts",
+    description: "Creative projects, tutorials, and craft tips."
+  },
+  {
+    value: "events-festivals",
+    label: "🎉 Events & Festivals",
+    description: "News about events, festivals, and cultural activities."
+  },
+  {
+    value: "animals-pets",
+    label: "🐾 Animals & Pets",
+    description: "Tips on caring for pets and stories about animals."
+  }
 ]
+
+
 
 export default function CategorySelect({
   title,

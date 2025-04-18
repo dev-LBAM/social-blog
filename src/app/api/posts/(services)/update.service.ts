@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { postDTO } from '../(dtos)/post.dto'
 import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
+import { verifyAuth } from '@/app/lib/utils/auths'
 
 export async function updatePostService(postId: string, req: NextRequest)
 {
@@ -11,10 +12,35 @@ export async function updatePostService(postId: string, req: NextRequest)
     {
         const validationRequest = await checkRequest(req)
         if(validationRequest instanceof NextResponse) return validationRequest
-        const { userId, body } = validationRequest
+        const { body } = validationRequest
     
+        const auth = await verifyAuth(req)
+        if (auth.status === 401) 
+        {
+            return auth
+        }
+        const { userId } = await auth.json()
+
         postDTO.parse(body)
-        
+
+        const existingPost = await Post.findOne({ _id: postId, userId: userId })
+        if (!existingPost) 
+        {
+          return NextResponse.json(
+          { message: 'Post not found or user not is author' },
+          { status: 404 })
+        }
+
+        if (!body.fileUrl && existingPost.file?.url) 
+        {
+          const url = new URL(existingPost.file.url)
+          await fetch(`http://localhost:3000/api/aws/delete-file`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url }),
+          })
+        }
+
         await connectToDB()
         const updatedPost = await Post.findOneAndUpdate(
         { _id: postId, userId: userId },
@@ -34,20 +60,22 @@ export async function updatePostService(postId: string, req: NextRequest)
             : { $unset: { file: 1 } }),
             categories: body.categories ?? []
         },
-        { new: true }
-      )
-        if(!updatedPost)
+        { new: true })
+
+        const response = NextResponse.json(
+        { message: 'Post updated successfully', post: updatedPost }, 
+        { status: 200 })
+
+        auth.headers.forEach((value, key) => 
         {
-          return NextResponse.json(
-          { message: 'Post not found or user not is author' },
-          { status: 404 })
-        }
-        else
-        {
-          return NextResponse.json(
-          { message: 'Post updated successfully', post: updatedPost }, 
-          { status: 200 })
-        }
+          if (key.toLowerCase() === 'set-cookie') 
+          {
+            response.headers.set(key, value)
+          }
+        })
+        
+        return response
+    
       } 
       catch (error) 
       {

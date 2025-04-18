@@ -5,12 +5,20 @@ import { z } from 'zod'
 import Post from '@/app/lib/database/schemas/post'
 import { commentDTO } from '../(dtos)/comment.dto'
 import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
+import { verifyAuth } from '@/app/lib/utils/auths'
 
 export async function createCommentService(postId: string, req: NextRequest) {
   try {
     const validationRequest = await checkRequest(req)
     if (validationRequest instanceof NextResponse) return validationRequest
-    const { userId, body } = validationRequest
+    const { body } = validationRequest
+
+    const auth = await verifyAuth(req)
+    if (auth.status === 401) 
+    {
+        return auth
+    }
+    const { userId } = await auth.json()
 
     commentDTO.parse(body)
 
@@ -62,9 +70,19 @@ export async function createCommentService(postId: string, req: NextRequest) {
 
     const savedComment = await newComment.save()
 
-    return NextResponse.json(
+    const response = NextResponse.json(
     { message: 'Comment created successfully', comment: savedComment },
     { status: 201 })
+
+    auth.headers.forEach((value, key) => 
+    {
+      if (key.toLowerCase() === 'set-cookie') 
+      {
+        response.headers.set(key, value)
+      }
+    })
+    
+    return response
   } 
   catch (error) 
   {
