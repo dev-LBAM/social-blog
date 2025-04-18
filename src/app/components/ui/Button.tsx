@@ -16,7 +16,7 @@ export default function Button({
   return (
     <button 
       type="submit" 
-      className={`outline-none ${width} py-2 bg-gradient-to-r font-serif drop-shadow-md from-background ${bgcolor} text-white rounded-md
+      className={`outline-none ${width} py-2 bg-gradient-to-r font-serif drop-shadow-md from-background ${bgcolor} text-neutral-200 rounded-sm
         ${disabled ? "cursor-not-allowed opacity-50" : ` transition-all duration-200 ease-in-out cursor-pointer hover:from-background ${bghcolor}`
       }`}
       disabled={disabled}

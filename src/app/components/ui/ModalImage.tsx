@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { useEffect } from "react"
 import { IoClose } from "react-icons/io5"
 
@@ -7,17 +8,32 @@ interface ModalProps {
 }
 
 export default function ModalImage({ selectedImage, setSelectedImage }: ModalProps) {
-  useEffect(() => {
-    if (!selectedImage) return
+  useEffect(() => 
+  {
+    if (selectedImage) 
+    {
+      document.body.classList.add("overflow-hidden")
+    } 
+    else 
+    {
+      document.body.classList.remove("overflow-hidden")
+    }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+    const handleKeyDown = (event: KeyboardEvent) => 
+    {
+      if (event.key === "Escape") 
+      {
         setSelectedImage(null)
       }
     }
 
     window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+
+    return () => 
+    {
+      window.removeEventListener("keydown", handleKeyDown)
+      document.body.classList.remove("overflow-hidden")
+    }
   }, [selectedImage, setSelectedImage])
 
   if (!selectedImage) return null
@@ -31,9 +47,10 @@ export default function ModalImage({ selectedImage, setSelectedImage }: ModalPro
         className="relative w-full h-full flex items-center justify-center"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
+        <Image
           src={selectedImage}
           alt="Full Screen"
+          fill
           className="max-w-full max-h-full object-contain"
         />
         

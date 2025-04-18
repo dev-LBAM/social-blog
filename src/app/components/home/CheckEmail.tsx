@@ -246,7 +246,7 @@ export default function CheckEmail()
               The code was send to email:
               <div className="items-center justify-center pt-1 rounded-x1 text-center">
 
-                <p className="block text-neutral-900 font-serif">{formData.email}</p>
+                <p className="block text-neutral-900 font-serif">{formData.email.toLowerCase()}</p>
 
                 <div className="flex gap-2 pt-3">
                   <p>Not your email?</p>

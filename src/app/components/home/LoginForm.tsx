@@ -104,7 +104,7 @@ export default function LoginForm()
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl " noValidate>
+    <form onSubmit={handleSubmit} className="space-y-4 " noValidate>
 
       {[
         {
@@ -117,7 +117,7 @@ export default function LoginForm()
           title: "Password",
           name: "password",
           type: "password",
-          placeholder: "example12345aA*",
+          placeholder: "*#*#*#*#",
         },
       ].map((field) => (
         <div key={field.title}>

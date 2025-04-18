@@ -35,7 +35,7 @@ export default function ShowFile({ file, onImageClick }: ShowFileProps)
               alt="Post Image"
               width={1200}
               height={675}
-              className="mt-1 cursor-pointer rounded-lg"
+              className="mt-1 max-h-[675px] cursor-pointer rounded-lg"
               onClick={() => onImageClick(file.url)}
             />
           )}
