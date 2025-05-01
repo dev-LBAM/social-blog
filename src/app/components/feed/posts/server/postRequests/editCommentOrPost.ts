@@ -17,10 +17,16 @@ export default async function editCommentOrPost({ postId, commentId, data }: Edi
       {
         'Content-Type': 'application/json',
       },
+      credentials:'include',
       body: JSON.stringify(data),
     })
 
-    if (!res.ok) 
+    if(res.status === 401) 
+    {
+      window.location.href = '/'
+    }
+      
+    if(!res.ok) 
     {
       const error = await res.json()
       throw new Error(error.message)

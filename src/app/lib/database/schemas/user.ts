@@ -50,8 +50,12 @@ const UserSchema = new Schema({
     type: String,
     default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
   },
-  followersCount: { type: Number, default: 0, required: false },
-  postsCount: { type: Number,  default: 0, required: false }
+  isOnline:{
+    type: Boolean
+  }, 
+  lastSeen:{
+    type: Date
+  }
 },
 {
   timestamps: true,
@@ -66,8 +70,8 @@ interface IUser extends Document
   country: string
   state: string
   city: string
-  followerCount?: number
-  postCount?: number
+  isOnline: boolean
+  lastSeen: Date
 }
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema)

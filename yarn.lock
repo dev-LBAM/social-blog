@@ -3112,6 +3112,11 @@ queue-microtask@^1.2.2:
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
+rate-limiter-flexible@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-7.0.0.tgz#087d666cbe475452628650d431b1b602cc45f5c4"
+  integrity sha512-K1Y7WTh6m/MpgifDkBzexI0PfPYd+LaXRl+Aqq+LkKKIb68KLJxd/cp+Fw3iU1T0h3oQ9TwbR0m2/ksU70ML+g==
+
 react-dom@^19.0.0:
   version "19.0.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-19.0.0.tgz"

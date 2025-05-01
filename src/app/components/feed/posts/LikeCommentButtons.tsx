@@ -47,11 +47,16 @@ interface PostsPage {
         method: "POST",
       })
   
-      if (!res.ok) 
+      if(res.status === 401) 
+      {
+        window.location.href = '/'
+      }
+          
+      if(!res.ok) 
       {
         const error = await res.json()
         throw new Error(error.message)
-      } 
+      }
       const delta = res.status === 201 ? 1 : -1
       const like = res.status === 201 ? true : false
       if (targetType === "Post") {

@@ -1,21 +1,17 @@
 @import "tailwindcss";
 
-@tailwind utilities;
-
 @custom-variant dark (&:is(.dark *));
-/* Certifique-se de que esta linha está presente para habilitar o modo escuro */
 
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .text-placeholder {
-  color: #333333;
+  @apply text-neutral-300
 }
 
 .dark .text-placeholder {
-  color: #cccccc;
-  /* Cor para o modo escuro */
+  @apply text-neutral-800
 }
 
 .text-color {
@@ -47,26 +43,23 @@ body {
 }
 
 .dark .text-input-title {
-  @apply text-neutral-200;
-  /* Ajuste de cor para o modo escuro */
+  @apply text-neutral-300;
 }
 
 .input-style-standard {
-  @apply w-full p-2 border rounded-md text-neutral-700 border-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-400 shadow-md;
+  @apply w-full p-2 border rounded-sm text-neutral-700 border-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-400 shadow-md;
 }
 
 .dark .input-style-standard {
-  @apply text-neutral-300 border-neutral-500 focus:ring-neutral-600;
-  /* Ajustes para o modo escuro */
+  @apply w-full p-2 border rounded-sm text-neutral-300 border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-600 shadow-md;
 }
 
 .input-style-error {
-  @apply w-full p-2 border rounded-md border-red-500 focus:outline-none focus:ring-1 focus:ring-neutral-600 shadow-md;
+  @apply w-full p-2 border rounded-sm text-neutral-700 border-red-500 focus:outline-none focus:ring-1 focus:ring-neutral-600 shadow-md;
 }
 
 .dark .input-style-error {
-  @apply border-red-700 focus:ring-neutral-600;
-  /* Ajustes para o modo escuro */
+  @apply w-full p-2 border rounded-sm text-neutral-300 border-red-700 focus:outline-none focus:ring-1 focus:ring-neutral-600 shadow-md;
 }
 
 .text-success {
@@ -75,7 +68,6 @@ body {
 
 .dark .text-success {
   @apply text-green-300;
-  /* Ajuste de cor para o modo escuro */
 }
 
 .text-error {
@@ -84,5 +76,4 @@ body {
 
 .dark .text-error {
   @apply text-red-400;
-  /* Ajuste de cor para o modo escuro */
 }

@@ -48,7 +48,7 @@ export default function CommentReplies({ commentId, userId } : {commentId: strin
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error, } = useInfiniteQuery({
     queryKey: ["replies", commentId],
-    queryFn: ({ pageParam = null }) => fetchCommentReplies({ pageParam, commentId }),
+    queryFn: ({ pageParam = null, signal }) => fetchCommentReplies({ pageParam, commentId, signal }),
     initialPageParam: null,
     getNextPageParam: (lastPage) => lastPage?.nextCursor,
     staleTime: 1000 * 60 * 3,

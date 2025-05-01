@@ -14,7 +14,16 @@ export default async function fetchUserId() {
     cache: "no-store", /* Avoids caching */
   })
 
-  if (!res.ok) throw new Error("Error to get userId")
+  if(res.status === 401) 
+  {
+    window.location.href = '/'
+  }
+      
+  if(!res.ok) 
+  {
+    const error = await res.json()
+    throw new Error(error.message)
+  }
 
   const userId = await res.json()
   return userId

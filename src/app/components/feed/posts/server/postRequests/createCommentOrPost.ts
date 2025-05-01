@@ -17,11 +17,17 @@ export default async function createCommentOrPost({ postId, data }: CreateCommen
     body: JSON.stringify(data),
   })
 
-  if (!res.ok) 
+  if(res.status === 401) 
+  {
+    window.location.href = '/'
+  }
+  
+  if(!res.ok) 
   {
     const error = await res.json()
     throw new Error(error.message)
   }
+
 
   const response = await res.json()
   return response

@@ -3,10 +3,9 @@ import { NextRequest } from 'next/server'
 
 import { createLikeService } from '../../(services)/create.service'
 export async function POST(req: NextRequest) {
-    const { searchParams } = new  URL(req.url);
+    const { searchParams } = new  URL(req.url)
     const targetId =  req.nextUrl.pathname.split('/')[3];
-    const targetType =  searchParams.get('type'); // Obtém o tipo da query string
-
+    const targetType =  searchParams.get('type')
     if (!targetType || (targetType !== 'Post' && targetType !== 'Comment')) {
         return new Response(JSON.stringify({ message: "Invalid targetType" }), { status: 400 });
     }
@@ -22,14 +21,5 @@ export async function GET(req: NextRequest)  /* GET LIKES */
     const postId = req.nextUrl.pathname.split('/')[3]
 
     const response = await getLikeService(postId, req)
-    return response
-}
-
-import { deleteLikeService } from '../../(services)/delete.service'
-export async function DELETE(req: NextRequest)  /* DELETE LIKES */
-{
-    const likeId = req.nextUrl.pathname.split('/')[3]
-
-    const response = await deleteLikeService(likeId, req)
     return response
 }

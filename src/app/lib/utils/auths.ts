@@ -25,7 +25,7 @@ export async function createAuth(userId: string) //CREATE AUTHENTICATION
             httpOnly: true,
             secure: false,
             sameSite: 'strict',
-            maxAge: 300
+            maxAge: 60 * 5
         })
         
         response.cookies.set('refreshToken', refreshToken, 
@@ -56,26 +56,26 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
 
     if (!accessToken && !refreshToken) 
     {
+
         return NextResponse.json(
-        { message: 'Unauthorized' }, 
+        { message: 'Access denied. Please log in.' }, 
         { status: 401 })
     }
 
     try 
     {
         const decoded = jwt.verify(accessToken!, process.env.SECRET_TOKEN_KEY!) as { userId: string }
-        
+
         await connectToDB()
         const userExists = await User.findById(decoded.userId)
         if (!userExists)
         {
             return NextResponse.json(
-            { message: 'User not found' },
+            { message: 'Access denied. Please log in.' },
             { status: 401 })
         }
-    
         return NextResponse.json(
-        { message: 'Authentication successfully.', userId: decoded.userId }, 
+        { message: 'Authorized', userId: decoded.userId }, 
         { status: 200 })
     } 
     catch
@@ -83,7 +83,7 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
         if (!refreshToken) 
         {
             return NextResponse.json(
-            { message: 'Authentication unauthorized or expired' },
+            { message: 'Access denied. Please log in.' },
             { status: 401 })
         }
 
@@ -97,30 +97,28 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
             if (!userExists)
             {
                 return NextResponse.json(
-                { message: 'User not found' },
+                { message: 'Access denied. Please log in.' },
                 { status: 401 })
             }
 
             const response = NextResponse.json(
-            { message: 'Authentication refresh sucessfully',  userId: decodedRefresh.userId}, 
+            { message: 'Authorized',  userId: decodedRefresh.userId}, 
             { status: 200 })
 
             response.cookies.set('accessToken', newAccessToken, 
             {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
                 path: '/',
+                httpOnly: true,
+                secure: false,
+                sameSite: 'strict',
                 maxAge: 60 * 5
             })  
-            
-
             return response
         } 
         catch 
         {
             return NextResponse.json(
-            { message: 'Authentication refresh unauthorized' }, 
+            { message: 'Access denied. Please log in.' }, 
             { status: 401 })
         }
     }
@@ -128,9 +126,15 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
 
 export async function parseAuth(req: NextRequest) // GET RESPONSE OF ( VERIFY AUTH ) AND TRANSFORM IN JSON
 {
-    const authUser = await verifyAuth(req)
-    if(authUser.status === 401) return authUser
+    const authUser = await verifyAuth(req);
+
+    if (authUser.status === 401) 
+    {
+        return authUser
+    }
+
     const { userId } = await authUser.json()
+
     return userId
 }
 
@@ -150,12 +154,12 @@ export async function logoutUser() // LOGOUT USER
 {
     try 
     {
-        const response = NextResponse.json({ message: 'Logout successful' })
+        const response = NextResponse.json({ message: 'Logout user successfully' })
 
         response.cookies.delete('accessToken')
         response.cookies.delete('refreshToken')
 
-        return NextResponse.json({ message: 'Logout user successful' })
+        return response
     } 
     catch (error) 
     {

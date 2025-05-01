@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import AWS from 'aws-sdk'
+import { verifyAuth } from '@/app/lib/utils/auths'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
 
 const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
@@ -8,8 +10,33 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
 })
 
+const rateLimiter = new RateLimiterMemory({
+  points: 2,
+  duration: 60,
+})
+
 export async function GET(req: NextRequest) 
 {
+  const auth = await verifyAuth(req)
+  if (auth.status === 401) 
+  {
+      return auth
+  }
+
+  const userIp = req.headers.get("x-forwarded-for") || 'anonymous'
+
+  try 
+  {
+    await rateLimiter.consume(userIp)
+  } 
+  catch 
+  {
+    return NextResponse.json(
+      { message: 'You have exceeded the file upload limit per minute. Please try again later!' }, 
+      { status: 429 }
+    )
+  }
+
   const fileType = req.headers.get('File-Type') 
   const fileName = req.headers.get('File-Name')
 
@@ -20,11 +47,17 @@ export async function GET(req: NextRequest)
     { status: 400 })
   }
 
-  const extension = fileName?.split('.').pop()
-  const baseFileName = fileName?.split('.')[0]
+  const lastDotIndex = fileName?.lastIndexOf('.') ?? -1
+  let baseFileName = lastDotIndex !== -1 ? fileName?.substring(0, lastDotIndex) : fileName
+  const extension = fileName?.substring(lastDotIndex + 1)
   
+  baseFileName = baseFileName
+  ?.trim()
+  .toLowerCase()
+  .replace(/\s+/g, '-')          
+  .replace(/[^a-z0-9-_]/g, '') 
   const fileKey = `uploads/${baseFileName}-${Date.now()}.${extension}`
-
+  
   const params = 
   {
     Bucket: process.env.AWS_S3_BUCKET_NAME!,
@@ -40,6 +73,7 @@ export async function GET(req: NextRequest)
   } 
   catch (error) 
   {
+
     console.error('Error generating signed URL:', error)
     return NextResponse.json({ message: 'Error generating signed URL' }, { status: 500 })
   }

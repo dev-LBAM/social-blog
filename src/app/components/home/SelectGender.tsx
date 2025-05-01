@@ -15,7 +15,7 @@ export default function SelectGender({ onGenderChange, genderError, initialGende
         Gender
       </label>
 
-      <div className="flex items-center gap-4 text-placeholder">
+      <div className="flex items-center gap-4">
         <div className="flex gap-4 w-full">
           <div className="flex-1">
             <select
@@ -25,7 +25,7 @@ export default function SelectGender({ onGenderChange, genderError, initialGende
                 setSelectedGender(e.target.value)
                 onGenderChange(e.target.value)
               }}
-              className={`${genderError ? "input-style-error" : "input-style-standard"}`}
+              className={`${genderError ? "input-style-error bg-box" : "input-style-standard bg-box"}`}
             >
               <option value="" disabled hidden>
                 Select a gender

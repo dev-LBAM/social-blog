@@ -30,15 +30,16 @@ export default function ShowFile({ file, onImageClick }: ShowFileProps)
         <>
           {/* if was image */}
           {file.type.startsWith("image/") && (
-            <Image
-              src={file.url}
-              alt="Post Image"
-              width={1200}
-              height={675}
-              className="mt-1 cursor-pointer rounded-lg"
-              onClick={() => onImageClick(file.url)}
-            />
-          )}
+  <Image
+    src={file.url}
+    alt="Post Image"
+    width={1200}
+    height={400}
+    className="mt-1 max-h-[650px] cursor-pointer rounded-lg object-contain"
+    onClick={() => onImageClick(file.url)}
+  />
+)}
+
 
           {/* if was video */}
           {file.type.startsWith("video/") && (

@@ -4,8 +4,8 @@ import Like from '@/app/lib/database/schemas/like'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function getCommentService(postId: string, req: NextRequest) {
-  try {
-    // Conectar ao banco de dados
+  try 
+  {
     await connectToDB()
 
     const limit = 5
@@ -23,7 +23,6 @@ export async function getCommentService(postId: string, req: NextRequest) {
       .populate('userId', 'name profileImg')
       .lean()
 
-    // Se houver userId, busca os likes correspondentes e adiciona o campo `hasLiked`
     if (userId) {
       const likedPosts = await Like.find({
         userId,
@@ -31,7 +30,6 @@ export async function getCommentService(postId: string, req: NextRequest) {
       }).lean()
 
       obtainedComments.forEach((comment) => {
-        // Converte o post._id para string
         const commentIdStr = String(comment._id)
         comment.hasLiked = likedPosts.some(like => String(like.targetId) === commentIdStr)
       })

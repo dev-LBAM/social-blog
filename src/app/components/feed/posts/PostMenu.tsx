@@ -27,8 +27,10 @@ export default function PostMenu({ postId, onEditClick }: { postId: string, onEd
       if(loading) return
       setLoading(true)
       
+      
       const res = await fetch(`/api/posts/${postId}`, {
         method: "DELETE",
+        credentials: "include"
       })
 
       if (!res.ok) {

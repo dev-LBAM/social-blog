@@ -106,7 +106,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
           }}
           className=
           {
-            `${locationError && !selectedCountry ? 'input-style-error' : 'input-style-standard'}`
+            `${locationError && !selectedCountry ? 'input-style-error bg-box' : 'input-style-standard bg-box'}`
           }
         >
 
@@ -133,7 +133,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
           <select
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value)}
-            className={`${locationError && !selectedState ? 'input-style-error' : 'input-style-standard'}`}
+            className={`${locationError && !selectedState ? 'input-style-error bg-box' : 'input-style-standard bg-box'}`}
           >
             <option value="" disabled hidden>Select a state</option>
             {states.map((state) => (
@@ -155,7 +155,7 @@ export default function LocationSelector({ onLocationChange, locationError}: Loc
           <select
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
-            className={`${locationError && !selectedCity ? 'input-style-error' : 'input-style-standard'}`}
+            className={`${locationError && !selectedCity ? 'input-style-error bg-box' : 'input-style-standard bg-box'}`}
           >
             <option value="" disabled hidden>Select a city</option>
             {cities.map((city) => (

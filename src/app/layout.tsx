@@ -1,11 +1,12 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Geist, Geist_Mono } from "next/font/google"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import "./globals.css"
 import { Toaster } from "sonner"
 
-import { ThemeProvider } from 'next-themes'
+
 import ThemeToggleButton from "./components/ui/ThemeToggleButton"
 
 const geistSans = Geist({
@@ -18,21 +19,33 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-
 const queryClient = new QueryClient()
-
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="en" >
-      <body
+}: {
+  children: React.ReactNode
+}) {
+  const [mounted, setMounted] = useState(false)
 
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    // Renderiza um fallback vazio ou básico enquanto o client monta
+    return (
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} />
+      </html>
+    )
+  }
+
+  return (
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+         
             <ThemeToggleButton />
             {children}
             <Toaster
@@ -43,7 +56,7 @@ export default function RootLayout({
               }}
               richColors
             />
-          </ThemeProvider>
+
         </QueryClientProvider>
       </body>
     </html>

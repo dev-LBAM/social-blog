@@ -7,16 +7,31 @@ export const postDTO = z.object(
     fileUrl: z.string().url(),
     fileName: z.string(),
     categories: z.array(z.enum([
-        "education",
-        "news",
-        "art",
-        "tech",
-        "lifestyle",
-        "personal",
-        "humor",
-        "insights",
-        "question",
-      ])
+      "education",
+      "news",
+      "technology",
+      "art-design",
+      "humor",
+      "lifestyle-wellness",
+      "personal-stories",
+      "music",
+      "movies-tv",
+      "gaming",
+      "food-recipes",
+      "sports",
+      "health-fitness",
+      "finance-investment",
+      "science",
+      "travel",
+      "environment-nature",
+      "politics-society",
+      "books-literature",
+      "tech-news",
+      "career-jobs",
+      "diy-crafts",
+      "events-festivals",
+      "animals-pets"
+    ])
     )
 }).partial()
 

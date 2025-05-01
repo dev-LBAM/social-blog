@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { formatDistanceToNow } from "date-fns"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import Image from "next/image"
 import { FiLoader } from "react-icons/fi"
 import PostMenu from "./PostMenu"
@@ -41,8 +41,9 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   const [commentsVisibility, setCommentsVisibility] = useState<{ [key: string]: boolean }>({})
   const [editVisibility, setEditVisibility] = useState<{ [key: string]: boolean }>({})
   const [hasMounted, setHasMounted] = useState(false)
-  const [showFallback, setShowFallback] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [onlyFollowers, setOnlyFollowers] = useState(false)
+  const [followingIds, setFollowingIds] = useState<string[]>([])
 
   const [query, setQuery] = useState<string>(() => {
     if (typeof window !== "undefined") {
@@ -63,11 +64,6 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   useEffect(() => 
   {
     setHasMounted(true)
-    const timer = setTimeout(() => 
-    {
-      setShowFallback(true)
-    }, 300)
-    return () => clearTimeout(timer)
   }, [])
 
 
@@ -75,14 +71,20 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   {
     try
     {
-      const res = await fetch(`/api/posts?cursor=${pageParam || ""}&userId=${userId}`)
+      console.log("a")
+      const res = await fetch(`/api/posts?cursor=${pageParam || ""}&userId=${userId}&onlyFollowers=${onlyFollowers}`)
       if (!res.ok) 
       {
         const error = await res.json()
         throw new Error(error.message)
       }
       const result = await res.json()
-  
+
+      if (result.followingIds) 
+      {
+        setFollowingIds(result.followingIds)
+        console.log(`aa`, result.followingIds)
+      }
       return result ?? { posts: [], nextCursor: null }
     }
     catch(error)
@@ -94,7 +96,7 @@ export default function Posts({ initialData, userId }: { initialData: object, us
 
 
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error} = useInfiniteQuery({
-    queryKey: ["posts", userId],
+    queryKey: ["posts", userId, onlyFollowers],
     queryFn: fetchPosts,
     initialPageParam: null,
     getNextPageParam: (lastPage) => {return lastPage?.nextCursor ?? null},
@@ -102,6 +104,16 @@ export default function Posts({ initialData, userId }: { initialData: object, us
     staleTime: 1000 * 60 * 3,
     refetchOnWindowFocus: false,
   })
+
+  const queryClient = useQueryClient()
+  // dispara refetch sempre que onlyFollowers mudar
+  useEffect(() => {
+    queryClient.resetQueries({
+      queryKey: ['posts', userId, onlyFollowers],
+      exact: true,
+    })
+  }, [onlyFollowers, userId, queryClient])
+  
 
   const observerRef = useRef<HTMLDivElement | null>(null)
   
@@ -124,17 +136,16 @@ export default function Posts({ initialData, userId }: { initialData: object, us
 
   const posts = data?.pages.flatMap((page) => page?.posts ?? []) || []
   const filteredPosts = posts.filter((post: Post) => {
-    const matchesText = post.text.toLowerCase().includes(query.toLowerCase())
+    const matchesText = !query || post.text?.toLowerCase().includes(query.toLowerCase())
     const matchesCategories =
       selectedCategories.length === 0 ||
-
       selectedCategories.some((category) => (post.categories ?? []).includes(category))
-
-    return matchesText && matchesCategories
+  
+    const isFollowing = 
+    !onlyFollowers || followingIds.includes(post.userId._id)
+  
+    return matchesText && matchesCategories && isFollowing
   })
-
-  
-  
   
   if(!hasMounted || isLoading) 
   {
@@ -154,22 +165,34 @@ export default function Posts({ initialData, userId }: { initialData: object, us
     )
   }
 
-  if(posts.length === 0 && showFallback) 
-  {
-    return <div className="text-center py-4 text-neutral-500">No posts found</div>
-  }
-
   const categoryMap: Record<string, { icon: string, label: string }> = {
     education: { icon: "📚", label: "Education" },
-    insights: { icon: "💡", label: "Thoughts & Ideas" },
     news: { icon: "📰", label: "News" },
-    art: { icon: "🎨", label: "Art" },
-    tech: { icon: "💻", label: "Technology" },
-    lifestyle: { icon: "🌱", label: "Lifestyle & Wellnes" },
-    personal: { icon: "📷", label: "Personal Stories" },
+    technology: { icon: "💻", label: "Technology" },
+    "art-design": { icon: "🎨", label: "Art & Design" },
     humor: { icon: "😂", label: "Humor" },
-    question: { icon: "❓", label: "Question" },
+    "lifestyle-wellness": { icon: "🌱", label: "Lifestyle & Wellness" },
+    "personal-stories": { icon: "📷", label: "Personal Stories" },
+    music: { icon: "🎵", label: "Music" },
+    "movies-tv": { icon: "🎬", label: "Movies & TV" },
+    gaming: { icon: "🎮", label: "Gaming" },
+    "food-recipes": { icon: "🍔", label: "Food & Recipes" },
+    sports: { icon: "🏆", label: "Sports" },
+    "health-fitness": { icon: "💪", label: "Health & Fitness" },
+    "finance-investment": { icon: "💰", label: "Finance & Investment" },
+    science: { icon: "🔬", label: "Science" },
+    travel: { icon: "✈️", label: "Travel" },
+    "environment-nature": { icon: "🌍", label: "Environment & Nature" },
+    "politics-society": { icon: "🏛️", label: "Politics & Society" },
+    "books-literature": { icon: "📖", label: "Books & Literature" },
+    "tech-news": { icon: "🖥️", label: "Tech News" },
+    "career-jobs": { icon: "💼", label: "Career & Jobs" },
+    "diy-crafts": { icon: "🧵", label: "DIY & Crafts" },
+    "events-festivals": { icon: "🎉", label: "Events & Festivals" },
+    "animals-pets": { icon: "🐾", label: "Animals & Pets" },
   }
+  
+  
 
   return (
    <>
@@ -178,6 +201,8 @@ export default function Posts({ initialData, userId }: { initialData: object, us
         setSearch={setQuery}
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
+        onlyFollowers={onlyFollowers}
+        setOnlyFollowers={setOnlyFollowers}
       />
 
       {filteredPosts.map((post: Post) => (
@@ -187,7 +212,7 @@ export default function Posts({ initialData, userId }: { initialData: object, us
               <div className="flex items-start space-x-2">
 
                 <Image
-                  src={post.userId.profileImg}
+                  src={post.userId.profileImg || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
                   alt={post.userId.name}
                   width={800}
                   height={600}

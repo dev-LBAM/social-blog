@@ -46,7 +46,7 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
                 setSelectedDay(e.target.value)
                 onDateChange(e.target.value, selectedMonth, selectedYear)
               }}
-              className={`${dateError ? 'input-style-error' : 'input-style-standard'}`}
+              className={`${dateError ? 'input-style-error bg-box' : 'input-style-standard bg-box'}`}
             >
               <option value="" disabled hidden>Day</option>
               {days.map((day) => (
@@ -65,7 +65,7 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
                 setSelectedMonth(e.target.value)
                 onDateChange(selectedDay, e.target.value, selectedYear)
               }}
-              className={`${dateError ? 'input-style-error' : 'input-style-standard'}`}
+              className={`${dateError ? 'input-style-error bg-box' : 'input-style-standard bg-box'}`}
             >
               <option value="" disabled hidden>Month</option>
               {months.map((month) => (
@@ -84,7 +84,7 @@ export default function SelectDate({ onDateChange, dateError, initialDay, initia
                 setSelectedYear(e.target.value)
                 onDateChange(selectedDay, selectedMonth, e.target.value)
               }}
-              className={`${dateError ? 'input-style-error' : 'input-style-standard'}`}
+              className={`${dateError ? 'input-style-error bg-box' : 'input-style-standard bg-box'}`}
             >
               <option value="" disabled hidden>Year</option>
               {years.map((year) => (

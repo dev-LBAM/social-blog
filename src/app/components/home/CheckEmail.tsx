@@ -246,13 +246,13 @@ export default function CheckEmail()
               The code was send to email:
               <div className="items-center justify-center pt-1 rounded-x1 text-center">
 
-                <p className="block text-neutral-900 font-serif">{formData.email}</p>
+                <p className="block text-neutral-900 font-serif">{formData.email.toLowerCase()}</p>
 
                 <div className="flex gap-2 pt-3">
                   <p>Not your email?</p>
                   <button 
                     type="button"
-                    className=" text-neutral-700 drop-shadow-sm font-light text-center underline transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer"
+                    className=" text-color drop-shadow-sm font-light text-center underline transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer"
                     onClick={() => 
                     {
                       setEmailCode(false)
@@ -268,7 +268,7 @@ export default function CheckEmail()
                   <button 
                     type="button"
                     disabled={resendTime >= 1}
-                    className={`text-neutral-700 drop-shadow-sm font-light text-center underline 
+                    className={`text-color drop-shadow-sm font-light text-center underline 
                     ${resendTime >= 1 ? 'opacity-50 cursor-not-allowed' : 'transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer'}`}
                     onClick={handleClickResend} 
                   >
