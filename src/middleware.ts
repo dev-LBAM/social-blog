@@ -5,8 +5,13 @@ export async function middleware(request: NextRequest) {
   const accessToken = request.cookies.get('accessToken')?.value;
   const refreshToken = request.cookies.get('refreshToken')?.value;
 
-  if ((accessToken || refreshToken) && request.nextUrl.pathname === '/') {
+  if((accessToken || refreshToken) && request.nextUrl.pathname === '/') 
+  {
     return NextResponse.redirect(new URL('/feed', request.url))
+  }
+  else if((!accessToken && !refreshToken) && request.nextUrl.pathname === '/feed')
+  {
+    return NextResponse.redirect(new URL('/', request.url))
   }
   
 
@@ -15,5 +20,5 @@ export async function middleware(request: NextRequest) {
 
 
 export const config = {
-  matcher: ['/'],
+  matcher: ['/', '/feed'],
 };

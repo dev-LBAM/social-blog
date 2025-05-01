@@ -1,7 +1,6 @@
 'use client'
 import { FiSearch } from "react-icons/fi"
 import CategorySelect from "./SelectCategory"
-import { useState } from "react"
 
 interface PostFilterProps
 {
@@ -9,12 +8,12 @@ interface PostFilterProps
   setSearch: (value: string) => void
   selectedCategories: string[]
   setSelectedCategories: (value: string[]) => void
+  onlyFollowers: boolean
+  setOnlyFollowers: (value: boolean) => void
 }
 
-export default function PostFilter({search, setSearch, selectedCategories, setSelectedCategories} : PostFilterProps) 
+export default function PostFilter({search, setSearch, selectedCategories, setSelectedCategories, onlyFollowers, setOnlyFollowers} : PostFilterProps) 
 {
-  const [onlyFollowers, setOnlyFollowers] = useState(false)
-
   return (
     <div className="mb-2 flex flex-col justify-between rounded-xl">
       <div className="relative w-full">
@@ -41,7 +40,11 @@ export default function PostFilter({search, setSearch, selectedCategories, setSe
             type="checkbox"
             id="onlyFollowers"
             checked={onlyFollowers}
-            onChange={(e) => setOnlyFollowers(e.target.checked)}
+            onChange={(e) => {
+              setOnlyFollowers(e.target.checked)
+              console.log(onlyFollowers)
+            }
+            }
             className="mr-2"
           />
           <label htmlFor="onlyFollowers" className="text-sm text-color">

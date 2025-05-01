@@ -7,8 +7,7 @@ export async function createFollowerService(userId: string, followedId: string) 
     try 
     {
         await connectToDB()
-
-        const existingUser = await User.findOne({ userId: followedId})
+        const existingUser = await User.findOne({ _id: followedId})
         if(!existingUser) 
         {
             const response =  NextResponse.json(

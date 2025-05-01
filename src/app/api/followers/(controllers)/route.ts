@@ -21,6 +21,14 @@ export async function POST(req: NextRequest)
     if(body.userFollowed)
     {
         const followedId = body.userFollowed
+
+        if(userId == followedId)
+        {
+            return NextResponse.json(
+            { message: 'You cant follow yourself' },
+            { status: 400 })
+        }
+
         const response = await createFollowerService(userId, followedId)
         auth.headers.forEach((value, key) => 
         {

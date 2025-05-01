@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { formatDistanceToNow } from "date-fns"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import Image from "next/image"
 import { FiLoader } from "react-icons/fi"
 import PostMenu from "./PostMenu"
@@ -41,8 +41,9 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   const [commentsVisibility, setCommentsVisibility] = useState<{ [key: string]: boolean }>({})
   const [editVisibility, setEditVisibility] = useState<{ [key: string]: boolean }>({})
   const [hasMounted, setHasMounted] = useState(false)
-  const [showFallback, setShowFallback] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [onlyFollowers, setOnlyFollowers] = useState(false)
+  const [followingIds, setFollowingIds] = useState<string[]>([])
 
   const [query, setQuery] = useState<string>(() => {
     if (typeof window !== "undefined") {
@@ -63,11 +64,6 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   useEffect(() => 
   {
     setHasMounted(true)
-    const timer = setTimeout(() => 
-    {
-      setShowFallback(true)
-    }, 300)
-    return () => clearTimeout(timer)
   }, [])
 
 
@@ -75,14 +71,20 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   {
     try
     {
-      const res = await fetch(`/api/posts?cursor=${pageParam || ""}&userId=${userId}`)
+      console.log("a")
+      const res = await fetch(`/api/posts?cursor=${pageParam || ""}&userId=${userId}&onlyFollowers=${onlyFollowers}`)
       if (!res.ok) 
       {
         const error = await res.json()
         throw new Error(error.message)
       }
       const result = await res.json()
-  
+
+      if (result.followingIds) 
+      {
+        setFollowingIds(result.followingIds)
+        console.log(`aa`, result.followingIds)
+      }
       return result ?? { posts: [], nextCursor: null }
     }
     catch(error)
@@ -94,7 +96,7 @@ export default function Posts({ initialData, userId }: { initialData: object, us
 
 
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error} = useInfiniteQuery({
-    queryKey: ["posts", userId],
+    queryKey: ["posts", userId, onlyFollowers],
     queryFn: fetchPosts,
     initialPageParam: null,
     getNextPageParam: (lastPage) => {return lastPage?.nextCursor ?? null},
@@ -102,6 +104,16 @@ export default function Posts({ initialData, userId }: { initialData: object, us
     staleTime: 1000 * 60 * 3,
     refetchOnWindowFocus: false,
   })
+
+  const queryClient = useQueryClient()
+  // dispara refetch sempre que onlyFollowers mudar
+  useEffect(() => {
+    queryClient.resetQueries({
+      queryKey: ['posts', userId, onlyFollowers],
+      exact: true,
+    })
+  }, [onlyFollowers, userId, queryClient])
+  
 
   const observerRef = useRef<HTMLDivElement | null>(null)
   
@@ -129,12 +141,11 @@ export default function Posts({ initialData, userId }: { initialData: object, us
       selectedCategories.length === 0 ||
       selectedCategories.some((category) => (post.categories ?? []).includes(category))
   
-    return matchesText && matchesCategories
+    const isFollowing = 
+    !onlyFollowers || followingIds.includes(post.userId._id)
+  
+    return matchesText && matchesCategories && isFollowing
   })
-  
-
-  
-  
   
   if(!hasMounted || isLoading) 
   {
@@ -153,12 +164,6 @@ export default function Posts({ initialData, userId }: { initialData: object, us
       </div>
     )
   }
-
-  if(posts.length === 0 && showFallback) 
-  {
-    return <div className="text-center py-4 text-neutral-500">No posts found</div>
-  }
-
 
   const categoryMap: Record<string, { icon: string, label: string }> = {
     education: { icon: "📚", label: "Education" },
@@ -196,6 +201,8 @@ export default function Posts({ initialData, userId }: { initialData: object, us
         setSearch={setQuery}
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
+        onlyFollowers={onlyFollowers}
+        setOnlyFollowers={setOnlyFollowers}
       />
 
       {filteredPosts.map((post: Post) => (
