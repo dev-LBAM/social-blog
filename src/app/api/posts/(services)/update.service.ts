@@ -23,6 +23,7 @@ export async function updatePostService(postId: string, req: NextRequest)
 
         postDTO.parse(body)
 
+        await connectToDB()
         const existingPost = await Post.findOne({ _id: postId, userId: userId })
         if (!existingPost) 
         {
@@ -31,7 +32,6 @@ export async function updatePostService(postId: string, req: NextRequest)
           { status: 404 })
         }
 
-        await connectToDB()
         const updatedPost = await Post.findOneAndUpdate(
         { _id: postId, userId: userId },
         {

@@ -49,6 +49,12 @@ const UserSchema = new Schema({
   profileImg: {
     type: String,
     default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+  },
+  isOnline:{
+    type: Boolean
+  }, 
+  lastSeen:{
+    type: Date
   }
 },
 {
@@ -64,6 +70,8 @@ interface IUser extends Document
   country: string
   state: string
   city: string
+  isOnline: boolean
+  lastSeen: Date
 }
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema)

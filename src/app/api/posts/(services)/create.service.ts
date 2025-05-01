@@ -6,8 +6,10 @@ import { z } from 'zod'
 import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 import { verifyAuth } from '@/app/lib/utils/auths'
 
-export async function createPostService(req: NextRequest) {
-  try {
+export async function createPostService(req: NextRequest) 
+{
+  try 
+  {
     const validationRequest = await checkRequest(req)
     if (validationRequest instanceof NextResponse) return validationRequest
 
@@ -66,9 +68,8 @@ export async function createPostService(req: NextRequest) {
     {
       console.error('❌ Internal server error while creating post:', error)
       return NextResponse.json(
-        { message: 'Internal server error, please try again later' },
-        { status: 500 }
-      )
+      { message: 'Internal server error, please try again later' },
+      { status: 500 })
     }
   } 
 }

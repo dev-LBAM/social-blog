@@ -160,7 +160,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
 
       {/* Name File + Remove */}
       {commentFile && (
-        <div className="flex items-center text-sm text-gray-600">
+        <div className="flex items-center text-sm text-color">
           <span className="mr-2">{commentFile?.name}</span>
             <div className="relative flex flex-col items-center w-fit">
               <div className="group relative">

@@ -13,7 +13,7 @@ export async function DELETE(req: NextRequest) {
   {
 
     const auth = await verifyAuth(req)
-  if (auth.status === 401) 
+    if (auth.status === 401) 
     {
         return auth
     }

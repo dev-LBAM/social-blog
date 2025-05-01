@@ -3,10 +3,9 @@ import { NextRequest } from 'next/server'
 
 import { createLikeService } from '../../(services)/create.service'
 export async function POST(req: NextRequest) {
-    const { searchParams } = new  URL(req.url);
+    const { searchParams } = new  URL(req.url)
     const targetId =  req.nextUrl.pathname.split('/')[3];
-    const targetType =  searchParams.get('type'); // Obtém o tipo da query string
-
+    const targetType =  searchParams.get('type')
     if (!targetType || (targetType !== 'Post' && targetType !== 'Comment')) {
         return new Response(JSON.stringify({ message: "Invalid targetType" }), { status: 400 });
     }

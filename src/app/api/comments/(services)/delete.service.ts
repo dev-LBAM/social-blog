@@ -16,21 +16,21 @@ export async function deleteCommentService(commentId: string, req: NextRequest)
         const { userId } = await auth.json()
     
         await connectToDB()
-        const deletedComment = await Comment.findOne(
-        { _id: commentId,userId: userId}, 
+        const findComment = await Comment.findOne(
+        { _id: commentId, userId: userId}, 
         "file.url")
         
-        if (!deletedComment) 
+        if (!findComment) 
         {
             return NextResponse.json(
             { message: 'Comment not found or you not is author' },
             { status: 404 })
         }
 
-        if (deletedComment.file.url) 
+        if (findComment.file.url) 
         {
-            const url = new URL(deletedComment.file.url);
-            const cookies = req.headers.get('cookie');  // pega os cookies do request
+            const url = new URL(findComment.file.url)
+            const cookies = req.headers.get('cookie')
         
             await fetch(`http://localhost:3000/api/aws/delete-file`, 
             {
@@ -38,17 +38,19 @@ export async function deleteCommentService(commentId: string, req: NextRequest)
                 headers: 
                 { 
                     "Content-Type": "application/json",
-                    ...(cookies ? { "Cookie": cookies } : {})  // só adiciona se existir
+                    ...(cookies ? { "Cookie": cookies } : {})
                 },
                 body: JSON.stringify({ url }),
-            });
+            })
         }
           
         const updatedPost = await Post.findByIdAndUpdate(
-        deletedComment.postId,
+        findComment.postId,
         { $inc: { commentsCount: -1 } },
         { new: true })
 
+        await Comment.findByIdAndDelete(commentId)
+        
         const response = NextResponse.json(
         { message: 'Comment deleted successfully', post: updatedPost}, 
         { status: 200 })
