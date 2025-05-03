@@ -70,7 +70,7 @@ const ThemeToggleButton = () => {
       </button>
 
       <span className="text-xs ml-1 text-color" aria-label="Português" title="Português">
-        BR
+        PT
       </span>
     </div>
 

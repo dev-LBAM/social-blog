@@ -9,7 +9,7 @@ export async function getUserPublicService(userId: string)
         {
         await connectToDB()
         
-        const obtainedUserDataPublic = await User.findById(userId).select( "-email -password -phone")
+        const obtainedUserDataPublic = await User.findById(userId).select( "-email -password")
 
         if (!obtainedUserDataPublic) 
         {

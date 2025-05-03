@@ -35,16 +35,12 @@ export default function PostFilter({search, setSearch, selectedCategories, setSe
             onChange={setSelectedCategories}
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center ml-1">
           <input
             type="checkbox"
             id="onlyFollowers"
             checked={onlyFollowers}
-            onChange={(e) => {
-              setOnlyFollowers(e.target.checked)
-              console.log(onlyFollowers)
-            }
-            }
+            onChange={(e) => setOnlyFollowers(e.target.checked)}
             className="mr-2"
           />
           <label htmlFor="onlyFollowers" className="text-sm text-color">

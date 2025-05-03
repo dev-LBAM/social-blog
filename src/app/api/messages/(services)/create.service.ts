@@ -5,6 +5,7 @@ import { messageDTO } from '../(dtos)/message.dto'
 import Conversation from '@/app/lib/database/schemas/conversation'
 import Message from '@/app/lib/database/schemas/message'
 import { checkRequest, checkFileType } from '@/app/lib/utils/checks'
+import { verifyAuth } from '@/app/lib/utils/auths'
 
 export async function createMessageService(receiverId: string, req: NextRequest) 
 {
@@ -12,7 +13,14 @@ export async function createMessageService(receiverId: string, req: NextRequest)
   {
     const validationRequest = await checkRequest(req)
     if(validationRequest instanceof NextResponse) return validationRequest
-    const { userId, body } = validationRequest
+    const { body } = validationRequest
+     
+    const auth = await verifyAuth(req)
+    if (auth.status === 401) 
+    {
+        return auth
+    }
+    const { userId } = await auth.json()
 
     messageDTO.parse(body)
 

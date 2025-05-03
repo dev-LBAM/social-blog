@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 import { messageDTO } from '../(dtos)/message.dto'
 import Message from '@/app/lib/database/schemas/message'
+import { verifyAuth } from '@/app/lib/utils/auths'
 
 
 export async function updateMessageService(messageId: string, req: NextRequest)
@@ -12,8 +13,13 @@ export async function updateMessageService(messageId: string, req: NextRequest)
     {
         const validationRequest = await checkRequest(req)
         if(validationRequest instanceof NextResponse) return validationRequest
-        const { userId, body } = validationRequest
-    
+        const { body } = validationRequest
+        const auth = await verifyAuth(req)
+        if (auth.status === 401) 
+        {
+            return auth
+        }
+        const { userId } = await auth.json()
         messageDTO.parse(body)
         
         await connectToDB()

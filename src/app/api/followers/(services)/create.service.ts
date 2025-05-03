@@ -7,12 +7,12 @@ export async function createFollowerService(userId: string, followedId: string) 
     try 
     {
         await connectToDB()
-        const existingUser = await User.findOne({ _id: followedId})
+        const existingUser = await User.findById({ _id: followedId})
         if(!existingUser) 
         {
             const response =  NextResponse.json(
             { message: `Followed user not found` },
-            { status: 400 })
+            { status: 404 })
 
             return response
         }
@@ -20,23 +20,20 @@ export async function createFollowerService(userId: string, followedId: string) 
         const existingFollower = await Follower.findOne({ userId, followedId })
         if(existingFollower) 
         {
-            await Follower.findOneAndDelete({ userId, followedId})
+            await Follower.findOneAndDelete({ userId, followedId })
 
-            const response =  NextResponse.json(
+            return NextResponse.json(
             { message: `User unfollowed` },
             { status: 200 })
 
-            return response
         }
 
         const follower = new Follower({ userId, followedId })
         await follower.save()
 
-        const response =  NextResponse.json(
+        return NextResponse.json(
         { message: `User followed succesfully`, follower },
         { status: 201 })
-
-        return response
     } 
     catch (error) 
     {

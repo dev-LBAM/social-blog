@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import "./globals.css"
 import { Toaster } from "sonner"
 
-
 import ThemeToggleButton from "./components/ui/ThemeToggleButton"
 
 const geistSans = Geist({
@@ -33,30 +32,33 @@ export default function RootLayout({
   }, [])
 
   if (!mounted) {
-    // Renderiza um fallback vazio ou básico enquanto o client monta
     return (
-      <html lang="en">
+      <html lang="en" translate="no">
+        <head>
+          <meta name="google" content="notranslate" />
+        </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} />
       </html>
     )
   }
 
   return (
-    <html lang="en">
+    <html lang="en" translate="no">
+      <head>
+        <meta name="google" content="notranslate" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <QueryClientProvider client={queryClient}>
-         
-            <ThemeToggleButton />
-            {children}
-            <Toaster
-              position="bottom-center"
-              toastOptions={{
-                className:
-                  "animate-in slide-in-from-bottom fade-in left-1/2 -translate-x-1/2 transform",
-              }}
-              richColors
-            />
-
+          <ThemeToggleButton />
+          {children}
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              className:
+                "animate-in slide-in-from-bottom fade-in left-1/2 -translate-x-1/2 transform",
+            }}
+            richColors
+          />
         </QueryClientProvider>
       </body>
     </html>

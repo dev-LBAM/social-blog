@@ -14,6 +14,10 @@ import ShowFile from "./ShowFile"
 import { failToast } from "../../ui/Toasts"
 import PostFilter from "./PostFilter"
 import EditCommentorPost from "./EditCommentOrPost"
+import ProfileMenu from "./ProfileMenu"
+import calculateAge from "@/app/lib/utils/calculateAge"
+import getDate from "@/app/lib/utils/getDate"
+import YouTubeTextRenderer from "./YouTubeTextRenderer"
 
 type Post = {
   _id: string
@@ -21,6 +25,13 @@ type Post = {
     _id: string
     name: string
     profileImg: string
+    email: string
+    birthDate: string
+    gender: string
+    city: string
+    state: string
+    country: string
+    createdAt: string
   }
   createdAt: string
   text: string
@@ -44,6 +55,25 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [onlyFollowers, setOnlyFollowers] = useState(false)
   const [followingIds, setFollowingIds] = useState<string[]>([])
+  const [profileOpenMap, setProfileOpenMap] = useState<{ [key: string]: boolean }>({})
+
+  const menuRef = useRef<HTMLDivElement | null>(null)
+
+  const toggleProfileMenu = (postId: string) => {
+    setProfileOpenMap(prev => ({ ...prev, [postId]: !prev[postId] }))
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setProfileOpenMap({})
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+  
 
   const [query, setQuery] = useState<string>(() => {
     if (typeof window !== "undefined") {
@@ -71,7 +101,6 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   {
     try
     {
-      console.log("a")
       const res = await fetch(`/api/posts?cursor=${pageParam || ""}&userId=${userId}&onlyFollowers=${onlyFollowers}`)
       if (!res.ok) 
       {
@@ -83,7 +112,6 @@ export default function Posts({ initialData, userId }: { initialData: object, us
       if (result.followingIds) 
       {
         setFollowingIds(result.followingIds)
-        console.log(`aa`, result.followingIds)
       }
       return result ?? { posts: [], nextCursor: null }
     }
@@ -96,7 +124,7 @@ export default function Posts({ initialData, userId }: { initialData: object, us
 
 
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error} = useInfiniteQuery({
-    queryKey: ["posts", userId, onlyFollowers],
+    queryKey: ["posts", userId],
     queryFn: fetchPosts,
     initialPageParam: null,
     getNextPageParam: (lastPage) => {return lastPage?.nextCursor ?? null},
@@ -106,10 +134,9 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   })
 
   const queryClient = useQueryClient()
-  // dispara refetch sempre que onlyFollowers mudar
   useEffect(() => {
     queryClient.resetQueries({
-      queryKey: ['posts', userId, onlyFollowers],
+      queryKey: ['posts', userId],
       exact: true,
     })
   }, [onlyFollowers, userId, queryClient])
@@ -221,9 +248,27 @@ export default function Posts({ initialData, userId }: { initialData: object, us
 
                 <div className="flex flex-col justify-start">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-semibold hover:underline cursor-pointer text-color">
+                    <span 
+                      className="font-semibold hover:underline cursor-pointer text-color"
+                      onClick={() => toggleProfileMenu(post._id)}
+                        
+                    >
                       {post.userId.name}
                     </span>
+                    {profileOpenMap[post._id] && (
+                    <div ref={menuRef}  translate="no">
+                      <ProfileMenu 
+                        userId={userId} 
+                        userPostId={post.userId._id} 
+                        userEmail={post.userId.email}
+                        userAge={calculateAge(post.userId.birthDate)}
+                        userCity={post.userId.city}
+                        userState={post.userId.state}
+                        userCountry={post.userId.country}
+                        userSinceMember={getDate(post.userId.createdAt)}
+                      />
+                    </div>
+                    )}
 
                     {post.categories?.map((category, index) => {
                       const categorie = categoryMap[category]
@@ -258,13 +303,12 @@ export default function Posts({ initialData, userId }: { initialData: object, us
 
           {!editVisibility[post._id] ? (
             <>
-              <p className="text-color whitespace-pre-line break-words overflow-hidden">{post.text}</p>
+              <YouTubeTextRenderer text={post.text} />
               {post.file && <ShowFile file={post.file} onImageClick={setSelectedImage} />}
             </>
           ) 
           : 
           (
-
             <EditCommentorPost fileEdit={post.file} textProp={post.text} onCancelEdit={() => setEditVisibility(() => ({ [post._id]: false }))} postId={post._id} categories={post.categories} />
           )}
 

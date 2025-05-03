@@ -1,7 +1,7 @@
 import User from '@/app/lib/database/schemas/user'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { NextRequest, NextResponse } from 'next/server'
-import { logoutUser, parseAuth } from '@/app/lib/utils/auths'
+import { logoutUser, verifyAuth } from '@/app/lib/utils/auths'
 import Post from '@/app/lib/database/schemas/post'
 import Message from '@/app/lib/database/schemas/message'
 import Like from '@/app/lib/database/schemas/like'
@@ -12,8 +12,12 @@ export async function deleteUserService(req: NextRequest)
 {
     try
     {
-        const userId = await parseAuth(req)
-        if(userId.status === 401) return userId
+        const auth = await verifyAuth(req)
+        if (auth.status === 401) 
+        {
+            return auth
+        }
+        const { userId } = await auth.json()
 
         await connectToDB()
         

@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { IoHeart, IoChatbubbleEllipses } from 'react-icons/io5'
+import { IoHeartOutline, IoHeart, IoChatbubbleEllipsesOutline, IoChatbubbleEllipses } from 'react-icons/io5'
 import { failToast } from '../../ui/Toasts'
 import Tooltip from '../../ui/Tooltip'
 import { FiLoader } from 'react-icons/fi'
@@ -109,17 +109,17 @@ interface PostsPage {
                 handleLikeCreation()}
             }}
             className={`transition-all duration-200 flex items-center
-              ${loading ? "text-color cursor-not-allowed"
-                : (isLiked ? "text-pink-700 hover:text-pink-900 cursor-pointer" : "text-pink-900 hover:text-pink-700 cursor-pointer")
+              ${loading ? "text-pink-800 hover:text-pink-700 cursor-not-allowed"
+                : "text-pink-800 hover:text-pink-700 cursor-pointer"
               }`}
           >
-              {loading ? (
-    <FiLoader size={18} className="animate-spin" />
-  ) : (
-    <IoHeart size={20} />
-  )}
+            {loading ? (
+              <FiLoader size={18} className="animate-spin" />
+            ) : (
+              isLiked ? <IoHeart size={20} /> : <IoHeartOutline size={20} />
+            )}
           </button>
-          <Tooltip text={isLiked ? 'Unlike' : 'Like'} bgColor={isLiked ? 'bg-pink-900' : 'bg-pink-700'} borderT={isLiked ? 'border-t-pink-900' : 'border-t-pink-700'} />
+          <Tooltip text={isLiked ? 'Unlike' : 'Like'} bgColor={'bg-pink-700'} borderT={'border-t-pink-700'} />
         </div>
       </div>
        
@@ -134,13 +134,12 @@ interface PostsPage {
                 onCommentClick()
                 setShowComment(!showComment)
               }}
-              className={`transition-all duration-200 flex items-center
-                ${(showComment ? "text-blue-400 hover:text-blue-500 cursor-pointer" : "text-blue-500 hover:text-blue-400 cursor-pointer")
-                }`}
+              className={`transition-all duration-200 flex items-center text-blue-500 hover:text-blue-400 cursor-pointer
+                `}
             >
-            <IoChatbubbleEllipses size={20} className="ml-2" />
+            {showComment ? <IoChatbubbleEllipses size={20} className="ml-2" /> : <IoChatbubbleEllipsesOutline size={20} className="ml-2" />}
           </button>
-          <Tooltip text={showComment ? 'Hide Comments' : 'Show Comments'} bgColor={showComment ? 'bg-blue-500' : 'bg-blue-400'} borderT={isLiked ? 'border-t-blue-500' : 'border-t-blue-400'} />
+          <Tooltip text={showComment ? 'Hide Comments' : 'Show Comments'} bgColor={'bg-blue-400'} borderT={'border-t-blue-400'} />
         </div>
       </div>
       <span className="text-color">{commentsCount}</span>

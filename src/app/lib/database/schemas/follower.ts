@@ -23,7 +23,7 @@ interface IFollower extends Document
     followedId: Schema.Types.ObjectId
 }
   
-FollowerSchema.index({ userId: 1, followerId: 1 }, { unique: true })
+FollowerSchema.index({ userId: 1, followedId: 1 }, { unique: true })
   
 const Follower = mongoose.models.Follower || mongoose.model<IFollower>('Follower', FollowerSchema)
   

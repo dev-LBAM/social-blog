@@ -1,15 +1,19 @@
 import { connectToDB } from '@/app/lib/database/mongodb';
 import Conversation from '@/app/lib/database/schemas/conversation';
 import Message from '@/app/lib/database/schemas/message';
-import { parseAuth } from '@/app/lib/utils/auths';
+import { verifyAuth } from '@/app/lib/utils/auths';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function getUserMessagesService(friendId: string, req: NextRequest)
 {
     try 
     {
-        const userId = await parseAuth(req);
-        if (userId.status === 401) return userId;
+        const auth = await verifyAuth(req)
+        if (auth.status === 401) 
+        {
+            return auth
+        }
+        const { userId } = await auth.json()
 
         await connectToDB();
         const conversation = await Conversation.findOne({ participants: { $all: [userId, friendId] } });

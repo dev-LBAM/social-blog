@@ -2,7 +2,7 @@ import User from '@/app/lib/database/schemas/user'
 import { connectToDB } from '@/app/lib/database/mongodb'
 import { updateUserDTO } from '../(dtos)/update.dto'
 import { NextRequest, NextResponse } from 'next/server'
-import { hashPassword } from '@/app/lib/utils/auths'
+import { hashPassword, verifyAuth } from '@/app/lib/utils/auths'
 import { z } from 'zod'
 import { checkRequest } from '@/app/lib/utils/checks'
 
@@ -12,8 +12,15 @@ export async function updateUserService(req: NextRequest)
   {
     const validationRequest = await checkRequest(req)
     if(validationRequest instanceof NextResponse) return validationRequest
-    const { userId, body } = validationRequest
-  
+    const { body } = validationRequest
+
+    const auth = await verifyAuth(req)
+    if (auth.status === 401) 
+    {
+        return auth
+    }
+    const { userId } = await auth.json()
+    
     if(body.birthDate) body.birthDate = new Date(body.birthDate)
     
     if(body.password) body.password = await hashPassword(body.password)

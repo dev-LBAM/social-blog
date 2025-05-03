@@ -15,7 +15,6 @@ export async function getPostService(req: NextRequest) {
     const categoryParams = req.nextUrl.searchParams.get("categories")
     const userId = req.nextUrl.searchParams.get("userId")
     const onlyFollowers = req.nextUrl.searchParams.get('onlyFollowers') === 'true'
-    console.log(onlyFollowers)
 
     const categories = categoryParams ? categoryParams.split(",") : []
 
@@ -57,7 +56,7 @@ export async function getPostService(req: NextRequest) {
     const obtainedPosts = await Post.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit)
-      .populate('userId', 'name profileImg')
+      .populate('userId', 'name profileImg email birthDate gender city state country createdAt')
       .lean()
 
     if(userId) 
