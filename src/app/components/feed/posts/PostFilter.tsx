@@ -40,7 +40,11 @@ export default function PostFilter({search, setSearch, selectedCategories, setSe
             type="checkbox"
             id="onlyFollowers"
             checked={onlyFollowers}
-            onChange={(e) => setOnlyFollowers(e.target.checked)}
+            onChange={(e) => {
+              setOnlyFollowers(e.target.checked)
+              console.log(onlyFollowers)
+            }
+            }
             className="mr-2"
           />
           <label htmlFor="onlyFollowers" className="text-sm text-color">
