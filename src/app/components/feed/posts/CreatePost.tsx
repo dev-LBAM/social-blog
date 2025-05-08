@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { FiPaperclip, FiSend, FiTrash2 } from "react-icons/fi"
 import uploadFile from "./server/postRequests/uploadFile"
 import ModalImage from "../../ui/ModalImage"
-import CategorySelect from "./SelectCategory"
+import CategorySelect from "./CategorySelect"
 import { failToast, successToast } from "../../ui/Toasts"
 import Tooltip from "../../ui/Tooltip"
 import createCommentOrPost from "./server/postRequests/createCommentOrPost"
@@ -166,7 +166,7 @@ export default function CreatePost()
       <div className="pt-1 flex items-center  gap-4 text-xs text-neutral-500">
         <p>{postText?.length ?? 0}/{maxLength}</p>
         <div className="w-1/2">
-          <CategorySelect title={"Select an category to your post"} value={selectedCategories} onChange={setSelectedCategories} />
+          <CategorySelect title={"Add a Category"} value={selectedCategories} onChange={setSelectedCategories} />
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 'use client'
 import { FiSearch } from "react-icons/fi"
-import CategorySelect from "./SelectCategory"
+import CategorySelect from "./CategorySelect"
 
 interface PostFilterProps
 {
@@ -30,7 +30,7 @@ export default function PostFilter({search, setSearch, selectedCategories, setSe
       <div className="mt-2 flex items-center justify-between">
         <div className="relative w-1/2">
           <CategorySelect
-            title="Select categories to filter posts"
+            title="Filter By Category"
             value={selectedCategories}
             onChange={setSelectedCategories}
           />
@@ -48,7 +48,7 @@ export default function PostFilter({search, setSearch, selectedCategories, setSe
             className="mr-2"
           />
           <label htmlFor="onlyFollowers" className="text-sm text-color">
-            Show only posts from people you follow
+            Followed Posts
           </label>
         </div>
       </div>

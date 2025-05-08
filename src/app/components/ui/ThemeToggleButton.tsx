@@ -37,7 +37,7 @@ const ThemeToggleButton = () => {
   }
 
   return (
-    <div className="fixed top-4 left-4 z-50">
+    <div className="fixed bottom-4 left-4 z-50">
       <div className="flex items-center">
         <SunIcon className="w-6 h-6 text-yellow-500" />
         <button
