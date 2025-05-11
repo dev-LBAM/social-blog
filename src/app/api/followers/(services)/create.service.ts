@@ -23,7 +23,7 @@ export async function createFollowerService(userId: string, followedId: string) 
             await Follower.findOneAndDelete({ userId, followedId })
 
             return NextResponse.json(
-            { message: `User unfollowed` },
+            { message: `User unfollowed`, isFollowing: true },
             { status: 200 })
 
         }
@@ -32,7 +32,7 @@ export async function createFollowerService(userId: string, followedId: string) 
         await follower.save()
 
         return NextResponse.json(
-        { message: `User followed succesfully`, follower },
+        { message: `User followed succesfully`, follower, isFollowing: false },
         { status: 201 })
     } 
     catch (error) 

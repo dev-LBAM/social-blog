@@ -1,7 +1,7 @@
 import { verifyAuth } from "@/app/lib/utils/auths"
 import { NextRequest, NextResponse } from "next/server"
-import { countFollowerService } from "../../(services)/count.service"
 
+import { countFollowerService } from "../../(services)/count.service"
 export async function GET(req: NextRequest) 
 {
     const auth = await verifyAuth(req)

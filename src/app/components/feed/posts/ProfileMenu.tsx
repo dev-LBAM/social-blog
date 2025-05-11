@@ -67,9 +67,8 @@ export default function ProfileMenu({ userId, userPostId, userEmail, userAge, us
             }
             const data = await res.json()
             setFollowingCount(data.following)
-            console.log(followingCount)
             setFollowersCount(data.followers)
-            setIsFollowing(data.followers)
+            setIsFollowing(data.isFollowing)
         }
         catch (error) 
         {
@@ -96,15 +95,15 @@ export default function ProfileMenu({ userId, userPostId, userEmail, userAge, us
           const error = await res.json()
           throw new Error(error.message)
         }
-
+        const data = await res.json()
         if(res.status == 201)
         {
-            setIsFollowing(prev => (prev === 1 ? 0 : 1))
+            setIsFollowing(data.isFollowing)
             return successToast('User Followed', 'You follow the user successfully')
         }
         if(res.status == 200)
         {
-            setIsFollowing(prev => (prev === 1 ? 0 : 1))
+            setIsFollowing(data.isFollowing)
             return successToast('User Unfollowed', 'You unfollow the user successfully')
         }
       }
