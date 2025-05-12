@@ -1,6 +1,6 @@
 'use client'
 
-import { useState,  useEffect } from "react"
+import { useState,  useEffect, useCallback } from "react"
 import { failToast, successToast } from "../../ui/Toasts"
 import { IoMail, IoPersonAdd, IoPersonAddOutline, IoSettingsSharp } from "react-icons/io5"
 import { FiLoader } from "react-icons/fi"
@@ -44,42 +44,38 @@ export default function ProfileMenu({ userId, userPostId, userEmail, userAge, us
         }
     }
 
-    useEffect(() => 
+    const loadUserFollowers = useCallback(async () => 
     {
-        loadUserFollowers()
-    }, [])
-
-    const loadUserFollowers = async () => 
-    {
-        try
+        try 
         {
-            if(loading) return
-            setLoading(true)
-        
-            const res = await fetch(`/api/followers/${userPostId}`, {
+          if(loading) return
+          setLoading(true)
+      
+          const res = await fetch(`/api/followers/${userPostId}`, {
             method: "GET"
-            })
-            
-            if (!res.ok) 
-            {
-                const error = await res.json()
-                throw new Error(error.message)
-            }
-            const data = await res.json()
-            setFollowingCount(data.following)
-            setFollowersCount(data.followers)
-            setIsFollowing(data.isFollowing)
+          })
+      
+          if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.message)
+          }
+      
+          const data = await res.json()
+          setFollowingCount(data.following)
+          setFollowersCount(data.followers)
+          setIsFollowing(data.isFollowing)
+        } catch (error) {
+          failToast({ title: "Failed To Load Profile User", error: error })
+        } finally {
+          setLoading(false)
         }
-        catch (error) 
+      }, [loading, userPostId])
+      
+        useEffect(() => 
         {
-        failToast({title: "Failed To Load Profile User", error: error})
-        }
-        finally
-        {
-        setLoading(false)
-        }
-    }
-
+            loadUserFollowers()
+        }, [loadUserFollowers])
+      
 
     const onFollowClick = async () => {
       try {
