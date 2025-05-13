@@ -74,7 +74,7 @@ export default function ProfileMenu({ userId, userPostId, userEmail, userAge, us
         useEffect(() => 
         {
             loadUserFollowers()
-        }, [loadUserFollowers])
+        }, [])
       
 
     const onFollowClick = async () => {

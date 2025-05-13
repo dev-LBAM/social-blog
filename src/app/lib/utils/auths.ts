@@ -19,23 +19,24 @@ export async function createAuth(userId: string) //CREATE AUTHENTICATION
 
 
 
-        response.cookies.set('accessToken', accessToken, 
-        {
-            path: '/',
-            httpOnly: true,
-            secure: false,
-            sameSite: 'strict',
-            maxAge: 60 * 5
+        const isProduction = process.env.NODE_ENV === 'production'
+
+        response.cookies.set('accessToken', accessToken, {
+          path: '/',
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? 'strict' : 'lax', 
+          maxAge: 60 * 5 
         })
         
-        response.cookies.set('refreshToken', refreshToken, 
-        {
-            path: '/',
-            httpOnly: true,
-            secure: false,
-            sameSite: 'strict',
-            maxAge: 604800
+        response.cookies.set('refreshToken', refreshToken, {
+          path: '/',
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? 'strict' : 'lax', 
+          maxAge: 604800, 
         })
+        
 
         return response
     } 
@@ -105,14 +106,16 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
             { message: 'Authorized',  userId: decodedRefresh.userId}, 
             { status: 200 })
 
-            response.cookies.set('accessToken', newAccessToken, 
-            {
-                path: '/',
-                httpOnly: true,
-                secure: false,
-                sameSite: 'strict',
-                maxAge: 60 * 5
-            })  
+
+        const isProduction = process.env.NODE_ENV === 'production'
+        response.cookies.set('accessToken', newAccessToken, {
+          path: '/',
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? 'strict' : 'lax', 
+          maxAge: 60 * 5 
+        })
+        
             return response
         } 
         catch 
