@@ -189,14 +189,14 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
 
       {/* Preview Image/Video */}
       {commentFilePreview && (
-      <div className="mt-2 max-w-full max-h-[300px] overflow-hidden rounded-lg cursor-pointer">
+      <div className="mt-2 max-w-full max-h-[300px] overflow-hidden cursor-pointer">
         <Image
           src={commentFilePreview}
           alt="Preview Image"
           width={0}
           height={0}
           sizes="100vw"
-          className="w-auto h-auto max-h-[300px] object-contain"
+          className="w-auto h-auto max-h-[300px] rounded-lg  object-contain"
           onClick={() => setSelectedImage(commentFilePreview)}
         />
       </div>

@@ -29,14 +29,14 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
               font-family: Arial, sans-serif;
               margin: 0;
               padding: 0;
-              background-color: #f7f7f7;
-              color: #333;
+              background-color: #f4f4f4; /* Background: Neutral light gray */
+              color: #333; /* Dark gray text */
             }
             .email-container {
               width: 100%;
               max-width: 600px;
               margin: 0 auto;
-              background-color: #FFEDD5;
+              background-color: #ffffff; /* White background for the container */
               padding: 20px;
               border-radius: 8px;
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -46,7 +46,7 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
               margin-bottom: 20px;
             }
             .header h1 {
-              color: #000000;
+              color: #333333; /* Dark gray for the heading */
               font-size: 24px;
             }
             .content {
@@ -56,23 +56,27 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
             .content p {
               font-size: 16px;
               margin-bottom: 20px;
+              color: #555; /* Medium gray text for the paragraph */
             }
             .code {
               font-size: 36px;
               font-weight: bold;
-              color: #000000;
-              background-color: #ffffff;
+              color: #333333; /* Dark gray code text */
+              background-color: #f1f1f1; /* Light gray background for code box */
               padding: 10px 20px;
               border-radius: 5px;
             }
             .footer {
               text-align: center;
               font-size: 14px;
-              color: #888;
+              color: #888; /* Light gray for footer text */
             }
             .footer a {
-              color: #1a73e8;
+              color: #555; /* Medium gray for the link */
               text-decoration: none;
+            }
+            .footer a:hover {
+              color: #1a73e8; /* Blue color on hover */
             }
           </style>
         </head>
@@ -91,14 +95,14 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
               <p>If you didn't request this code, you can ignore this email.</p>
             </div>
             <div class="footer">
-              <p>Thank you for using our service! <br> If you have any questions, feel free to contact us at <a href="mailto:support@example.com">app.tester.lbam@gmail.com
-</a>.</p>
+              <p>Thank you for using our service! <br> If you have any questions, feel free to contact us at <a href="mailto:app.tester.lbam@gmail.com">app.tester.lbam@gmail.com</a>.</p>
             </div>
           </div>
         </body>
         </html>
       `,
     };
+    
 
     await transporter.sendMail(mailOptions);
     return { status: 200, message: "Email sent successfully!" };

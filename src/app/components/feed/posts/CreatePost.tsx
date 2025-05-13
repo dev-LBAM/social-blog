@@ -173,7 +173,7 @@ export default function CreatePost()
       <div className="pt-1 flex items-center  gap-4 text-xs text-neutral-500">
         <p>{postText?.length ?? 0}/{maxLength}</p>
         <div className="w-1/2">
-          <CategorySelect title={"Add a Category"} value={selectedCategories} onChange={setSelectedCategories} />
+          <CategorySelect title={"Add Category"} value={selectedCategories} onChange={setSelectedCategories} />
         </div>
       </div>
 
@@ -197,14 +197,14 @@ export default function CreatePost()
       )}
 
 {filePreview && (
-  <div className="mt-2 max-w-full max-h-[300px] overflow-hidden rounded-lg cursor-pointer">
+  <div className="mt-2 max-w-full max-h-[300px] overflow-hidden cursor-pointer">
     <Image
       src={filePreview}
       alt="Preview Image"
       width={0}
       height={0}
       sizes="100vw"
-      className="w-auto h-auto max-h-[300px] object-contain"
+      className="w-auto h-auto max-h-[300px] object-contain rounded-lg "
       onClick={() => setSelectedImage(filePreview)}
     />
   </div>
