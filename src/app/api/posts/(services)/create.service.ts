@@ -34,6 +34,8 @@ export async function createPostService(req: NextRequest)
             name: parsedBody.fileName,
             url: parsedBody.fileUrl,
             type: checkFileType(parsedBody.fileUrl),
+            isSensitive: parsedBody.isSensitive,
+            sensitiveLabel: parsedBody.sensitiveLabel
           }
         : undefined,
       categories: parsedBody.categories ?? [],

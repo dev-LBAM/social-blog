@@ -33,25 +33,24 @@ export default function CreatePost()
     }
   }, [postText])
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => 
-  {
-    const selectedFile = event.target.files ? event.target.files[0] : null
-    if(selectedFile) 
-    {
-      setFile(selectedFile)
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+    if (selectedFile) {
+      if (selectedFile.type.startsWith("image/")) {
+        setFile(selectedFile);
+  
+        const previewUrl = URL.createObjectURL(selectedFile);
+        setFilePreview(previewUrl);
+      } else {
 
-      if (selectedFile.type.startsWith("image/")) 
-      {
-        const previewUrl = URL.createObjectURL(selectedFile)
-        setFilePreview(previewUrl)
-      }
-      else 
-      {
-        setFilePreview(null)
+        setFile(null);
+        setFilePreview(null);
+
+        failToast({ title: 'Invalid file type', error: 'Only image files are allowed!' });
       }
     }
-  }
-
+  };
+  
   const handleRemoveFile = () => 
   {
     setFile(null)
@@ -74,6 +73,9 @@ export default function CreatePost()
       setIsUploading(true)
       let fileUrl = ''
       let fileName = ''
+      let isSensitive = false
+      let sensitiveLabel = []
+
       if (file) 
       {
         const res = await uploadFile(file)
@@ -81,6 +83,8 @@ export default function CreatePost()
         {
           fileUrl = res.fileUrl
           fileName = res.fileName
+          isSensitive = res.isSensitive
+          sensitiveLabel = res.labels
         }
       }
 
@@ -89,6 +93,8 @@ export default function CreatePost()
         text: postText?.trim() || undefined,
         fileUrl: fileUrl?.trim() || undefined,
         fileName: fileName?.trim() || undefined,
+        isSensitive: isSensitive,
+        sensitiveLabel: sensitiveLabel,
         categories: selectedCategories.length > 0 ? selectedCategories : undefined
       }
 
@@ -141,6 +147,7 @@ export default function CreatePost()
             key={file ? file.name : "file-input"}
             id="file-input"
             type="file"
+            accept="image/*"
             onChange={handleFileChange}
             className="hidden"
           />
@@ -166,7 +173,7 @@ export default function CreatePost()
       <div className="pt-1 flex items-center  gap-4 text-xs text-neutral-500">
         <p>{postText?.length ?? 0}/{maxLength}</p>
         <div className="w-1/2">
-          <CategorySelect title={"Add a Category"} value={selectedCategories} onChange={setSelectedCategories} />
+          <CategorySelect title={"Add Category"} value={selectedCategories} onChange={setSelectedCategories} />
         </div>
       </div>
 
@@ -189,16 +196,20 @@ export default function CreatePost()
         </div>
       )}
 
-      {filePreview && (
-        <Image
-          src={filePreview}
-          alt="Preview Image"
-          width={400}
-          height={200}
-          className="mt-1cursor-pointer rounded-lg"
-          onClick={() => setSelectedImage(filePreview)}
-        />
-      )}
+{filePreview && (
+  <div className="mt-2 max-w-full max-h-[300px] overflow-hidden cursor-pointer">
+    <Image
+      src={filePreview}
+      alt="Preview Image"
+      width={0}
+      height={0}
+      sizes="100vw"
+      className="w-auto h-auto max-h-[300px] object-contain rounded-lg "
+      onClick={() => setSelectedImage(filePreview)}
+    />
+  </div>
+)}
+
 
       <ModalImage selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
 

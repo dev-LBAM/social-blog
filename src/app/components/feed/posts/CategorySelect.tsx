@@ -180,7 +180,7 @@ export default function CategorySelect({
                 .filter((opt) => value.includes(opt.value))
                 .map((opt) => opt.label)
                 .join(", ")
-              : `📌 ${title}`
+              : `${title}`
           }
         >
           {value.length > 0
@@ -188,7 +188,7 @@ export default function CategorySelect({
               .filter((opt) => value.includes(opt.value))
               .map((opt) => opt.label)
               .join(", ")
-            : `📌 ${title}`}
+            : `${title}`}
         </span>
 
         <ChevronDown size={16} className="text-color" />

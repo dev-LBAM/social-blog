@@ -8,6 +8,7 @@ import Image from "next/image"
 import { failToast, successToast } from "../../ui/Toasts"
 import Tooltip from "../../ui/Tooltip"
 import createCommentOrPost from "./server/postRequests/createCommentOrPost"
+import ModalImage from "../../ui/ModalImage"
 
 export default function CreateComment({ postId, commentId }: { postId: string , commentId?: string }) 
 {
@@ -16,6 +17,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
   const [commentFile, setCommentFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [commentFilePreview, setCommentFilePreview] = useState<string | null>(null)
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const maxLength = 1500
 
@@ -64,6 +66,8 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
       setIsUploading(true)
       let fileUrl = ''
       let fileName = ''
+      let isSensitive = false
+      let sensitiveLabel = []
       if(commentFile)
       {
         const res = await uploadFile(commentFile)
@@ -71,6 +75,8 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
         {
           fileUrl = res.fileUrl
           fileName = res.fileName
+          isSensitive = res.isSensitive
+          sensitiveLabel = res.labels
         }
       }
   
@@ -79,6 +85,8 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
         text: comment?.trim() || undefined,
         fileUrl: fileUrl?.trim() || undefined,
         fileName: fileName?.trim() || undefined,
+        isSensitive: isSensitive,
+        sensitiveLabel: sensitiveLabel,
         parentCommentId: commentId,
       }
 
@@ -138,7 +146,11 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
               <Tooltip text={'Attach File'} bgColor={'bg-gray-700'} borderT={'border-t-gray-700'} />
             </div>
           </div>
-          <input id={`file-comment-input-${uniqueId}`} type="file" onChange={handleFileChange} className="hidden" />
+          <input 
+          id={`file-comment-input-${uniqueId}`} 
+          type="file" onChange={handleFileChange} 
+          accept="image/*"
+          className="hidden" />
         </label>
 
         {/* Send Button */}
@@ -176,14 +188,20 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
       )}
 
       {/* Preview Image/Video */}
-      {commentFilePreview && 
-      <Image 
-        src={commentFilePreview} 
-        alt="Preview"
-        width={400}
-        height={200}
-        className="mt-1 w-full cursor-pointer rounded-lg"
-      />}
+      {commentFilePreview && (
+      <div className="mt-2 max-w-full max-h-[300px] overflow-hidden cursor-pointer">
+        <Image
+          src={commentFilePreview}
+          alt="Preview Image"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="w-auto h-auto max-h-[300px] rounded-lg  object-contain"
+          onClick={() => setSelectedImage(commentFilePreview)}
+        />
+      </div>
+    )}
+<ModalImage selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
     </div>
   )
 }

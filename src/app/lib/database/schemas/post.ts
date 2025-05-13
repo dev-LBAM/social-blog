@@ -30,6 +30,16 @@ const PostSchema = new Schema({
         {
             type: String,
             required: false
+        },
+        isSensitive:
+        {
+          type: Boolean,
+          required: false
+        },
+        sensitiveLabel:
+        {
+          type: Array,
+          required: false
         }
     },
     editAt:
@@ -82,6 +92,8 @@ export interface IPost extends Document
         name:string
         url: string
         type:string
+        isSensitive: boolean
+        sensitiveLabel: string[]
     }
     editAt: Date
     categories: {

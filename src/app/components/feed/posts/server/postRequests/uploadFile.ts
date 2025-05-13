@@ -39,6 +39,22 @@ export default async function uploadFile(file: File) {
     const error = await uploadFile.json()
     throw new Error(error.message)
   }
+  const rekognitionResponse = await fetch('/api/aws/analyze-image', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ imageUrl: s3FileUrl }), // URL do arquivo no S3
+  })
+  
+  if (!rekognitionResponse.ok) {
+    const error = await rekognitionResponse.json()
+    throw new Error(error.message)
+  }
+  
+  const { isSensitive, labels } = await rekognitionResponse.json()
+  console.log('isSensitive: ', isSensitive)
+  console.log('labels: ', labels)
 
-  return { fileUrl: s3FileUrl, fileName: file.name }
+  return { fileUrl: s3FileUrl, fileName: file.name, isSensitive, labels }
 }
