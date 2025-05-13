@@ -26,6 +26,8 @@ interface Comment
     url: string
     type: string
     name: string
+    isSensitive: boolean
+    sensitiveLabel: string[]
   }
   hasLiked: boolean
   text: string

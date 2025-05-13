@@ -39,6 +39,8 @@ type Post = {
     url: string
     type: string
     name: string
+    isSensitive: boolean
+    sensitiveLabel: string[]
   }
   hasLiked: boolean
   categories: [string]
