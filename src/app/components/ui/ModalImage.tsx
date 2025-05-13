@@ -25,39 +25,45 @@ export default function ModalImage({ selectedImage, setSelectedImage }: ModalPro
       }
     }
 
+    document.body.style.overflow = "hidden";
+
     window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = "auto";
+      window.removeEventListener("keydown", handleKeyDown)
+    }
   }, [selectedImage, setSelectedImage])
 
   if (!selectedImage || !dimensions) return null
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center"
-      onClick={() => setSelectedImage(null)}
-    >
-      <button
-          onClick={() => setSelectedImage(null)}
-          className="absolute top-4 right-4 text-red-400 bg-black p-3 rounded-full hover:bg-neutral-200 transition-all duration-300 cursor-pointer"
-        >
-          <IoClose size={30} />
-      </button>
-      <div
-        className="relative"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          maxWidth: "88%",
-        }}
-      >
-        <Image
-          src={selectedImage}
-          alt="Full Screen"
-          width={dimensions.width}
-          height={dimensions.height}
-          unoptimized
-          className="object-contain"
-        />
-      </div>
-    </div>
+<div
+  className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center"
+  onClick={() => setSelectedImage(null)}
+>
+  <button
+    onClick={() => setSelectedImage(null)}
+    className="absolute top-4 right-4 text-red-400 bg-black p-3 rounded-full hover:bg-neutral-200 transition-all duration-300 cursor-pointer"
+  >
+    <IoClose size={30} />
+  </button>
+
+  <div
+    className="relative w-full h-full max-w-full max-h-full"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <Image
+      src={selectedImage}
+      alt="Full Screen"
+      layout="intrinsic"
+      objectFit="contain"
+      width={0}
+      height={0}
+      className="w-full h-full max-w-full max-h-full object-contain"
+      unoptimized
+    />
+  </div>
+</div>
   )
 }

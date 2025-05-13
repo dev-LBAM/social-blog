@@ -31,8 +31,10 @@ export const postDTO = z.object(
       "diy-crafts",
       "events-festivals",
       "animals-pets"
-    ])
-    )
+    ])),
+    isSensitive: z.boolean(),
+    sensitiveLabel: z.array(z.string())
+
 }).partial()
 
 export type PostDTO = z.infer<typeof postDTO>

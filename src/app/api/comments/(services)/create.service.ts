@@ -63,6 +63,8 @@ export async function createCommentService(postId: string, req: NextRequest) {
           name: body.fileName,
           url: body.fileUrl,
           type: checkFileType(body.fileUrl),
+          isSensitive: body.isSensitive,
+          sensitiveLabel: body.sensitiveLabel
         }
         : undefined,
       parentCommentId: body.parentCommentId || null,

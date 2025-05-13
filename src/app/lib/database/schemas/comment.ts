@@ -42,6 +42,16 @@ const CommentSchema = new Schema({
         {
             type: String,
             required: false
+        },
+        isSensitive:
+        {
+          type: Boolean,
+          required: false
+        },
+        sensitiveLabel:
+        {
+          type: Array,
+          required: false
         }
     },
     editAt:
@@ -68,6 +78,8 @@ interface IComment extends Document
         name: string,
         url: string,
         type: string
+        isSensitive: boolean
+        sensitiveLabel: string[]
     }
 }
 

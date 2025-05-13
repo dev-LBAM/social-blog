@@ -8,6 +8,8 @@ interface ShowFileProps
     url: string
     type: string
     name: string
+    isSensitive: boolean
+    sensitiveLabel: string[]
   }
   onImageClick: (imageUrl: string) => void
 }
@@ -30,15 +32,38 @@ export default function ShowFile({ file, onImageClick }: ShowFileProps)
         <>
           {/* if was image */}
           {file.type.startsWith("image/") && (
-  <Image
-    src={file.url}
-    alt="Post Image"
-    width={1200}
-    height={400}
-    className="mt-1 max-h-[650px] cursor-pointer rounded-lg object-contain"
-    onClick={() => onImageClick(file.url)}
-  />
+  <div className="relative mt-1">
+    <Image
+      src={file.url}
+      alt="Post Image"
+      width={1200}
+      height={400}
+      className={`
+        w-full max-h-[500px] object-contain rounded-md cursor-pointer transition duration-300
+        ${file.isSensitive ? "blur-3xl" : ""}
+      `}
+      onClick={() => onImageClick(file.url)}
+    />
+
+    {file.isSensitive && (
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 text-white rounded-md p-4">
+        <p className="mb-2 text-sm text-center">
+          Sensitive content detected ({file.sensitiveLabel?.join(", ")})
+        </p>
+        <button
+          onClick={() => onImageClick(file.url)}
+          className="rounded-md cursor-pointer bg-page px-4 py-1 text-sm text-color"
+        >
+          see image anyway
+        </button>
+      </div>
+    )}
+  </div>
 )}
+
+
+
+
 
 
           {/* if was video */}

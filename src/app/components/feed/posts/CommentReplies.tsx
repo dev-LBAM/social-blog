@@ -20,6 +20,8 @@ type Reply =
     url: string
     type: string
     name: string
+    isSensitive: boolean
+    sensitiveLabel: string[]
   }
   text: string
   createdAt: string

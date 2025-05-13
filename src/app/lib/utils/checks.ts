@@ -34,6 +34,7 @@ export function checkFileType(url: string) {
         case 'jpeg':
         case 'png':
         case 'gif':
+        case 'webp':
             return 'image/' + extension;
 
         // Video
