@@ -6,7 +6,7 @@ export default async function fetchUserId() {
 
   const formattedCookies = allCookies.map((cookie) => `${cookie.name}=${cookie.value}`).join(";") /*  Format cookies to send in header */
   
-  const res = await fetch(`http://localhost:3000/api/auth/verify-userId`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify-userId`, {
     method: "GET",
     headers: {
       Cookie: formattedCookies,

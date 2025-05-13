@@ -107,15 +107,14 @@ export async function verifyAuth(req: NextRequest) //VERIFY AUTHENTICATION
             { status: 200 })
 
 
-        const isProduction = process.env.NODE_ENV === 'production'
-        response.cookies.set('accessToken', newAccessToken, {
-          path: '/',
-          httpOnly: true,
-          secure: isProduction,
-          sameSite: isProduction ? 'strict' : 'lax', 
-          maxAge: 60 * 5 
-        })
-        
+            const isProduction = process.env.NODE_ENV === 'production'
+            response.cookies.set('accessToken', newAccessToken, {
+            path: '/',
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? 'strict' : 'lax', 
+            maxAge: 60 * 5 
+            })
             return response
         } 
         catch 

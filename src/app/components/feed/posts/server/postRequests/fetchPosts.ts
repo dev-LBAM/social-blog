@@ -1,6 +1,6 @@
 // ✅ Carregar os primeiros posts no servidor (SSR)
 export default async function fetchInitialPosts(userId?: string) {
-    const res = await fetch(userId ? `http://localhost:3000/api/posts?userId=${userId}` : `http://localhost:3000/api/posts`, 
+    const res = await fetch(userId ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts?userId=${userId}` : `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, 
     {
       method: 'GET',
       cache: "no-store",
