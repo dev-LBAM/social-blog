@@ -22,7 +22,8 @@ export default function SidebarFollowers() {
 
   useEffect(() => {
     const socketInstance: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
-      withCredentials: true
+      transports: ['websocket'],
+      withCredentials: true,
     })
 
     if (!socketInstance) return
