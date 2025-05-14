@@ -21,8 +21,10 @@ export default function SidebarFollowers() {
   const toggleSidebar = () => setIsOpen(!isOpen)
 
   useEffect(() => {
+    console.log('sock: ',process.env.NEXT_PUBLIC_SOCKET_URL)
     const socketInstance: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
-      withCredentials: true
+
+  withCredentials: true,
     })
 
     if (!socketInstance) return
