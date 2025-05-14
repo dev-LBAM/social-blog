@@ -45,6 +45,8 @@ export async function updatePostService(postId: string, req: NextRequest)
                   url: body.fileUrl,
                   name: body.fileName || undefined,
                   type: checkFileType(body.fileUrl),
+                  isSensitive: body.isSensitive ?? undefined,
+                  sensitiveLabel: body.sensitiveLabel ?? undefined
                 },
               }
             : { $unset: { file: 1 } }),

@@ -63,7 +63,7 @@ export async function deleteCommentService(commentId: string, req: NextRequest)
             }
         })
         
-        return response
+        return response 
     }
     catch (error) 
     {

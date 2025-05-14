@@ -31,27 +31,32 @@ const CommentSchema = new Schema({
         name: 
         {
             type: String,
-            required: false
+            required: false,
+            default: undefined
         },
         url: 
         {
             type: String,
-            required: false
+            required: false,
+            default: undefined
         },
         type: 
         {
             type: String,
-            required: false
+            required: false,
+            default: undefined
         },
         isSensitive:
         {
           type: Boolean,
-          required: false
+          required: false,
+            default: undefined
         },
         sensitiveLabel:
         {
-          type: Array,
-          required: false
+            type: Array,
+            required: false,
+            default: undefined
         }
     },
     editAt:

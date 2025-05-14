@@ -86,7 +86,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
         fileUrl: fileUrl?.trim() || undefined,
         fileName: fileName?.trim() || undefined,
         isSensitive: isSensitive,
-        sensitiveLabel: sensitiveLabel,
+        sensitiveLabel: sensitiveLabel.length > 0 ? sensitiveLabel : undefined,
         parentCommentId: commentId,
       }
 
@@ -97,6 +97,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
         successToast('Reply Sended', 'Your reply was sended succesfully')
         queryClient.invalidateQueries({ queryKey: ["replies", commentId] })
         queryClient.invalidateQueries({ queryKey: ["comments", postId] })
+        
       }
       else
       {

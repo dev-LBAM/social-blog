@@ -16,12 +16,23 @@ interface FileProps {
     url: string
     type: string
     name: string
+    isSensitive: boolean;
+    sensitiveLabel?: string[];
   }
   textProp: string
   onCancelEdit: () => void
   postId?: string
   commentId?: string
   categories?: string[]
+}
+
+interface PostData {
+  text?: string;
+  fileUrl?: string;
+  fileName?: string;
+  isSensitive: boolean;
+  sensitiveLabel?: string[];
+  categories?: string[];
 }
 
 export default function EditCommentOrPost({ fileEdit, textProp, onCancelEdit, postId, commentId, categories }: FileProps) 
@@ -95,7 +106,8 @@ export default function EditCommentOrPost({ fileEdit, textProp, onCancelEdit, po
     
       let fileUrl = ''
       let fileName = ''
-
+      let isSensitive = false
+      let sensitiveLabel = []
       try 
       {
         if (file) 
@@ -116,11 +128,12 @@ export default function EditCommentOrPost({ fileEdit, textProp, onCancelEdit, po
           {
             fileUrl = res.fileUrl
             fileName = res.fileName
+            isSensitive = res.isSensitive
+            sensitiveLabel = res.labels
           }
         } 
         else if(fileUrlRemove && fileEdit?.url) 
         {
-          // Nenhum novo arquivo, e usuário pediu pra remover.
           const url = new URL(fileEdit?.url)
           await fetch(`/api/aws/delete-file`, {
             method: "DELETE",
@@ -137,14 +150,19 @@ export default function EditCommentOrPost({ fileEdit, textProp, onCancelEdit, po
           fileName = fileEdit?.name
         }
     
-        const postData = {
-          text: text?.trim() || undefined,
-          fileUrl: fileUrl?.trim() || undefined,
-          fileName: fileName?.trim() || undefined,
-          categories: selectedCategories?.length ? selectedCategories : undefined
+
+          const data: PostData = 
+      {
+        text: text?.trim() || undefined,
+        fileUrl: fileUrl?.trim() || undefined,
+        fileName: fileName?.trim() || undefined,
+        isSensitive: isSensitive,
+        categories: selectedCategories?.length ? selectedCategories : undefined
+      }
+        if (sensitiveLabel.length > 0) {
+          data.sensitiveLabel = sensitiveLabel
         }
-    
-        const res = await editCommentOrPost({ postId, commentId, data: postData })
+        const res = await editCommentOrPost({ postId, commentId, data: data })
     
         if (postId) 
         {

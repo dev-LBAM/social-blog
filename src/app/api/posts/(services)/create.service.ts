@@ -34,11 +34,11 @@ export async function createPostService(req: NextRequest)
             name: parsedBody.fileName,
             url: parsedBody.fileUrl,
             type: checkFileType(parsedBody.fileUrl),
-            isSensitive: parsedBody.isSensitive,
-            sensitiveLabel: parsedBody.sensitiveLabel
+            isSensitive: body.isSensitive ?? undefined,
+            sensitiveLabel: body.sensitiveLabel ?? undefined
           }
         : undefined,
-      categories: parsedBody.categories ?? [],
+      categories: parsedBody.categories,
     })
 
     const savedPost = await newPost.save()

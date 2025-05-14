@@ -47,6 +47,8 @@ export async function updateCommentService(commentId: string, req: NextRequest)
               url: body.fileUrl,
               name: body.fileName || undefined,
               type: checkFileType(body.fileUrl),
+              isSensitive: body.isSensitive ?? undefined,
+              sensitiveLabel: body.sensitiveLabel ?? undefined
             },
           }
         : { $unset: { file: 1 } }),

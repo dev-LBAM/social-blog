@@ -1,6 +1,13 @@
 import mongoose, { Schema } from 'mongoose'
 
 const UserSchema = new Schema({
+  username: 
+  {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+  },
   name: 
   {
     type: String,
@@ -63,6 +70,7 @@ const UserSchema = new Schema({
 
 interface IUser extends Document 
 {
+  username: string
   name: string
   email: string
   password: string
