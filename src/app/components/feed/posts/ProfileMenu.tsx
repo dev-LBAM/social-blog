@@ -6,7 +6,8 @@ import { IoMail, IoPersonAdd, IoPersonAddOutline, IoSettingsSharp } from "react-
 import { FiLoader } from "react-icons/fi"
 
 interface ProfileProps{
-    userId: string, 
+    userId: string,
+    userName: string,
     userPostId: string,
     userEmail: string,
     userAge: number,
@@ -16,7 +17,7 @@ interface ProfileProps{
     userSinceMember: string,
 }
 
-export default function ProfileMenu({ userId, userPostId, userEmail, userAge, userCity, userState, userCountry, userSinceMember} : ProfileProps) 
+export default function ProfileMenu({ userId, userName, userPostId, userEmail, userAge, userCity, userState, userCountry, userSinceMember} : ProfileProps) 
 {
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -91,15 +92,13 @@ export default function ProfileMenu({ userId, userPostId, userEmail, userAge, us
           const error = await res.json()
           throw new Error(error.message)
         }
-        const data = await res.json()
+        await res.json()
         if(res.status == 201)
         {
-            setIsFollowing(data.isFollowing)
             return successToast('User Followed', 'You follow the user successfully')
         }
         if(res.status == 200)
         {
-            setIsFollowing(data.isFollowing)
             return successToast('User Unfollowed', 'You unfollow the user successfully')
         }
       }
@@ -136,7 +135,7 @@ export default function ProfileMenu({ userId, userPostId, userEmail, userAge, us
                     Email copied!
                     </div>
                 )}
-
+                <p className="truncate" title={userName}>Name: {userName}</p>
                 <p>City: {userCity}</p>
                 <p>State: {userState}</p>
                 <p>Country: {userCountry}</p>

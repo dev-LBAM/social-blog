@@ -11,6 +11,14 @@ import { failToast, successToast } from "../../ui/Toasts"
 import Tooltip from "../../ui/Tooltip"
 import createCommentOrPost from "./server/postRequests/createCommentOrPost"
 
+interface PostData {
+  text?: string;
+  fileUrl?: string;
+  fileName?: string;
+  isSensitive: boolean;
+  sensitiveLabel?: string[];
+  categories?: string[];
+}
 export default function CreatePost() 
 {
   const [postText, setPostText] = useState<string | undefined>(undefined)
@@ -87,17 +95,20 @@ export default function CreatePost()
           sensitiveLabel = res.labels
         }
       }
-
-      const postData = 
+      console.log(sensitiveLabel.length)
+      const postData: PostData = 
       {
         text: postText?.trim() || undefined,
         fileUrl: fileUrl?.trim() || undefined,
         fileName: fileName?.trim() || undefined,
         isSensitive: isSensitive,
-        sensitiveLabel: sensitiveLabel,
-        categories: selectedCategories.length > 0 ? selectedCategories : undefined
       }
-
+      if (sensitiveLabel.length > 0) {
+        postData.sensitiveLabel = sensitiveLabel
+      }
+      if (selectedCategories.length > 0) {
+        postData.categories = selectedCategories
+      }
       const res = await createCommentOrPost({ data: postData })
       successToast('Post Sended', 'Your post was sended succesfully')
       queryClient.invalidateQueries({ queryKey: ["posts", res.post.userId] })

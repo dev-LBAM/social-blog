@@ -7,10 +7,14 @@ import SelectGender from "./SelectGender"
 import SelectDate from "./SelectDate"
 import SelectLocation from "./SelectLocation"
 import Buttom from "../ui/Button"
+import { debounce } from "lodash"
+import { FaCheckCircle, FaSpinner, FaTimesCircle } from "react-icons/fa"
+
 
 
 interface RegisterFormData 
 {
+  username: string
   name: string
   email: string
   password: string
@@ -36,6 +40,9 @@ export default function RegisterForm()
   const [loading, setLoading] = useState<boolean>(false)
   const [formSucessColor, setFormSucessColor] = useState<boolean | null>(null)
   const [formSucessText, setFormSucessText] = useState<string>("")
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null)
+ const [verifyName, setVerifyName] = useState<boolean>(false)
+
 
   const [formData, setFormData] = useState<RegisterFormData>(() => 
   {    
@@ -47,6 +54,7 @@ export default function RegisterForm()
         const data = JSON.parse(storedData)
 
         return {
+          username: data.username || "",
           name: data.name || "",
           email: data.email || "", 
           password: data.password || "",
@@ -63,6 +71,7 @@ export default function RegisterForm()
       }
     }
     return {
+      username: "",
       name: "",
       email: "",
       password: "",
@@ -114,17 +123,35 @@ export default function RegisterForm()
 
   }, [])
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => 
-    {
-      const { name, value } = e.target
+const checkUsernameAvailability = useCallback(debounce(async (username: string) => {
+  try {
+    setVerifyName(true)
+    const res = await axios.post("/api/auth/verify-username", { username })
+    setVerifyName(false)
+    setUsernameAvailable(res.data.available)
+  } catch {
+    setVerifyName(false)
+    setUsernameAvailable(null)
+  }
+}, 500), [])
 
-      setFormData((prev) => ({ ...prev, [name]: value ?? ""}))
-      
-      if (formErrors[name]) /* When exists a formError with the name of input define error undefined */
-      {
-          setFormErrors((prevErrors) => ({...prevErrors,[name]: undefined}))
-      }
-    }, [formErrors])
+const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target
+
+  setFormData((prev) => ({ ...prev, [name]: value ?? "" }))
+
+  if (formErrors[name]) {
+    setFormErrors((prevErrors) => ({ ...prevErrors, [name]: undefined }))
+  }
+
+  if (name === "username") {
+    if (value.length >= 3) {
+      checkUsernameAvailability(value)
+    } else {
+      setUsernameAvailable(null)
+    }
+  }
+}, [formErrors, checkUsernameAvailability])
 
   const handleSubmit = async (e: React.FormEvent) => 
   {
@@ -206,10 +233,16 @@ export default function RegisterForm()
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {[
         {
+          title: "Username",
+          name: "username",
+          type: "string",
+          placeholder: "username$ex4mple",
+        },
+        {
           title: "Name",
           name: "name",
           type: "string",
-          placeholder: "User Name Example ",
+          placeholder: "User Real Name Example",
         },
         {
           title: "Password",
@@ -243,6 +276,25 @@ export default function RegisterForm()
             className={`${formErrors[field.name as keyof RegisterFormData]? "input-style-error": "input-style-standard"}`}
           />
 
+          {field.name === "username" && verifyName && <p className="flex items-center text-gray-500 gap-2 mt-1">
+    <FaSpinner className="animate-spin" />
+    Checking availability...
+  </p>}
+          {field.name === "username" && !verifyName && !formErrors[field.name] && formData.username.length >= 3 && (
+          <p className={`${usernameAvailable === false ? "text-error" : "text-success"}`}>
+            {usernameAvailable === false
+              ? <p className="flex items-center gap-2 mt-1">
+                    <FaTimesCircle  />
+                    Username already exists...Try other!
+                  </p>
+              : usernameAvailable === true
+              ?   <p className="flex items-center gap-2 mt-1">
+                    <FaCheckCircle />
+                    Username is available
+                  </p>
+              : ""}
+          </p>
+          )}
           {formErrors[field.name] && (<p className="text-error">{formErrors[field.name]}</p>)}
 
         </div>

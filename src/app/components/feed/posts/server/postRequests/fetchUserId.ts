@@ -22,7 +22,9 @@ export default async function fetchUserId() {
   if(!res.ok) 
   {
     const error = await res.json()
+    window.location.href = '/'
     throw new Error(error.message)
+    
   }
 
   const userId = await res.json()

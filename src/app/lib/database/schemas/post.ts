@@ -19,27 +19,32 @@ const PostSchema = new Schema({
         name: 
         {
             type: String,
-            required: false
+            required: false,
+            default: undefined
         },
         url: 
         {
             type: String,
-            required: false
+            required: false,
+            default: undefined
         },
         type: 
         {
             type: String,
-            required: false
+            required: false,
+            default: undefined
         },
         isSensitive:
         {
           type: Boolean,
-          required: false
+          required: false,
+          default: undefined
         },
         sensitiveLabel:
         {
           type: Array,
-          required: false
+          required: false,
+          default: undefined
         }
     },
     editAt:
@@ -75,7 +80,7 @@ const PostSchema = new Schema({
           "events-festivals",
           "animals-pets"
         ],
-        default: [],
+        default: undefined,
       },
     likesCount: { type: Number, default: 0 },
     commentsCount: { type: Number, default: 0 },

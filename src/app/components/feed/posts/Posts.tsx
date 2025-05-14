@@ -23,6 +23,7 @@ type Post = {
   _id: string
   userId: {
     _id: string
+    username: string
     name: string
     profileImg: string
     email: string
@@ -39,6 +40,8 @@ type Post = {
     url: string
     type: string
     name: string
+    isSensitive: boolean
+    sensitiveLabel: string[]
   }
   hasLiked: boolean
   categories: [string]
@@ -253,12 +256,13 @@ export default function Posts({ initialData, userId }: { initialData: object, us
                       onClick={() => toggleProfileMenu(post._id)}
                         
                     >
-                      {post.userId.name}
+                      {post.userId.username}
                     </span>
                     {profileOpenMap[post._id] && (
                     <div ref={menuRef}  translate="no">
                       <ProfileMenu 
                         userId={userId} 
+                        userName={post.userId.name}
                         userPostId={post.userId._id} 
                         userEmail={post.userId.email}
                         userAge={calculateAge(post.userId.birthDate)}

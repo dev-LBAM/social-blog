@@ -56,7 +56,7 @@ export async function getPostService(req: NextRequest) {
     const obtainedPosts = await Post.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit)
-      .populate('userId', 'name profileImg email birthDate gender city state country createdAt')
+      .populate('userId', 'name username profileImg email birthDate gender city state country createdAt')
       .lean()
 
     if(userId) 
