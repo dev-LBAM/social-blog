@@ -97,7 +97,8 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   useEffect(() => 
   {
     setHasMounted(true)
-  }, [])
+    sessionStorage.setItem("user-id", userId)
+  }, [userId])
 
 
   const fetchPosts = async ({ pageParam = null }) => 
