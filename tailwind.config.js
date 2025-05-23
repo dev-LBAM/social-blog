@@ -8,11 +8,6 @@ export default defineConfig({
     "./src/**/*.{html,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      screens: {
-        'xl2': '1450px',
-      },
-    },
   },
   plugins: [],
 })

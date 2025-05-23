@@ -19,6 +19,7 @@ interface Comment
   {
     name: string
     profileImg: string
+    username: string
     _id: string
   }
   file: 
@@ -119,7 +120,7 @@ export default function PostComments({ postId, userId }: { postId: string, userI
                     <div className="flex justify-between items-start">
                       <div>
                         <span className="font-semibold hover:underline cursor-pointer text-color text-sm pr-2">
-                          {c.userId.name}
+                          {c.userId.username}
                         </span>
                         <span className="text-neutral-500">
                           {format(new Date(c.createdAt), "dd/MM/yyyy HH:mm")}{" "}

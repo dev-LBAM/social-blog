@@ -6,7 +6,7 @@ export default async function uploadFile(file: File) {
       "File-Name": file.name,
     },
   })
-
+  
   if (signedUrlFile.status === 401) {
     window.location.href = '/'
     throw new Error("User is not authorized")
@@ -16,7 +16,6 @@ export default async function uploadFile(file: File) {
     const error = await signedUrlFile.json()
     throw new Error(error.message)
   }
-
   const { uploadUrl, fileUrl: s3FileUrl } = await signedUrlFile.json()
 
   const uploadFile = await fetch(uploadUrl, {
@@ -26,7 +25,6 @@ export default async function uploadFile(file: File) {
       "Content-Type": file.type,
     },
   })
-
   if (uploadFile.status === 401) 
   {
     window.location.href = '/'
@@ -35,10 +33,11 @@ export default async function uploadFile(file: File) {
   }
 
   if (!uploadFile.ok) {
-    window.location.href = '/'
-    const error = await uploadFile.json()
-    throw new Error(error.message)
+    const error = await uploadFile.text()
+    console.log(error)
+    throw new Error(error)
   }
+
   const rekognitionResponse = await fetch('/api/aws/analyze-image', {
     method: "POST",
     headers: {

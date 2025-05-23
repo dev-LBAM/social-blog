@@ -68,7 +68,7 @@ const UserSchema = new Schema({
   timestamps: true,
 })
 
-interface IUser extends Document 
+export interface IUser extends Document 
 {
   username: string
   name: string

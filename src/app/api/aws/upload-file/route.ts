@@ -13,7 +13,7 @@ const s3 = new S3Client({
 })
 
 const rateLimiter = new RateLimiterMemory({
-  points: 2,
+  points: 20,
   duration: 60,
 })
 
@@ -63,8 +63,7 @@ export async function GET(req: NextRequest) {
   })
 
   try {
-    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 60 })
-
+    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 })
     return NextResponse.json({
       uploadUrl,
       fileUrl: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${fileKey}`,

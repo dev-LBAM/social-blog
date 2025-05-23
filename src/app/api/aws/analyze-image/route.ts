@@ -16,7 +16,8 @@ export async function POST(req: NextRequest) {
     return auth;
   }
 
-  const { imageUrl } = await req.json();
+  const { imageUrl } = await req.json(); 
+   console.log(imageUrl)
   if (!imageUrl) {
     return NextResponse.json({ error: "Image URL is required." }, { status: 400 });
   }

@@ -69,7 +69,7 @@ body {
 }
 
 .input-style-standard {
-  @apply w-full p-2 border rounded-sm text-neutral-700 border-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-400 shadow-md;
+  @apply w-full p-2 border rounded-sm text-neutral-700 border-neutral-400 focus:outline-none focus:ring-1 focus:ring-neutral-300 shadow-md;
 }
 
 .dark .input-style-standard {

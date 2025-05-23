@@ -144,7 +144,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
                 className="text-gray-500 hover:text-gray-700 transition-all duration-200 cursor-pointer"
               />
 
-              <Tooltip text={'Attach File'} bgColor={'bg-gray-700'} borderT={'border-t-gray-700'} />
+              <Tooltip text={'Attach File'} bgColor={'bg-gray-700'} />
             </div>
           </div>
           <input 
@@ -152,7 +152,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
           type="file" onChange={handleFileChange} 
           accept="image/*"
           className="hidden" />
-        </label>
+          </label>
 
         {/* Send Button */}
         <div className="relative flex flex-col items-center w-fit">
@@ -164,7 +164,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
             onClick={comment?.trim() || commentFile ? handleCommentSubmit : undefined}
           />
 
-          <Tooltip text={'Send Comment'} bgColor={'bg-blue-600'} borderT={'border-t-blue-600'} />
+          <Tooltip text={'Send Comment'} bgColor={'bg-blue-600'} />
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
                   size={15}
                   className="cursor-pointer text-red-300 hover:text-red-400 transition-all duration-200"
                 />
-                <Tooltip text={'Remove File'} bgColor={'bg-red-400'} borderT={'border-t-red-400'} />
+                <Tooltip text={'Remove File'} bgColor={'bg-red-400'}/>
               </div>
             </div>
         </div>

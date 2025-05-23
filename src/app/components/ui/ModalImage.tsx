@@ -1,6 +1,5 @@
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { IoClose } from "react-icons/io5"
 
 interface ModalProps {
   selectedImage: string | null
@@ -40,19 +39,20 @@ export default function ModalImage({ selectedImage, setSelectedImage }: ModalPro
   return (
 <div
   className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center"
-  onClick={() => setSelectedImage(null)}
 >
   <button
     onClick={() => setSelectedImage(null)}
-    className="absolute top-4 right-4 text-red-400 bg-black p-3 rounded-full hover:bg-neutral-200 transition-all duration-300 cursor-pointer"
+    className="absolute top-4 right-4 transition-all duration-300 cursor-pointer"
   >
-    <IoClose size={30} />
+                <Image
+                  src="/closeicon.png"
+                  alt="Close Fullscreen Icon"
+                  width={40}
+                  height={40}
+                  aria-hidden
+                />
   </button>
-
-  <div
-    className="relative w-full h-full max-w-full max-h-full"
-    onClick={(e) => e.stopPropagation()}
-  >
+<div className="w-screen h-screen flex items-center justify-center">
     <Image
       src={selectedImage}
       alt="Full Screen"

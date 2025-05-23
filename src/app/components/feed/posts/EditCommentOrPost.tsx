@@ -221,7 +221,7 @@ export default function EditCommentOrPost({ fileEdit, textProp, onCancelEdit, po
                 className="text-gray-500 hover:text-gray-700 transition-all duration-200 cursor-pointer"
               />
 
-              <Tooltip text={'Attach File'} bgColor={'bg-gray-700'} borderT={'border-t-gray-700'} />
+              <Tooltip text={'Attach File'} bgColor={'bg-gray-700'}/>
             </div>
           </div>
 
@@ -240,14 +240,14 @@ export default function EditCommentOrPost({ fileEdit, textProp, onCancelEdit, po
               className={`transition-all duration-200 ${!text?.trim() && !file || isUploading ? "text-gray-300 dark:text-neutral-600 cursor-not-allowed" : "text-blue-500 hover:text-blue-600 cursor-pointer"}`}
               onClick={text?.trim() || file ? handlePostSubmit : undefined}
             />
-            <Tooltip text={'Send Edit'} bgColor={'bg-blue-600'} borderT={'border-t-blue-600'} />
+            <Tooltip text={'Send Edit'} bgColor={'bg-blue-600'}/>
           </div>
         </div>
       </div>
       <div className="pt-1 flex items-center  gap-4 text-xs text-neutral-500">
         <p>{text?.length ?? 0}/{maxLength}</p>
         <div className="w-1/2">
-          {postId && <CategorySelect title={"Select an category to your post"} value={selectedCategories ?? []} onChange={setSelectedCategories} />}
+          {postId && <CategorySelect title={"Add Category"} value={selectedCategories ?? []} onChange={setSelectedCategories} />}
         </div>
       </div>
       {(file || (!fileUrlRemove && fileEdit?.url)) && (

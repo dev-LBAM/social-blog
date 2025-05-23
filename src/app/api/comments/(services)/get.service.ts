@@ -20,7 +20,7 @@ export async function getCommentService(postId: string, req: NextRequest) {
     const obtainedComments = await Comment.find(filter)
       .sort({ createdAt: -1 }) 
       .limit(limit + 1) 
-      .populate('userId', 'name profileImg')
+      .populate('userId', 'name username profileImg')
       .lean()
 
     if (userId) {

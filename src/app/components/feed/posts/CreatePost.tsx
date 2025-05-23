@@ -89,13 +89,13 @@ export default function CreatePost()
         const res = await uploadFile(file)
         if(res) 
         {
+          console.log(file)
           fileUrl = res.fileUrl
           fileName = res.fileName
           isSensitive = res.isSensitive
           sensitiveLabel = res.labels
         }
       }
-      console.log(sensitiveLabel.length)
       const postData: PostData = 
       {
         text: postText?.trim() || undefined,
@@ -109,6 +109,7 @@ export default function CreatePost()
       if (selectedCategories.length > 0) {
         postData.categories = selectedCategories
       }
+
       const res = await createCommentOrPost({ data: postData })
       successToast('Post Sended', 'Your post was sended succesfully')
       queryClient.invalidateQueries({ queryKey: ["posts", res.post.userId] })
@@ -150,7 +151,7 @@ export default function CreatePost()
                 className="text-gray-500 hover:text-gray-700 transition-all duration-200 cursor-pointer"
               />
 
-              <Tooltip text={'Attach File'} bgColor={'bg-gray-700'} borderT={'border-t-gray-700'} />
+              <Tooltip text={'Attach File'} bgColor={'bg-gray-700'} />
             </div>
           </div>
 
@@ -176,7 +177,7 @@ export default function CreatePost()
               onClick={postText?.trim() || file ? handlePostSubmit : undefined}
             />
 
-            <Tooltip text={'Send Post'} bgColor={'bg-blue-600'} borderT={'border-t-blue-600'} />
+            <Tooltip text={'Send Post'} bgColor={'bg-blue-600'} />
           </div>
         </div>
 
@@ -200,7 +201,7 @@ export default function CreatePost()
                 size={15}
                 className="cursor-pointer text-red-300 hover:text-red-400 transition-all duration-200"
               />
-              <Tooltip text={'Remove File'} bgColor={'bg-red-400'} borderT={'border-t-red-400'} />
+              <Tooltip text={'Remove File'} bgColor={'bg-red-400'} />
             </div>
           </div>
 

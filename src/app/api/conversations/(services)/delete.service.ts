@@ -3,45 +3,42 @@ import { NextRequest, NextResponse } from 'next/server'
 import { parseAuth } from '@/app/lib/utils/auths'
 import Conversation from '@/app/lib/database/schemas/conversation'
 import Message from '@/app/lib/database/schemas/message'
+import mongoose from 'mongoose'
 
-export async function deleteUserConversationService(conversationId: string, req: NextRequest)
-{
-    try
-    {
-        const userId = await parseAuth(req)
-        if(userId.status === 401) return userId
-    
-        await connectToDB()
+export async function deleteUserConversationService(conversationId: string, req: NextRequest) {
+  try {
+    const userAuth = await parseAuth(req)
+    if (userAuth.status === 401) return userAuth
 
-        const deletedConversation = await Conversation.findOneAndDelete(
-        {
-            _id: conversationId
-        })
-        
-        if (!deletedConversation) 
-        {
-            return NextResponse.json(
-            { message: 'Conversation not found' },
-            { status: 404 })
-        }
+    const userId = await userAuth.json().then(data => data.userId)
 
-        
-        await Message.deleteMany(
-        {
-            conversationId: deletedConversation._id
-        })
-          
-        return NextResponse.json(
-        { message: 'Conversation deleted successfully' }, 
-        { status: 200 })
+    await connectToDB()
+
+    const conversation = await Conversation.findOne({
+      _id: conversationId,
+      participants: userId,
+    })
+
+    if (!conversation) {
+      return NextResponse.json(
+        { message: 'Conversation not found or user not authorized' },
+        { status: 404 }
+      )
     }
-    catch (error) 
-    {
-        console.error('\u{274C} Internal server error while deleting like: ', error)
 
-        return NextResponse.json(
-        { message: 'Internal server error, please try again later' },
-        { status: 500})
-    }
+    await Conversation.findByIdAndDelete(conversationId)
+
+    await Message.deleteMany({ conversationId: new mongoose.Types.ObjectId(conversationId) })
+
+    return NextResponse.json(
+      { message: 'Conversation deleted successfully' },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('\u{274C} Internal server error while deleting conversation: ', error)
+    return NextResponse.json(
+      { message: 'Internal server error, please try again later' },
+      { status: 500 }
+    )
+  }
 }
-

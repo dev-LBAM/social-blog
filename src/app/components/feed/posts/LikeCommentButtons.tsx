@@ -119,7 +119,7 @@ interface PostsPage {
               isLiked ? <IoHeart size={20} /> : <IoHeartOutline size={20} />
             )}
           </button>
-          <Tooltip text={isLiked ? 'Unlike' : 'Like'} bgColor={'bg-pink-700'} borderT={'border-t-pink-700'} />
+          <Tooltip text={isLiked ? 'Unlike' : 'Like'} bgColor={'bg-pink-700'}/>
         </div>
       </div>
        
@@ -139,7 +139,7 @@ interface PostsPage {
             >
             {showComment ? <IoChatbubbleEllipses size={20} className="ml-2" /> : <IoChatbubbleEllipsesOutline size={20} className="ml-2" />}
           </button>
-          <Tooltip text={showComment ? 'Hide Comments' : 'Show Comments'} bgColor={'bg-blue-400'} borderT={'border-t-blue-400'} />
+          <Tooltip text={showComment ? 'Hide Comments' : 'Show Comments'} bgColor={'bg-blue-400'}/>
         </div>
       </div>
       <span className="text-color">{commentsCount}</span>

@@ -17,7 +17,7 @@ const FollowerSchema = new Schema({
     timestamps: true,
 })
   
-interface IFollower extends Document 
+export interface IFollower extends Document 
 {
     userId: Schema.Types.ObjectId
     followedId: Schema.Types.ObjectId
