@@ -12,6 +12,7 @@ type Reply =
 {
   _id: string
   userId: {
+    username: string
     name: string
     profileImg: string
     _id: string
@@ -82,7 +83,7 @@ export default function CommentReplies({ commentId, userId } : {commentId: strin
           {/* Profile Image */}
           <Image
             src={reply.userId.profileImg}
-            alt={`Foto de perfil de ${reply.userId.name}`}
+            alt={`Foto de perfil de ${reply.userId.username}`}
             width={800}
             height={600}
             className="w-6 h-6 rounded-full"
@@ -91,7 +92,7 @@ export default function CommentReplies({ commentId, userId } : {commentId: strin
                     <div className="flex justify-between items-start">
                       <div>
                         <span className="font-semibold hover:underline cursor-pointer text-color text-sm pr-2">
-                          {reply.userId.name}
+                          {reply.userId.username}
                         </span>
                         <span className="text-neutral-500">
                           {format(new Date(reply.createdAt), "dd/MM/yyyy HH:mm")}{" "}
