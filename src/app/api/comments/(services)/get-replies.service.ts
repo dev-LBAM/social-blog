@@ -17,7 +17,7 @@ export async function getCommentRepliesService(commentId: string, req: NextReque
     const obtainedReplies = await Comment.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit + 1)
-      .populate('userId', 'name profileImg')
+      .populate('userId', 'name profileImg username')
       .lean()
 
       
