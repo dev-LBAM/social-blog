@@ -5,7 +5,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 import { verifyAuth } from '@/app/lib/utils/auths'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
 
+const rateLimiter = new RateLimiterMemory({
+  points: 1,
+  duration: 60,
+})
 export async function createPostService(req: NextRequest) 
 {
   try 
@@ -21,6 +26,17 @@ export async function createPostService(req: NextRequest)
         return auth
     }
     const { userId } = await auth.json()
+
+  const userIp = req.headers.get("x-forwarded-for") || 'anonymous'
+
+  try {
+    await rateLimiter.consume(userIp)
+  } catch {
+    return NextResponse.json(
+      { message: 'You have exceeded the create post limit per minute. Please try again later!' },
+      { status: 429 }
+    )
+  }
 
     const parsedBody = postDTO.parse(body)
 

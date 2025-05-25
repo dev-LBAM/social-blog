@@ -11,6 +11,7 @@ type Follower = {
   _id: string;
   name: string;
   username: string;
+
   profileImg: string;
   lastSeen: Date | null;
   loggedAt: Date | null;
@@ -101,10 +102,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         </button>
       )}
 
-      <aside
-        className={`fixed top-2 bottom-2 right-2 bg-box rounded-lg shadow-lg flex flex-col transition-transform duration-300 w-full sm:w-100 ${isOpen ? "translate-x-0" : "translate-x-105"
-          }`}
-      >
+
+
+        <aside
+  className={`fixed bg-box rounded-lg shadow-lg flex flex-col transition-transform duration-300 
+  ${isOpen ? "translate-x-0" : "translate-x-105"} 
+  ${window.innerWidth < 1280 ? "w-screen h-screen top-0 bottom-0 right-0 left-0" : "w-full sm:w-100 top-2 bottom-2 right-2"}`}
+>
+
         {chatOpen && selectedFollower ? (
           <>
             <div className="border-b border-neutral-300 dark:border-neutral-800 flex flex-col justify-between items-start">
@@ -189,6 +194,27 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="border-b border-neutral-300 dark:border-neutral-800 flex flex-col justify-between items-start">
 
               <h2 className="text-lg p-3 font-semibold text-color">Mutual Followers</h2>
+                            <button
+                onClick={toggleSidebar}
+                className="group fixed top-3 right-3 rounded-lg z-30 flex items-center justify-center cursor-pointer transition-colors duration-300"
+                title="Back chat"
+                aria-label="Back Chat"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-7 w-7 text-neutral-800 dark:text-neutral-500 group-hover:text-neutral-500 dark:group-hover:text-neutral-800 transition-colors duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
             </div>
 
             {/* Section Online */}

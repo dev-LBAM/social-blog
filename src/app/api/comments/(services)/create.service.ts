@@ -6,6 +6,12 @@ import Post from '@/app/lib/database/schemas/post'
 import { commentDTO } from '../(dtos)/comment.dto'
 import { checkFileType, checkRequest } from '@/app/lib/utils/checks'
 import { verifyAuth } from '@/app/lib/utils/auths'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
+
+const rateLimiter = new RateLimiterMemory({
+  points: 2,
+  duration: 60,
+})
 
 export async function createCommentService(postId: string, req: NextRequest) {
   try {
@@ -19,7 +25,16 @@ export async function createCommentService(postId: string, req: NextRequest) {
         return auth
     }
     const { userId } = await auth.json()
+  const userIp = req.headers.get("x-forwarded-for") || 'anonymous'
 
+  try {
+    await rateLimiter.consume(userIp)
+  } catch {
+    return NextResponse.json(
+      { message: 'You have exceeded the create comment limit per minute. Please try again later!' },
+      { status: 429 }
+    )
+  }
     commentDTO.parse(body)
 
     await connectToDB()

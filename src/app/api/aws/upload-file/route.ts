@@ -13,7 +13,7 @@ const s3 = new S3Client({
 })
 
 const rateLimiter = new RateLimiterMemory({
-  points: 20,
+  points: 1,
   duration: 60,
 })
 

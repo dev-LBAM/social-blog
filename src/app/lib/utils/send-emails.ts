@@ -1,19 +1,19 @@
 import nodemailer from "nodemailer";
 
-// Nodemailer setup
+// Configuração do Nodemailer para SendGrid
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "smtp.sendgrid.net",
   port: 587,
   secure: false,
   auth: {
-    user: process.env.NODEMAILER_EMAIL,
-    pass: process.env.NODEMAILER_PASS,
+    user: "apikey", // Obrigatoriamente "apikey"
+    pass: process.env.SENDGRID_API_KEY, // Sua chave de API do SendGrid
   },
 });
 
-// Function to send HTML email
 export async function sendVerificationEmail(userEmail: string, code: string) {
   try {
+    console.time("smtpSend");
     const mailOptions = {
       from: process.env.NODEMAILER_EMAIL,
       to: userEmail,
@@ -29,14 +29,14 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
               font-family: Arial, sans-serif;
               margin: 0;
               padding: 0;
-              background-color: #f4f4f4; /* Background: Neutral light gray */
-              color: #333; /* Dark gray text */
+              background-color: #f4f4f4;
+              color: #333;
             }
             .email-container {
               width: 100%;
               max-width: 600px;
               margin: 0 auto;
-              background-color: #ffffff; /* White background for the container */
+              background-color: #ffffff;
               padding: 20px;
               border-radius: 8px;
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -46,7 +46,7 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
               margin-bottom: 20px;
             }
             .header h1 {
-              color: #333333; /* Dark gray for the heading */
+              color: #333333;
               font-size: 24px;
             }
             .content {
@@ -56,27 +56,27 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
             .content p {
               font-size: 16px;
               margin-bottom: 20px;
-              color: #555; /* Medium gray text for the paragraph */
+              color: #555;
             }
             .code {
               font-size: 36px;
               font-weight: bold;
-              color: #333333; /* Dark gray code text */
-              background-color: #f1f1f1; /* Light gray background for code box */
+              color: #333333;
+              background-color: #f1f1f1;
               padding: 10px 20px;
               border-radius: 5px;
             }
             .footer {
               text-align: center;
               font-size: 14px;
-              color: #888; /* Light gray for footer text */
+              color: #888;
             }
             .footer a {
-              color: #555; /* Medium gray for the link */
+              color: #555;
               text-decoration: none;
             }
             .footer a:hover {
-              color: #1a73e8; /* Blue color on hover */
+              color: #1a73e8;
             }
           </style>
         </head>
@@ -102,11 +102,12 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
         </html>
       `,
     };
-    
 
     await transporter.sendMail(mailOptions);
+    console.timeEnd("smtpSend");
     return { status: 200, message: "Email sent successfully!" };
   } catch (error) {
+    console.timeEnd("smtpSend");
     return { status: 500, message: "Error sending email", error };
   }
 }

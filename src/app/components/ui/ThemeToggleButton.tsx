@@ -5,12 +5,12 @@ import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 
 const ThemeToggleButton = () => {
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [isEnglish, setIsEnglish] = useState(true)
+/*   const [isEnglish, setIsEnglish] = useState(true)
 
   const toggleLanguage = () => {
 
     setIsEnglish((prev) => !prev)
-  }
+  } */
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme')
@@ -52,7 +52,7 @@ const ThemeToggleButton = () => {
         </button>
         <MoonIcon className="w-6 h-6 text-gray-500" />
       </div>
-      <div className="flex items-center mt-1">
+     {/*  <div className="flex items-center mt-1">
 
       <span className=" w-5 ml-1 text-xs text-color" aria-label="English" title="English">
         EN
@@ -72,7 +72,7 @@ const ThemeToggleButton = () => {
       <span className="text-xs ml-1 text-color" aria-label="Português" title="Português">
         PT
       </span>
-    </div>
+    </div> */}
 
     </div>
   )

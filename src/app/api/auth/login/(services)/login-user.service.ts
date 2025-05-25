@@ -20,8 +20,8 @@ export async function loginUserService(req: NextRequest)
         if(!validatedUser)
         {
             return NextResponse.json(
-            { message: 'Email not registered!'  },
-            { status: 404 })
+            { message: 'Email or password incorrect!'  },
+            { status: 400 })
         }
 
         const validatedPass = await comparePassword(validatedData.password, validatedUser.password)
