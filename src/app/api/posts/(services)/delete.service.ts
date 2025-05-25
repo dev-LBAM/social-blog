@@ -59,7 +59,7 @@ export async function deletePostService(postId: string, req: NextRequest) {
     await Post.findByIdAndDelete(postId)
 
     const response = NextResponse.json(
-      { message: 'Post and related comments deleted successfully' },
+      { message: 'Post and related comments deleted successfully', userId: userId},
       { status: 200 }
     )
 

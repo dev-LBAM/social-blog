@@ -1,21 +1,14 @@
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
 
-// Configuração do Nodemailer para SendGrid
-const transporter = nodemailer.createTransport({
-  host: "smtp.sendgrid.net",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "apikey", // Obrigatoriamente "apikey"
-    pass: process.env.SENDGRID_API_KEY, // Sua chave de API do SendGrid
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendVerificationEmail(userEmail: string, code: string) {
   try {
-    console.time("smtpSend");
-    const mailOptions = {
-      from: process.env.NODEMAILER_EMAIL,
+    console.log(`from no-reply@socialblog.blog, to ${userEmail}`);
+    console.time("resendSend");
+
+    const response = await resend.emails.send({
+      from: 'no-reply@socialblog.blog',
       to: userEmail,
       subject: "Your new code to check the email",
       html: `
@@ -101,13 +94,18 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
         </body>
         </html>
       `,
-    };
+      replyTo: process.env.NODEMAILER_EMAIL, // se quiser manter o reply-to
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.timeEnd("smtpSend");
+    console.timeEnd("resendSend");
+
+    if (response.error) {
+      return { status: 500, message: "Resend error", error: response.error };
+    }
+
     return { status: 200, message: "Email sent successfully!" };
   } catch (error) {
-    console.timeEnd("smtpSend");
-    return { status: 500, message: "Error sending email", error };
+    console.timeEnd("resendSend");
+    return { status: 500, message: "Unexpected error", error };
   }
 }

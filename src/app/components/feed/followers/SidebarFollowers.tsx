@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import Sidebar from "./Sidebar";
+import ThemeToggleButton from "../../ui/ThemeToggleButton";
 
 type Follower = {
   _id: string;
@@ -49,14 +50,13 @@ export default function ChatApp() {
   const toggleSidebar = () => setIsOpen((prev) => !prev);
 
   // Abre o chat com o seguidor, garantindo que, se a tela for menor que 1635px, o sidebar inicie fechado
-  const toggleChat = (follower: Follower) => {
-    setSelectedFollower(null);
-    setSelectedFollower(follower);
-    setMessages([]);
-    setCursor(null);
-    setChatOpen(true);
-    setIsOpen(window.innerWidth >= 1635);
-  };
+const toggleChat = (follower: Follower) => {
+  setSelectedFollower(follower);
+  setMessages([]);
+  setCursor(null);
+  setChatOpen(true);
+  setIsOpen(true)
+};
 
   useEffect(() => {
     if (selectedFollower) {
@@ -92,7 +92,14 @@ export default function ChatApp() {
   // Responsividade: se a tela for menor que 1635px, o sidebar inicia fechado; se maior, ele abre.
 useEffect(() => {
   const handleResize = () => {
-    setIsOpen(window.innerWidth >= 1635);
+    if(selectedFollower)
+    {
+      setIsOpen(true);
+    }
+    else{
+      setIsOpen(window.innerWidth >= 1635);
+    }
+
   };
 
   window.addEventListener("resize", handleResize);
@@ -196,6 +203,8 @@ useEffect(() => {
 
 return (
   <>
+  <ThemeToggleButton isSidebarOpen={isOpen} />
+
     <Sidebar
       isOpen={isOpen}
       showButton={false}

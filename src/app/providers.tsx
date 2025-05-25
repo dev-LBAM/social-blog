@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { Toaster } from "sonner"
+import { Toaster } from "react-hot-toast"
 import ThemeToggleButton from "./components/ui/ThemeToggleButton"
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -17,15 +17,20 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeToggleButton />
+      <ThemeToggleButton isSidebarOpen={true} />
       {children}
-      <Toaster
-        position="bottom-center"
-        toastOptions={{
-          className: "animate-in slide-in-from-bottom fade-in left-1/2 -translate-x-1/2 transform",
-        }}
-        richColors
-      />
+<Toaster
+  position="bottom-center"
+  toastOptions={{
+    className: "max-w-[90vw] break-words whitespace-normal px-4 py-3 rounded-xl shadow-lg bg-page text-color",
+    style: {
+      left: "50%",
+      transform: "translateX(-50%)",
+    },
+    duration: 4000,
+  }}
+/>
+
     </QueryClientProvider>
   )
 }

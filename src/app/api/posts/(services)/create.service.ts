@@ -33,7 +33,7 @@ export async function createPostService(req: NextRequest)
     await rateLimiter.consume(userIp)
   } catch {
     return NextResponse.json(
-      { message: 'You have exceeded the create post limit per minute. Please try again later!' },
+      { message: 'You have exceeded the create post limit per minute.' },
       { status: 429 }
     )
   }

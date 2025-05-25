@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { SunIcon, MoonIcon } from '@heroicons/react/24/solid'
 
-const ThemeToggleButton = () => {
+const ThemeToggleButton = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
+  
   const [isDarkMode, setIsDarkMode] = useState(false)
 /*   const [isEnglish, setIsEnglish] = useState(true)
 
@@ -11,6 +12,18 @@ const ThemeToggleButton = () => {
 
     setIsEnglish((prev) => !prev)
   } */
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1635); // Estado para monitorar tela mobile
+
+  useEffect(() => {
+    // Atualiza isMobile ao redimensionar a tela
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1635);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme')
@@ -35,6 +48,10 @@ const ThemeToggleButton = () => {
     }
     setIsDarkMode(!isDarkMode)
   }
+
+
+ if (isSidebarOpen && isMobile) return null;
+
 
   return (
     <div className="fixed bottom-4 left-4 z-50">

@@ -101,13 +101,10 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </button>
       )}
-
-
-
-        <aside
-  className={`fixed bg-box rounded-lg shadow-lg flex flex-col transition-transform duration-300 
-  ${isOpen ? "translate-x-0" : "translate-x-105"} 
-  ${window.innerWidth < 1280 ? "w-screen h-screen top-0 bottom-0 right-0 left-0" : "w-full sm:w-100 top-2 bottom-2 right-2"}`}
+<aside
+  className={`fixed bg-box rounded-lg shadow-lg flex flex-col transition-transform duration-300
+  ${isOpen ? "translate-x-0 " : "translate-x-[200%]"} 
+  ${isOpen && window.innerWidth < 1634 ? "w-screen h-screen top-0 bottom-0 right-0 left-0" : "w-full sm:w-100 top-2 bottom-2 right-2"}`}
 >
 
         {chatOpen && selectedFollower ? (
@@ -115,10 +112,10 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="border-b border-neutral-300 dark:border-neutral-800 flex flex-col justify-between items-start">
               <div className="flex items-center space-x-2 p-3">
                 <Image
-                                      src={
-                      selectedFollower.profileImg ||
-                      "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                    }
+                  src={
+                    selectedFollower.profileImg ||
+                    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                  }
                   alt={selectedFollower.username}
                   width={40}
                   height={40}
@@ -194,7 +191,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="border-b border-neutral-300 dark:border-neutral-800 flex flex-col justify-between items-start">
 
               <h2 className="text-lg p-3 font-semibold text-color">Mutual Followers</h2>
-                            <button
+              <button
                 onClick={toggleSidebar}
                 className="group fixed top-3 right-3 rounded-lg z-30 flex items-center justify-center cursor-pointer transition-colors duration-300"
                 title="Back chat"
@@ -225,11 +222,11 @@ const Sidebar: React.FC<SidebarProps> = ({
               onlineFollowers.map((f) => (
                 <div
                   key={f._id}
-                  onClick={() => {toggleChat(f)}}
+                  onClick={() => { toggleChat(f) }}
                   className="flex items-center space-x-3 m-1 p-2 rounded-sm bg-white/50 dark:bg-black/50 cursor-pointer transition-transform duration-200 hover:scale-[1.01]"
                 >
                   <Image
-                  alt={f.name}
+                    alt={f.name}
                     src={
                       f.profileImg ||
                       "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"

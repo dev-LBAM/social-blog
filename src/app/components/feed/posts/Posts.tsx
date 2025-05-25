@@ -166,8 +166,11 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   }, [hasMounted, hasNextPage, fetchNextPage])
 
   const posts = data?.pages.flatMap((page) => page?.posts ?? []) || []
-  const filteredPosts = posts.filter((post: Post) => {
-    const matchesText = !query || post.text?.toLowerCase().includes(query.toLowerCase())
+  const filteredPosts = posts.filter((post: Post) => {const matchesText = !query || (
+  post.text?.toLowerCase().includes(query.toLowerCase()) ||
+  post.userId?.username?.toLowerCase().includes(query.toLowerCase())
+)
+
     const matchesCategories =
       selectedCategories.length === 0 ||
       selectedCategories.some((category) => (post.categories ?? []).includes(category))

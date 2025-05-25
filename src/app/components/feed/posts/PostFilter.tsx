@@ -20,7 +20,7 @@ export default function PostFilter({search, setSearch, selectedCategories, setSe
         <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-700" />
         <input
           type="text"
-          placeholder="Search posts..."
+          placeholder="Looking for something? Try a keyword or username..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="input-style-standard"

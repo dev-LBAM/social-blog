@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     await rateLimiter.consume(userIp)
   } catch {
     return NextResponse.json(
-      { message: 'You have exceeded the file upload limit per minute. Please try again later!' },
+      { message: 'You have exceeded the file upload limit per minute.' },
       { status: 429 }
     )
   }

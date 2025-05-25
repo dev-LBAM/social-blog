@@ -31,7 +31,7 @@ export async function createCommentService(postId: string, req: NextRequest) {
     await rateLimiter.consume(userIp)
   } catch {
     return NextResponse.json(
-      { message: 'You have exceeded the create comment limit per minute. Please try again later!' },
+      { message: 'You have exceeded the create comment limit per minute.' },
       { status: 429 }
     )
   }
