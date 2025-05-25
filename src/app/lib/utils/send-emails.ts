@@ -4,11 +4,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendVerificationEmail(userEmail: string, code: string) {
   try {
-    console.log(`from no-reply@socialblog.blog, to ${userEmail}`);
     console.time("resendSend");
 
     const response = await resend.emails.send({
-      from: 'no-reply@socialblog.blog',
+      from: process.env.DOMAIN_EMAIL!,
       to: userEmail,
       subject: "Your new code to check the email",
       html: `
@@ -94,7 +93,7 @@ export async function sendVerificationEmail(userEmail: string, code: string) {
         </body>
         </html>
       `,
-      replyTo: process.env.NODEMAILER_EMAIL, // se quiser manter o reply-to
+      replyTo: process.env.SUPPORT_EMAIL,
     });
 
     console.timeEnd("resendSend");
