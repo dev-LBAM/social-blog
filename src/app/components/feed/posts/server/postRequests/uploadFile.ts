@@ -9,7 +9,8 @@ export default async function uploadFile(file: File) {
   
   if (signedUrlFile.status === 401) {
     window.location.href = '/'
-    throw new Error("User is not authorized")
+    const error = await signedUrlFile.json()
+    throw new Error(error.message)
   }
 
   if (!signedUrlFile.ok) {
@@ -52,8 +53,6 @@ export default async function uploadFile(file: File) {
   }
   
   const { isSensitive, labels } = await rekognitionResponse.json()
-  console.log('isSensitive: ', isSensitive)
-  console.log('labels: ', labels)
 
   return { fileUrl: s3FileUrl, fileName: file.name, isSensitive, labels }
 }

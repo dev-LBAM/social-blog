@@ -90,20 +90,21 @@ export default function CreateComment({ postId, commentId }: { postId: string , 
         parentCommentId: commentId,
       }
 
-      await createCommentOrPost({postId, data: commentData})
+      const res = await createCommentOrPost({postId, data: commentData})
 
       if(commentId != undefined) 
       {
-        successToast('Reply Sended', 'Your reply was sended succesfully')
         queryClient.invalidateQueries({ queryKey: ["replies", commentId] })
         queryClient.invalidateQueries({ queryKey: ["comments", postId] })
+        successToast('Reply Sended', 'Your reply was sended succesfully')
         
       }
       else
       {
-        successToast('Comment Sended', 'Your comment was sended succesfully')
+        
         queryClient.invalidateQueries({ queryKey: ["comments", postId] })
-        queryClient.invalidateQueries({ queryKey: ["posts"] })
+        queryClient.invalidateQueries({ queryKey: ["posts", res.userId] })
+        successToast('Comment Sended', 'Your comment was sended succesfully')
       }
     } 
     catch (error) 

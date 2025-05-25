@@ -88,7 +88,7 @@ export async function createCommentService(postId: string, req: NextRequest) {
     const savedComment = await newComment.save()
 
     const response = NextResponse.json(
-    { message: 'Comment created successfully', comment: savedComment },
+    { message: 'Comment created successfully', comment: savedComment, userId },
     { status: 201 })
 
     auth.headers.forEach((value, key) => 

@@ -6,6 +6,5 @@ export default async function LoadPosts()
 {
     const userId = await fetchUserId()
     const initialData = await fetchInitialPosts(userId)
-
     return <Posts initialData={initialData} userId={userId}/>
 }

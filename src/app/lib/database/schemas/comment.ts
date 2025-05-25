@@ -75,10 +75,11 @@ interface IComment extends Document
 {
     postId: Schema.Types.ObjectId
     userId: Schema.Types.ObjectId
+    parentCommentId: Schema.Types.ObjectId
     text: string
     editAt: Date
     likesCount: number
-    answersCount: number
+    commentsCount: number
     file:{
         name: string,
         url: string,
