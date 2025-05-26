@@ -64,7 +64,7 @@ console.log('key:', key)
   } catch (err) {
     console.error("Rekognition error:", err);
     return NextResponse.json(
-      { error: "Failed to analyze image." },
+      { message: "Failed to analyze image." },
       { status: 500 }
     );
   }

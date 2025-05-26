@@ -1,4 +1,8 @@
-export default async function uploadFile(file: File) {
+import { convertToAcceptedImage } from "@/app/lib/utils/convertFile"
+
+export default async function uploadFile(originalFile: File) {
+
+  const file = await convertToAcceptedImage(originalFile)
   const signedUrlFile = await fetch(`/api/aws/upload-file`, {
     method: "GET",
     headers: {
