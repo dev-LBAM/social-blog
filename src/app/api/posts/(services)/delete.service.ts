@@ -26,7 +26,7 @@ export async function deletePostService(postId: string, req: NextRequest) {
     // Deleta arquivo do post (se existir)
     if (post.file?.url) {
       const url = new URL(post.file.url)
-      await fetch(`http://localhost:3000/api/aws/delete-file`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/aws/delete-file`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export async function deletePostService(postId: string, req: NextRequest) {
     await Promise.all(comments.map(async (comment) => {
       if (comment.file?.url) {
         const url = new URL(comment.file.url)
-        await fetch(`http://localhost:3000/api/aws/delete-file`, {
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/aws/delete-file`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

@@ -30,7 +30,7 @@ export async function deleteCommentService(commentId: string, req: NextRequest) 
       const url = new URL(findComment.file.url)
       const cookies = req.headers.get('cookie')
 
-      await fetch(`http://localhost:3000/api/aws/delete-file`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/aws/delete-file`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

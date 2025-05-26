@@ -17,18 +17,17 @@ export async function POST(req: NextRequest) {
   }
 
   const { imageUrl } = await req.json(); 
-   console.log(imageUrl)
+
   if (!imageUrl) {
     return NextResponse.json({ error: "Image URL is required." }, { status: 400 });
   }
 
   try {
-    console.log('url: ', imageUrl)
     const bucket = process.env.AWS_S3_BUCKET_NAME!;
     const key = decodeURIComponent(
       imageUrl.split(`https://${bucket}.s3.amazonaws.com/`)[1]
     );
-console.log('key:', key)
+
     const command = new DetectModerationLabelsCommand({
       Image: {
         S3Object: {
