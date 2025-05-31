@@ -45,6 +45,9 @@ export default function ChatApp() {
   const socketRef = useRef<Socket | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [userExists, setUserExists] = useState <boolean>(false)
+  const [loadingFollowers, setLoadingFollowers] = useState<boolean>(true)
+
 
   // Toggle do sidebar
   const toggleSidebar = () => setIsOpen((prev) => !prev);
@@ -80,7 +83,7 @@ const toggleChat = (follower: Follower) => {
         setCursor(data.nextCursor || null);
       }
     } catch (err) {
-      console.error("Erro ao buscar mensagens:", err);
+      console.error("Error to load messages: ", err);
     }
   };
 
@@ -107,10 +110,13 @@ useEffect(() => {
   return () => window.removeEventListener("resize", handleResize);
 }, []);
 
+
   // Configuração do socket e eventos
   useEffect(() => {
     const userId = sessionStorage.getItem("user-id");
     if (!userId) return;
+
+    setUserExists(true)
     if (!socketRef.current) {
       socketRef.current = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
         withCredentials: true,
@@ -119,10 +125,18 @@ useEffect(() => {
     }
     const socket = socketRef.current;
     socket.on("mutual_followers_online", (followers: Follower[]) =>
-      setOnlineFollowers(followers)
+      {
+        setOnlineFollowers(followers)
+        setLoadingFollowers(false)
+      }
     );
     socket.on("mutual_followers_offline", (followers: Follower[]) =>
+    {
       setOfflineFollowers(followers)
+      setLoadingFollowers(false)
+    }
+
+    
     );
     socket.on("chat_message", (msg: Message) => {
       if (
@@ -200,12 +214,14 @@ useEffect(() => {
       console.error("Erro ao enviar mensagem:", error);
     }
   };
-
+console.log(userExists)
 return (
   <>
   <ThemeToggleButton isSidebarOpen={isOpen} />
 
     <Sidebar
+      loadingFollowers={loadingFollowers}
+      userExists={userExists}
       isOpen={isOpen}
       showButton={false}
       onlineFollowers={onlineFollowers}

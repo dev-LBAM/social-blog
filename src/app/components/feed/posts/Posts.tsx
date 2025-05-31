@@ -97,7 +97,13 @@ export default function Posts({ initialData, userId }: { initialData: object, us
   useEffect(() => 
   {
     setHasMounted(true)
-    sessionStorage.setItem("user-id", userId)
+    console.log(userId)
+    if(userId)
+    {
+
+      sessionStorage.setItem("user-id", userId)
+    }
+      
   }, [userId])
 
 

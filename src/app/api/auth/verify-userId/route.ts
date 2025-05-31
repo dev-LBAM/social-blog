@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   {
     const userId = await parseAuth(req)
     
-    return NextResponse.json( userId )
+    return NextResponse.json(userId)
   } 
   catch 
   {

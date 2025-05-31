@@ -27,6 +27,11 @@ export default async function fetchUserId() {
     
   }
 
-  const userId = await res.json()
+  const userId = await res.json();
+
+  if (typeof userId === "object" && userId !== null && Object.keys(userId).length === 0) {
+    return null;
+  }
+
   return userId
 }
