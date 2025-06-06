@@ -47,6 +47,7 @@ export default function ChatApp() {
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [userExists, setUserExists] = useState <boolean>(false)
   const [loadingFollowers, setLoadingFollowers] = useState<boolean>(true)
+  const [socketConnected, setSocketConnected] = useState<boolean>(true);
 
 
   // Toggle do sidebar
@@ -54,6 +55,7 @@ export default function ChatApp() {
 
   // Abre o chat com o seguidor, garantindo que, se a tela for menor que 1635px, o sidebar inicie fechado
 const toggleChat = (follower: Follower) => {
+  console.log(follower)
   setSelectedFollower(follower);
   setMessages([]);
   setCursor(null);
@@ -183,7 +185,19 @@ useEffect(() => {
         );
       }
     });
+
+      socket.on("connect", () => {
+    setSocketConnected(true);
+  });
+
+  socket.on("connect_error", () => {
+    setSocketConnected(false);
+    setLoadingFollowers(false); 
+  });
+
     return () => {
+      socket.off("connect");
+      socket.off("connect_error");
       socket.off("mutual_followers_online");
       socket.off("mutual_followers_offline");
       socket.off("chat_message");
@@ -193,7 +207,6 @@ useEffect(() => {
     };
   }, [selectedFollower]);
 
-  // Envia a mensagem e emite para o socket
   const handleSendMessage = async (message: string) => {
     if (!message.trim() || !selectedFollower) return;
     const userId = sessionStorage.getItem("user-id");
@@ -238,6 +251,7 @@ return (
       resetShouldScrollToBottom={() => setShouldScrollToBottom(false)}
       socket={socketRef.current}
       isTyping={isTyping}
+      socketConnected={socketConnected}
     />
   </>
 );

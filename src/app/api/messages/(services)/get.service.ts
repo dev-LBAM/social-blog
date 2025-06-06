@@ -66,7 +66,7 @@ export async function getUserMessagesService(friendId: string, req: NextRequest)
     const messages = await Message.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit)
-      .select("_id senderId text createdAt")
+      .select("_id senderId text createdAt conversationId")
       .lean<MessageLean[]>();
 
     const nextCursor =

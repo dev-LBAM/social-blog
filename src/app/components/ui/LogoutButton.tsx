@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react"
 
-export default function LogoutButton() {
+export default function LogoutButton({userId}) {
   const [userExists, setUserExists] = useState<boolean>(false)
 
-  useEffect(() => {
-    const userId = sessionStorage.getItem("user-id")
+
+    useEffect(() => {
+        console.log(userId)
     if (userId) setUserExists(true)
   }, [])
-
   const handleLogout = async () => {
 
     sessionStorage.clear()

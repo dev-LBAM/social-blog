@@ -6,6 +6,7 @@ import MessageInput from "./MessageInput";
 import { formatDistanceToNow } from "date-fns";
 import { Socket } from "socket.io-client";
 import { FiLoader } from "react-icons/fi";
+import MessagesTab from "./MessagesTab";
 
 type Follower = {
   _id: string;
@@ -54,6 +55,7 @@ type SidebarProps = {
   socket: Socket | null;
   isTyping: boolean;
   loadingFollowers: boolean;
+  socketConnected: boolean | null;
 
 };
 
@@ -75,7 +77,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   resetShouldScrollToBottom,
   socket,
   isTyping,
-  loadingFollowers
+  loadingFollowers,
+  socketConnected 
 
 }) => {
   const [activeTab, setActiveTab] = useState<"followers" | "messages">("followers");
@@ -238,101 +241,110 @@ const Sidebar: React.FC<SidebarProps> = ({
 
 
             {!userExists ? (
-              <div className="flex flex-col items-center justify-center text-center px-4 py-12 text-neutral-500">
-                <p className="text-base font-medium">You need to be logged in to view your mutual followers</p>
-              </div>
-            ) : loadingFollowers ? (
-              <div className="flex justify-center items-center mt-2">
-                <FiLoader size={30} className="animate-spin text-neutral-500" />
-              </div>
-            ) : (
-              <>
-                <span className="text-xs ml-1 text-neutral-500">Online ({onlineFollowers.length})</span>
-                {onlineFollowers.length > 0 ? (
-                  onlineFollowers.map((f) => (
-                    <div
-                      key={f._id}
-                      onClick={() => toggleChat(f)}
-                      className="flex items-center space-x-3 m-1 p-2 rounded-sm bg-white/50 dark:bg-black/50 cursor-pointer transition-transform duration-200 hover:scale-[1.01]"
-                    >
-                      <Image
-                        alt={f.name}
-                        src={
-                          f.profileImg ||
-                          "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                        }
-                        width={40}
-                        height={40}
-                        className="w-10 h-10 rounded-lg"
-                      />
-                      <div className="flex flex-col">
-                        <span className="font-sans text-sm hover:underline cursor-pointer text-color">
-                          {f.username}
-                        </span>
-                        <span className="text-xs text-green-500">online</span>
-                        <span className="text-xs text-neutral-500 italic">
-                          {`active ${formatDistanceToNow(new Date(f.loggedAt!))} ago`}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-sm text-center text-neutral-500 py-2">
-                    No online mutual followers found.
-                  </div>
-                )}
+  <div className="flex flex-col items-center justify-center text-center px-4 py-12 text-neutral-500">
+    <p className="text-base font-medium">You need to be logged in to view your mutual followers</p>
+  </div>
+) : socketConnected === false ? (
+  <div className="flex flex-col items-center justify-center text-center px-4 py-12 text-red-500">
+    <p className="text-base font-medium">Unable to connect to the messaging server.</p>
+    <p className="text-sm mt-2 text-neutral-500">Please check your connection or try again later.</p>
+  </div>
+) : loadingFollowers ? (
+  <div className="flex justify-center items-center mt-2">
+            <div className="flex items-center justify-center p-4 text-neutral-500">
+              <FiLoader className="animate-spin mr-2" />
+              Loading mutual followers...
+            </div>
+  </div>
+) : activeTab === "followers" ? (
+  <>
+    <span className="text-xs ml-1 text-neutral-500">Online ({onlineFollowers.length})</span>
+    {onlineFollowers.length > 0 ? (
+      onlineFollowers.map((f) => (
+        <div
+          key={f._id}
+          onClick={() => toggleChat(f)}
+          className="flex items-center space-x-3 m-1 p-2 rounded-sm bg-white/50 dark:bg-black/50 cursor-pointer transition-transform duration-200 hover:scale-[1.01]"
+        >
+          <Image
+            alt={f.name}
+            src={
+              f.profileImg ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            }
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-lg"
+          />
+          <div className="flex flex-col">
+            <span className="font-sans text-sm hover:underline cursor-pointer text-color">
+              {f.username}
+            </span>
+            <span className="text-xs text-green-500">online</span>
+            <span className="text-xs text-neutral-500 italic">
+              {`active ${formatDistanceToNow(new Date(f.loggedAt!))} ago`}
+            </span>
+          </div>
+        </div>
+      ))
+    ) : (
+      <div className="text-sm text-center text-neutral-500 py-2">
+        No online mutual followers found.
+      </div>
+    )}
 
-                <hr className="my-3 border-neutral-300 dark:border-neutral-800" />
+    <hr className="my-3 border-neutral-300 dark:border-neutral-800" />
 
-                <div>
-                  <span className="text-xs ml-1 text-neutral-500">Offline ({offlineFollowers.length})</span>
-                  {offlineFollowers.length > 0 ? (
-                    offlineFollowers.map((f) => (
-                      <div
-                        key={f._id}
-                        className="flex items-center space-x-3 m-1 p-2 rounded-sm bg-white/50 dark:bg-black/50 cursor-pointer transition-transform duration-200 hover:scale-[1.01]"
-                        onClick={() => toggleChat(f)}
-                      >
-                        <Image
-                          src={
-                            f.profileImg ||
-                            "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                          }
-                          alt={f.name}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 rounded-lg"
-                        />
-                        <div className="flex flex-col">
-                          <span className="font-sans text-sm hover:underline cursor-pointer text-color">
-                            {f.username}
-                          </span>
-                          <span className="text-xs text-red-500">offline</span>
-                          <span className="text-xs text-neutral-500 italic">
-                            last seen on{" "}
-                            {f.lastSeen
-                              ? new Date(f.lastSeen).toLocaleDateString("en-US", {
-                                day: "2-digit",
-                                month: "2-digit",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                                year: "2-digit",
-                                hour12: false,
-                                timeZone: "America/Sao_Paulo",
-                              })
-                              : "unknown"}
-                          </span>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-sm text-center text-neutral-500 py-2">
-                      No offline mutual followers found.
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
+    <div>
+      <span className="text-xs ml-1 text-neutral-500">Offline ({offlineFollowers.length})</span>
+      {offlineFollowers.length > 0 ? (
+        offlineFollowers.map((f) => (
+          <div
+            key={f._id}
+            className="flex items-center space-x-3 m-1 p-2 rounded-sm bg-white/50 dark:bg-black/50 cursor-pointer transition-transform duration-200 hover:scale-[1.01]"
+            onClick={() => toggleChat(f)}
+          >
+            <Image
+              src={
+                f.profileImg ||
+                "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+              }
+              alt={f.name}
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-lg"
+            />
+            <div className="flex flex-col">
+              <span className="font-sans text-sm hover:underline cursor-pointer text-color">
+                {f.username}
+              </span>
+              <span className="text-xs text-red-500">offline</span>
+              <span className="text-xs text-neutral-500 italic">
+                last seen on{" "}
+                {f.lastSeen
+                  ? new Date(f.lastSeen).toLocaleDateString("en-US", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      year: "2-digit",
+                      hour12: false,
+                      timeZone: "America/Sao_Paulo",
+                    })
+                  : "unknown"}
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-sm text-center text-neutral-500 py-2">
+          No offline mutual followers found.
+        </div>
+      )}
+    </div>
+  </>
+) : (<MessagesTab userExists={userExists} toggleChat={toggleChat}/>)}
+
           </div>
         )}
       </aside>

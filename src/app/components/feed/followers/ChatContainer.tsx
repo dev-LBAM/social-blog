@@ -48,21 +48,42 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 }) => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [loadingOlder, setLoadingOlder] = useState(false);
+  const [loadingInitial, setLoadingInitial] = useState(true);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
-  // 1. Scroll para o final ao abrir uma nova conversa
-  useLayoutEffect(() => {
-    if (selectedFollower && messagesContainerRef.current) {
+useEffect(() => {
+  const loadMessages = async () => {
+    if (!selectedFollower) return;
+
+    setLoadingInitial(true);
+    await fetchMessages();
+    setLoadingInitial(false);
+
+    if (messagesContainerRef.current) {
       setTimeout(() => {
         messagesContainerRef.current!.scrollTo({
           top: messagesContainerRef.current!.scrollHeight,
           behavior: "smooth",
         });
-      }, 500);
+      }, 100);
     }
-  }, [selectedFollower]);
+  };
 
-  // 2. Ao rolar para o topo, carrega mensagens antigas e preserva a posição do scroll.
+  loadMessages();
+}, [selectedFollower]);
+
+useEffect(() => {
+  if (messages.length > 0) {
+    console.log(messages)
+    const firstMessage = messages[0];
+    if (firstMessage?.conversationId) {
+      fetch(`/api/messages/${firstMessage.conversationId}/viewed`, {
+        method: "PATCH",
+      }).catch(err => console.error("Erro ao marcar como visualizado:", err));
+    }
+  }
+}, [messages]);
+
   useLayoutEffect(() => {
     const handleScroll = async () => {
       const container = messagesContainerRef.current;
@@ -86,7 +107,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     };
   }, [fetchMessages, loadingOlder]);
 
-  // 3. Ao enviar mensagem, scroll automático para o final.
   useEffect(() => {
     if (shouldScrollToBottom && messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -97,8 +117,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }, [shouldScrollToBottom, messages, resetShouldScrollToBottom]);
 
-  // 4. [Nova funcionalidade] Usando MutationObserver para, em caso de nova mensagem recebida
-  // ou mudança (como o indicador "digitando"), scrollar até o final, se o usuário estiver no final.
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (container && isAtBottom) {
@@ -116,7 +134,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     }
   }, [isAtBottom, messages]);
 
-  // 5. Atualiza o estado de "isAtBottom" conforme o usuário rola a lista.
   useEffect(() => {
     const handleScroll = () => {
       const container = messagesContainerRef.current;
@@ -134,10 +151,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     };
   }, []);
 
-  // 6. Agrupa mensagens por data usando a chave local "yyyy-mm-dd"
   const groupedMessages = messages.reduce((groups: { [key: string]: Message[] }, message) => {
     const dateObj = new Date(message.createdAt);
-    // Formata a data local (yyyy-mm-dd)
     const localDateKey = `${dateObj.getFullYear()}-${("0" + (dateObj.getMonth() + 1)).slice(-2)}-${(
       "0" + dateObj.getDate()
     ).slice(-2)}`;
@@ -148,7 +163,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     return groups;
   }, {});
 
-  // Ordena as datas cronologicamente.
   const sortedDates = Object.keys(groupedMessages).sort(
     (a, b) => new Date(a + "T00:00").getTime() - new Date(b + "T00:00").getTime()
   );
@@ -160,7 +174,9 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         className="flex-1 overflow-y-auto px-4 py-2 space-y-4"
         style={{ maxHeight: "calc(100vh - 150px)" }}
       >
-        {sortedDates.length > 0 ? (
+        {loadingInitial ? (
+          <div className="text-center text-neutral-500 italic">Loading messages...</div>
+        ) : sortedDates.length > 0 ? (
           sortedDates.map((dateKey) => (
             <div key={dateKey} className="space-y-2">
               <div className="flex justify-center">
@@ -183,7 +199,6 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
           <div className="text-center text-neutral-500 italic">No messages</div>
         )}
 
-        {/* ✨ Indicador de "digitando" ✨ */}
         {isTyping && selectedFollower && (
           <div className="text-sm italic text-neutral-500 px-4 py-2">
             {selectedFollower.username} is typing...
